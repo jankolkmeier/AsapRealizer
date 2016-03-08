@@ -55,7 +55,7 @@ public class IpaacaEventEngineLoader implements EngineLoader
         PlanManager<TimedIpaacaMessageUnit> planManager = new PlanManager<>();
         SingleThreadedPlanPlayer<TimedIpaacaMessageUnit> pp = new SingleThreadedPlanPlayer<>(are.getFeedbackManager(), planManager);
         IpaacaEventPlanner planner = new IpaacaEventPlanner(are.getFeedbackManager(), planManager, messageManager);
-        engine = new DefaultEngine<TimedIpaacaMessageUnit>(planner,new DefaultPlayer(pp),new PlanManager<TimedIpaacaMessageUnit>());
+        engine = new DefaultEngine<TimedIpaacaMessageUnit>(planner,new DefaultPlayer(pp), planManager);
         engine.setId(id);
         are.addEngine(engine);
     }
