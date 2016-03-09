@@ -22,7 +22,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class MURMLDescriptionIntegrationTest
 {
     private final File file;
-    private static String GESTURE_PATH = System.getProperty("shared.project.root")+"/Asap/AsapMURML/test/resource/gestures"; 
+    private static String GESTURE_PATH = System.getProperty("shared.project.root")+"/AsapRealizer/Engines/Animation/AsapMURML/test/resource/gestures"; 
     
     @Parameters
     public static Collection<Object[]> configs()
