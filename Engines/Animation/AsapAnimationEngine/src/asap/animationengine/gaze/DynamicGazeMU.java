@@ -217,10 +217,10 @@ public class DynamicGazeMU extends AbstractGazeMU
             double tRel = t / RELATIVE_READY_TIME;
             if (influence == GazeInfluence.WAIST)
             {
-                setThoracic(qStart, qSpine, tRel);
+                setThoracic(qStart, qSpine, tRel);                
                 if (t < RELATIVE_READY_TIME / TORSO_TIME_SCALE)
                 {
-                    setCervical(qStart, qSpine, tRel / (RELATIVE_READY_TIME / TORSO_TIME_SCALE));
+                    setCervical(qStart, qSpine, t / (RELATIVE_READY_TIME / TORSO_TIME_SCALE));
                 }
                 else
                 {
