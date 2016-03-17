@@ -67,11 +67,11 @@ public class DynamicRestGaze implements RestGaze
 
     }
 
-    private void VOREye(VJoint eye)
+    private void VOREye(VJoint currEye, VJoint eye)
     {
         WorldObject woTarget = aniPlayer.getWoManager().getWorldObject(target);
         float gazeDir[] = Vec3f.getVec3f();
-        woTarget.getTranslation2(gazeDir, eye);
+        woTarget.getTranslation2(gazeDir, currEye);
         Quat4f.transformVec3f(GazeUtils.getOffsetRotation(offsetDirection, offsetAngle), gazeDir);
         Vec3f.normalize(gazeDir);
         float qp[] = Quat4f.getQuat4f();
@@ -88,8 +88,8 @@ public class DynamicRestGaze implements RestGaze
         {
             if (aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null && aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint) != null)
             {
-                VOREye(aniPlayer.getVNextPartBySid(Hanim.l_eyeball_joint));
-                VOREye(aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint));                
+                VOREye(aniPlayer.getVCurrPartBySid(Hanim.l_eyeball_joint), aniPlayer.getVNextPartBySid(Hanim.l_eyeball_joint));
+                VOREye(aniPlayer.getVCurrPartBySid(Hanim.r_eyeball_joint), aniPlayer.getVNextPartBySid(Hanim.r_eyeball_joint));                
             }
         }
     }

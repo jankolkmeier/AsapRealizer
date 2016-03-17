@@ -207,7 +207,7 @@ public class DynamicGazeMU extends AbstractGazeMU
         setEndEyeRotation(rEyeCurr, qDesRight);
 
         playSpine(t, qSpine);
-        playEye(t, qDesLeft, qDesRight);
+        playEye(t, qDesRight, qDesLeft);
     }
 
     private void playSpine(double t, float[] qSpine) throws MUPlayException
