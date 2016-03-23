@@ -317,6 +317,9 @@ public class MixedPlayer
     public void switchSystem(MixedSystem sys, float timeDiff, VJoint prev,
             VJoint curr, VJoint next, boolean switchPrevCurrNext)
     {
+        float q[]=Quat4f.getQuat4f();
+        next.getPartBySid("r_hip").getRotation(q);
+        System.out.println("r hip rotation: "+Quat4f.explainQuat4f(q));
         PhysicalHumanoid ph = system.getPHuman();
         calculateKinematics();
         sys.set(system, qCurr, w);

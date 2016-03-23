@@ -271,6 +271,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
      */
     public synchronized void setResetPose()
     {
+        vNext.calculateMatrices();
         vNextStartPose.setFromTarget();
         synchronized (PhysicsSync.getSync())
         {
