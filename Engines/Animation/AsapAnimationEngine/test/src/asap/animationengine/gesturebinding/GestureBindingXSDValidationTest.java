@@ -24,8 +24,8 @@ public class GestureBindingXSDValidationTest extends XSDValidationTest
     private static final Resources GB_XSD_RES = new Resources("xsd");
     private static final String GB_XSD = "gesturebinding.xsd";
     private static final String GB_DIRS[] = {
-        System.getProperty("shared.project.root")+"/asapresource/AsapHumanoidControlShared/resource/Humanoids/shared/gesturebinding",
-        System.getProperty("shared.project.root")+"/asapresource/AsapHumanoidControlArmandia/resource/Humanoids/armandia/gesturebinding"
+        System.getProperty("shared.project.root")+"/AsapResource/AsapHumanoidControlShared/resource/Humanoids/shared/gesturebinding",
+        System.getProperty("shared.project.root")+"/AsapResource/AsapHumanoidControlArmandia/resource/Humanoids/armandia/gesturebinding"
     };
         
     

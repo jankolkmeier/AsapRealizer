@@ -78,7 +78,7 @@ public class ScheduleriSSIntegrationTest extends SchedulerIntegrationTestCases
     public static void oneTimeSetUp()
     {
         System.setProperty("mary.base", System.getProperty("shared.project.root")
-                + "/asapresource/MARYTTSIncremental/resource/MARYTTSIncremental");
+                + "/AsapResource/MARYTTSIncremental/resource/MARYTTSIncremental");
         dispatcher = SimpleMonitor.setupDispatcher(new Resources("").getURL("sphinx-config.xml"));
         soundManager.init();
         Odejava.init();
