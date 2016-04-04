@@ -82,26 +82,31 @@ public class GazeTMU extends TimedAnimationMotionUnit
 
         // setting relax
         TimePeg endPeg = getTimePeg("end");
-        if (relaxTime != TimePeg.VALUE_UNKNOWN)
+        if (relaxTime != TimePeg.VALUE_UNKNOWN && getEndTime() != TimePeg.VALUE_UNKNOWN)
         {
-            relaxDuration = readyTime - getStartTime();
+            relaxDuration = getEndTime()-relaxTime;
         }
         else
         {
-            relaxDuration = readyDuration;
-            TimePeg tpRelax = new TimePeg(getBMLBlockPeg());
-            setTimePeg("relax", tpRelax);
-            if (endPeg != null && endPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+            relaxDuration = gmu.getPreferedRelaxDuration();
+            
+            TimePeg tpRelax = getTimePeg("relax");
+            if(tpRelax == null || tpRelax.getGlobalValue() == TimePeg.VALUE_UNKNOWN)
             {
-                tpRelax.setGlobalValue(getEndTime()-relaxDuration);
-            }
-            else
-            {
-                tpRelax.setGlobalValue(getTime("ready")+gmu.getPreferedStayDuration());
+                tpRelax = new TimePeg(getBMLBlockPeg());
+                setTimePeg("relax", tpRelax);
+                if (endPeg != null && endPeg.getGlobalValue() != TimePeg.VALUE_UNKNOWN)
+                {
+                    tpRelax.setGlobalValue(getEndTime() - relaxDuration);
+                }
+                else
+                {
+                    tpRelax.setGlobalValue(getTime("ready") + gmu.getPreferedStayDuration());
+                }
             }
         }
 
-        // set end        
+        // set end
         if (endPeg == null)
         {
             endPeg = new TimePeg(getBMLBlockPeg());
@@ -109,7 +114,7 @@ public class GazeTMU extends TimedAnimationMotionUnit
         }
         if (getEndTime() == TimePeg.VALUE_UNKNOWN)
         {
-            endPeg.setGlobalValue(getTime("relax")+relaxDuration);
+            endPeg.setGlobalValue(getTime("relax") + relaxDuration);
         }
 
         gmu.setDurations(readyDuration, relaxDuration);

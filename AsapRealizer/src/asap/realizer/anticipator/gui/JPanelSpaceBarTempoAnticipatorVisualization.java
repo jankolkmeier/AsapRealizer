@@ -2,11 +2,12 @@
  *******************************************************************************/
 package asap.realizer.anticipator.gui;
 
-
 import java.awt.Color;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Observable;
 
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import asap.realizer.anticipator.Anticipator;
 import asap.realizer.anticipator.KeyInfo;
@@ -21,13 +22,13 @@ public class JPanelSpaceBarTempoAnticipatorVisualization extends SpaceBarTempoAn
 {
     private final JPanel predictPanel;
     private final JPanelSpaceBarVisualization spaceBarPressViz;
-    private final static double DISPLAY_DURATION = 0.1; 
-    
+    private final static double DISPLAY_DURATION = 0.1;
+
     public JPanelSpaceBarTempoAnticipatorVisualization(JPanel jpPress, JPanel jpPredict, KeyInfo keyInfo, Anticipator ant)
     {
         super(ant);
-        spaceBarPressViz = new JPanelSpaceBarVisualization(jpPress,keyInfo);
-        predictPanel = jpPredict;                
+        spaceBarPressViz = new JPanelSpaceBarVisualization(jpPress, keyInfo);
+        predictPanel = jpPredict;
     }
 
     @Override
@@ -35,19 +36,37 @@ public class JPanelSpaceBarTempoAnticipatorVisualization extends SpaceBarTempoAn
     {
         spaceBarPressViz.update(arg0, arg1);
     }
-    
+
     public void update(double time)
     {
-        for(TimePeg tp:anticipator.getTimePegs())
+        for (TimePeg tp : anticipator.getTimePegs())
         {
-            if( time-tp.getGlobalValue()<DISPLAY_DURATION && time-tp.getGlobalValue()>0)
+            if (time - tp.getGlobalValue() < DISPLAY_DURATION && time - tp.getGlobalValue() > 0)
             {
-                predictPanel.setBackground(Color.GREEN);
-                predictPanel.setForeground(Color.GREEN);                
+                try
+                {
+                    SwingUtilities.invokeAndWait(() -> {
+                        predictPanel.setBackground(Color.GREEN);
+                        predictPanel.setForeground(Color.GREEN);
+                    });
+                }
+                catch (InvocationTargetException | InterruptedException e)
+                {
+                    throw new RuntimeException(e);
+                }
                 return;
             }
         }
-        predictPanel.setBackground(Color.RED);
-        predictPanel.setForeground(Color.RED); 
+        try
+        {
+            SwingUtilities.invokeAndWait(() -> {
+                predictPanel.setBackground(Color.RED);
+                predictPanel.setForeground(Color.RED);
+            });
+        }
+        catch (InvocationTargetException | InterruptedException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

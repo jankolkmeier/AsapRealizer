@@ -30,14 +30,18 @@ import saiba.bml.core.GazeBehaviour;
 import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.AnimationPlayerMock;
+import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
+import asap.animationengine.motionunit.StubAnimationUnit;
 import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
+import asap.motionunit.MUPlayException;
 import asap.realizer.BehaviourPlanningException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
+import asap.realizer.planunit.KeyPosition;
 import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
@@ -62,11 +66,92 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
     private static final double TIME_PRECISION = 0.0001;
     private GazeBehaviour mockBeh = mock(GazeBehaviour.class);
 
-    private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId) throws TMUSetupException, MUSetupException
+    private class StubGazeMU extends StubAnimationUnit implements GazeMU
     {
-        //TweedGazeMU mu = new TweedGazeMU();
-        DynamicGazeMU mu = new DynamicGazeMU();
+        private static final double STAY_DURATION = 1;
+        private static final double RELAX_DURATION = 2;
+        private static final double READY_DURATION = 3;
+        private double stayDuration, relaxDuration, readyDuration;
+        private static final double RELATIVE_READY_TIME = 0.25;
+        private static final double RELATIVE_RELAX_TIME = 0.75;   
         
+        public StubGazeMU()
+        {
+            stayDuration = STAY_DURATION;
+            readyDuration = READY_DURATION;
+            relaxDuration = RELAX_DURATION;
+            
+            KeyPosition ready = new KeyPosition("ready", RELATIVE_READY_TIME, 1);
+            KeyPosition relax = new KeyPosition("relax", RELATIVE_RELAX_TIME, 1);
+            addKeyPosition(ready);
+            addKeyPosition(relax);
+            addKeyPosition(new KeyPosition("start", 0, 1));
+            addKeyPosition(new KeyPosition("end", 1, 1));
+        }
+
+        @Override
+        public StubGazeMU copy(AnimationPlayer p)
+        {
+            super.copy(p);
+            return this;
+        }
+        
+        @Override
+        public double getPreferedStayDuration()
+        {
+            return stayDuration;
+        }
+
+        @Override
+        public double getPreferedRelaxDuration()
+        {
+            return relaxDuration;
+        }
+
+        @Override
+        public double getPreferedReadyDuration()
+        {
+            return readyDuration;
+        }
+
+        @Override
+        public double getPreferedDuration()
+        {
+            return stayDuration+relaxDuration+readyDuration;
+        }
+        
+        @Override
+        public void setDurations(double prepDur, double relaxDur)
+        {
+            this.readyDuration = prepDur;
+            this.relaxDuration = relaxDur;
+
+        }
+
+        @Override
+        public void setEndRotation(float[] gazeDir)
+        {
+        }
+
+        @Override
+        public void setStartPose() throws MUPlayException
+        {
+        }
+
+        @Override
+        public void setTarget()
+        {
+        }
+    }
+
+    private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)
+            throws TMUSetupException, MUSetupException
+    {
+        // TweedGazeMU mu = new TweedGazeMU();
+        // DynamicGazeMU mu = new DynamicGazeMU();
+        //DynamicGazeMU
+        StubGazeMU mu = new StubGazeMU();
+
         WorldObjectManager woManager = new WorldObjectManager();
         VJoint bluebox = new VJoint();
         bluebox.setTranslation(Vec3f.getVec3f(0, 0, 1));
@@ -74,24 +159,22 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         woManager.addWorldObject("bluebox", blueBox);
 
         mu = mu.copy(mockAnimationPlayer);
-        mu.player = mockAnimationPlayer;
-        mu.target = "bluebox";
-        mu.woManager = woManager;
-        
+        //mu.target = "bluebox";
+        //mu.woManager = woManager;
 
         RestGaze mockRestGaze = mock(RestGaze.class);
         TimedAnimationMotionUnit mockTMU = mock(TimedAnimationMotionUnit.class);
         when(mockAnimationPlayer.getGazeTransitionToRestDuration()).thenReturn(2d);
         when(mockAnimationPlayer.getRestGaze()).thenReturn(mockRestGaze);
-        when(
-                mockRestGaze.createTransitionToRest(any(FeedbackManager.class), any(TimePeg.class), any(TimePeg.class), anyString(),
-                        anyString(), any(BMLBlockPeg.class), eq(pegBoard))).thenReturn(mockTMU);
+        when(mockRestGaze.createTransitionToRest(any(FeedbackManager.class), any(TimePeg.class), any(TimePeg.class), anyString(),
+                anyString(), any(BMLBlockPeg.class), eq(pegBoard))).thenReturn(mockTMU);
 
         return new GazeTMU(bfm, bbPeg, bmlId, id, mu, pegBoard, mockAnimationPlayer);
     }
 
     @Override
-    protected GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime) throws TMUSetupException
+    protected GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId, double startTime)
+            throws TMUSetupException
     {
         GazeTMU tmu;
         try
@@ -126,7 +209,7 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         assertThat(tmu.getTime("ready"), greaterThan(1d));
         assertThat(tmu.getTime("end"), greaterThan(1d));
     }
-    
+
     @Test
     public void testStart() throws TMUSetupException, BehaviourPlanningException, TimedPlanUnitPlayException, MUSetupException
     {
@@ -134,12 +217,35 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         List<TimePegAndConstraint> sacs = new ArrayList<>();
         sacs.add(new TimePegAndConstraint("start", TimePegUtil.createTimePeg(1), new Constraint(), 0));
         sacs.add(new TimePegAndConstraint("ready", TimePegUtil.createTimePeg(3), new Constraint(), 0));
-        tmu.resolveSynchs(BMLBlockPeg.GLOBALPEG, mockBeh, sacs);                
+        tmu.resolveSynchs(BMLBlockPeg.GLOBALPEG, mockBeh, sacs);
         tmu.setState(TimedPlanUnitState.LURKING);
         tmu.start(1);
         assertEquals(1, tmu.getStartTime(), TIME_PRECISION);
         assertEquals(3, tmu.getTime("ready"), TIME_PRECISION);
         assertThat(tmu.getTime("relax"), greaterThan(3d));
-        assertThat(tmu.getTime("end"),  greaterThan(tmu.getTime("ready")+1.95));
+        assertThat(tmu.getTime("end"), greaterThan(tmu.getTime("ready") + 1.95));
+    }
+
+    @Test
+    public void testStartUnit() throws TMUSetupException, MUSetupException, TimedPlanUnitPlayException
+    {
+        GazeTMU tmu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "gaze1", "bml1");
+        tmu.setTimePeg("start", TimePegUtil.createTimePeg(0));
+        tmu.startUnit(0);
+        assertEquals(tmu.getTime("ready"), StubGazeMU.READY_DURATION, TIME_PRECISION);
+        assertEquals(tmu.getTime("relax"), StubGazeMU.READY_DURATION+StubGazeMU.STAY_DURATION, TIME_PRECISION);
+        assertEquals(tmu.getTime("end"), StubGazeMU.READY_DURATION+StubGazeMU.STAY_DURATION+StubGazeMU.RELAX_DURATION, TIME_PRECISION);
+    }
+    
+    @Test
+    public void testStartUnitWithRelax() throws TMUSetupException, MUSetupException, TimedPlanUnitPlayException
+    {
+        GazeTMU tmu = setupPlanUnit(fbManager, BMLBlockPeg.GLOBALPEG, "gaze1", "bml1");
+        tmu.setTimePeg("start", TimePegUtil.createTimePeg(0));
+        tmu.setTimePeg("relax", TimePegUtil.createTimePeg(10));
+        tmu.startUnit(0);
+        assertEquals(StubGazeMU.READY_DURATION, tmu.getTime("ready"), TIME_PRECISION);
+        assertEquals(10, tmu.getTime("relax"), TIME_PRECISION);
+        assertEquals(10+StubGazeMU.RELAX_DURATION, tmu.getTime("end"),  TIME_PRECISION);
     }
 }
