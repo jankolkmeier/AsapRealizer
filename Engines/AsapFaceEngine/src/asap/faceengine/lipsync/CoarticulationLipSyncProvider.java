@@ -128,35 +128,42 @@ public class CoarticulationLipSyncProvider implements LipSynchProvider
         }
 
         // A increasing number for the overall amount of phonemes in the current sequence
-        int currentPhonemeAmount = wordDescriptions.get(0).getPhonemes().size();
-        phonemesOfSequence = new ArrayList<>(wordDescriptions.get(0).getPhonemes());
-        numbersOfFirstPhonemes.add(0);
-        numbersOfLastPhonemes.add(currentPhonemeAmount - 1);
+        int currentPhonemeAmount = 0;
+        phonemesOfSequence = new ArrayList<>();
+        
+        if (wordDescriptions.size()>0) {
+            currentPhonemeAmount = wordDescriptions.get(0).getPhonemes().size();
+            phonemesOfSequence =  new ArrayList<>(wordDescriptions.get(0).getPhonemes());
+        
+            
+            numbersOfFirstPhonemes.add(0);
+            numbersOfLastPhonemes.add(currentPhonemeAmount - 1);
 
-        // Create the sequence of all phonemes as a list and fill the lists with the numbers of the first and last phonemes in the words of the sequence
-        for (WordDescription wd : wordDescriptions)
-        {
-
-            if (ACTIVATEOUTPUTS) System.out.print("--- Added " + wd.getPhonemes().size() + " new phonemes ---   ");
-
-            for (Phoneme p : wd.getPhonemes())
+            // Create the sequence of all phonemes as a list and fill the lists with the numbers of the first and last phonemes in the words of the sequence
+            for (WordDescription wd : wordDescriptions)
             {
-                if (ACTIVATEOUTPUTS) System.out.print(PhonemeUtil.phonemeIntToString(p.getNumber()));
-                if (p != wd.getPhonemes().get(wd.getPhonemes().size() - 1)) if (ACTIVATEOUTPUTS) System.out.print(", ");
+
+                if (ACTIVATEOUTPUTS) System.out.print("--- Added " + wd.getPhonemes().size() + " new phonemes ---   ");
+
+                for (Phoneme p : wd.getPhonemes())
+                {
+                    if (ACTIVATEOUTPUTS) System.out.print(PhonemeUtil.phonemeIntToString(p.getNumber()));
+                    if (p != wd.getPhonemes().get(wd.getPhonemes().size() - 1)) if (ACTIVATEOUTPUTS) System.out.print(", ");
+                }
+
+                if (wd != wordDescriptions.get(0))
+                {
+                    phonemesOfSequence.addAll(wd.getPhonemes());
+
+                    numbersOfFirstPhonemes.add(currentPhonemeAmount);
+
+                    currentPhonemeAmount += wd.getPhonemes().size();
+
+                    numbersOfLastPhonemes.add(currentPhonemeAmount - 1);
+
+                }
+                if (ACTIVATEOUTPUTS) System.out.println("");
             }
-
-            if (wd != wordDescriptions.get(0))
-            {
-                phonemesOfSequence.addAll(wd.getPhonemes());
-
-                numbersOfFirstPhonemes.add(currentPhonemeAmount);
-
-                currentPhonemeAmount += wd.getPhonemes().size();
-
-                numbersOfLastPhonemes.add(currentPhonemeAmount - 1);
-
-            }
-            if (ACTIVATEOUTPUTS) System.out.println("");
         }
 
         if (ACTIVATEOUTPUTS)
