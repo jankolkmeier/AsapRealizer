@@ -13,6 +13,7 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnit;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import lombok.Getter;
 
 /**
  * Default implementation of the Engine Interface
