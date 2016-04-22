@@ -33,6 +33,9 @@ import asap.realizerport.RealizerPort;
 
 import com.google.common.collect.ImmutableSet;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * New bridge between ipaaca and ASAPrealizer, unifying request and feedback
  * into persistent IUs. Replacement for initial ipaaca adapter by Herwin.
@@ -46,6 +49,8 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
     {
         Initializer.initializeIpaacaRsb();
     }
+    
+	private Logger logger = LoggerFactory.getLogger(IpaacaToBMLRealizerAdapter.class.getName());
     
     private final InputBuffer inBuffer = new InputBuffer(
     	"IpaacaToBMLRealizerAdapter", 
@@ -116,6 +121,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 					}
 					
 					if (has_errors) {
+						logger.warn("Error (notifying over ipaaca): {}", error_string);
 						items.put(IpaacaBMLConstants.IU_STATUS_KEY, "ERROR");
 						items.put(IpaacaBMLConstants.IU_ERROR_KEY, error_string);
 					} else {
@@ -150,6 +156,7 @@ public class IpaacaToBMLRealizerAdapter implements BMLFeedbackListener
 							}
 						} catch (Exception e) {
 							error_string = "Exception during BML parse or perform: "+getExceptionStackTrace(e);
+							logger.warn("Error (notifying over ipaaca): {}", error_string);
 							items.put(IpaacaBMLConstants.IU_STATUS_KEY, "ERROR");
 							items.put(IpaacaBMLConstants.IU_ERROR_KEY, error_string);
 						}
