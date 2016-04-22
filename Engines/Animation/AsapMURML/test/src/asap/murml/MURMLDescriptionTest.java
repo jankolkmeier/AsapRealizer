@@ -386,7 +386,7 @@ public class MURMLDescriptionTest
         assertEquals(Symmetry.SymMS, dynLeft.getSymmetryTransform());
     }
 
-    @Ignore //FIXME: writeback of symmetricals
+    //@Ignore //FIXME: writeback of symmetricals
     @Test
     public void testWriteSymmetricalDynamic()
     {
@@ -408,11 +408,10 @@ public class MURMLDescriptionTest
         descIn.readXML(murmlScript);
         StringBuilder buf = new StringBuilder();
         descIn.appendXML(buf);
-        System.out.println(buf.toString());
         MURMLDescription descOut = new MURMLDescription();
         descOut.readXML(buf.toString());
         
-        
+        //unparses in parallel left and right arm movement
         Parallel par = descOut.getParallel();
         assertNotNull(par);
         assertEquals(2, par.getDynamics().size());
@@ -420,8 +419,7 @@ public class MURMLDescriptionTest
         assertEquals("right_arm", dynRight.getScope());
 
         Dynamic dynLeft = par.getDynamics().get(1);
-        assertEquals("left_arm", dynLeft.getScope());
-        assertEquals(Symmetry.SymMS, dynLeft.getSymmetryTransform());
+        assertEquals("left_arm", dynLeft.getScope());        
     }
     
     @Test
