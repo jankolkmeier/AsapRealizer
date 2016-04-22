@@ -188,8 +188,7 @@
    
    <target name="docall" depends="-pre-docAll" description="Generate integrated Javadoc for all HMI/* projects">     
         <javadoc source="1.8"
-            destdir="${javadoc.dir}"
-            Overview="javadoc-overview.html" 
+            destdir="${javadoc.dir}"            
             doctitle="API Documentation for Asap packages, including the Asap Realizer"
             private="true" 
             use="true"

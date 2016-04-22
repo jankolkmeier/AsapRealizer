@@ -23,7 +23,10 @@ import asap.realizer.scheduler.TimePegAndConstraint;
 public class DefaultEngine<T extends TimedPlanUnit> implements Engine
 {
     private final Planner<T> planner;
+    
+    @Getter
     private final Player player;
+    
     private final PlanManager<T> planManager;
     private boolean verifyNoPlay = false;
 

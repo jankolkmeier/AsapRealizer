@@ -2,29 +2,17 @@
  *******************************************************************************/
 package asap.environment;
 
-import hmi.environmentbase.CompoundLoader;
-import hmi.environmentbase.Embodiment;
-import hmi.environmentbase.EmbodimentLoader;
-import hmi.environmentbase.Environment;
-import hmi.environmentbase.Loader;
-import hmi.util.Clock;
-import hmi.xml.XMLScanException;
-import hmi.xml.XMLStructureAdapter;
-import hmi.xml.XMLTokenizer;
-
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map.Entry;
-
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 import org.fest.swing.util.Arrays;
 
-import saiba.bml.core.Behaviour;
+import com.google.common.base.Splitter;
+
 import asap.environment.impl.ActivateEngineLoader;
 import asap.environment.impl.InterruptEngineLoader;
 import asap.environment.impl.ParameterValueChangeEngineLoader;
@@ -35,6 +23,21 @@ import asap.realizerembodiments.AsapRealizerEmbodiment;
 import asap.realizerembodiments.EngineLoader;
 import asap.realizerembodiments.SchedulingClockEmbodiment;
 import asap.realizerport.RealizerPort;
+import hmi.environmentbase.CompoundLoader;
+import hmi.environmentbase.Embodiment;
+import hmi.environmentbase.EmbodimentLoader;
+import hmi.environmentbase.Environment;
+import hmi.environmentbase.Loader;
+import hmi.environmentbase.StatusInformer;
+import hmi.util.Clock;
+import hmi.xml.XMLScanException;
+import hmi.xml.XMLStructureAdapter;
+import hmi.xml.XMLTokenizer;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import saiba.bml.core.Behaviour;
 
 /**
  * Loads and unloads an AsapVirtualHuman and provides access to its elements (realizer, embodiments, engines, etc)
@@ -42,6 +45,12 @@ import asap.realizerport.RealizerPort;
 @Slf4j
 public class AsapVirtualHuman
 {
+    enum Status
+    {
+        LOADING, LOADED, FAILED
+    }
+
+    private Collection<StatusInformer> statusInformers = new ArrayList<>();
     /** "human readable name" */
     @Getter
     @Setter(AccessLevel.PROTECTED)
@@ -59,8 +68,7 @@ public class AsapVirtualHuman
 
     /** used for loading the virtual human from an XML specification file */
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
-    /** used for loading the virtual human from an XML specification file */
-    private HashMap<String, String> attrMap = null;
+
     /** used for loading the virtual human from an XML specification file */
     private XMLTokenizer theTokenizer = null;
 
@@ -123,11 +131,15 @@ public class AsapVirtualHuman
 
         try
         {
+            HashMap<String, String> attrMap = theTokenizer.getAttributes();
+            loadStatusInformers(attrMap);
+            setStatus(Status.LOADING);
+            
             if (vhId.isEmpty())
             {
-                attrMap = theTokenizer.getAttributes();
                 vhId = adapter.getOptionalAttribute("id", attrMap, vhId);
             }
+
             theTokenizer.takeSTag("AsapVirtualHuman");
             Loader loader = null;
 
@@ -207,8 +219,8 @@ public class AsapVirtualHuman
                 {
                     for (String reqId : requiredLoaderIds.split(","))
                     {
-                        if (!reqId.equals("") && loaders.get(reqId) == null) throw theTokenizer
-                                .getXMLScanException("Required loader not present: " + reqId);
+                        if (!reqId.equals("") && loaders.get(reqId) == null)
+                            throw theTokenizer.getXMLScanException("Required loader not present: " + reqId);
                         requiredLoaders.add(loaders.get(reqId));
                     }
                 }
@@ -276,7 +288,34 @@ public class AsapVirtualHuman
         {
             throw new RuntimeException(ex);
         }
+        setStatus(Status.LOADED);
+    }
 
+    private void setStatus(Status status)
+    {
+        for (StatusInformer su : statusInformers)
+        {
+            su.setStatus(status.toString());
+        }
+    }
+
+    private void loadStatusInformers(HashMap<String, String> attrMap)
+    {
+        Iterator<String> iter = Splitter.on(",").omitEmptyStrings().trimResults()
+                .split(adapter.getOptionalAttribute("statusInformers", attrMap, "")).iterator();
+        while (iter.hasNext())
+        {
+            String className = iter.next();
+            try
+            {
+                Class<?> cl = Class.forName(className);
+                statusInformers.add(cl.asSubclass(StatusInformer.class).newInstance());
+            }
+            catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex)
+            {
+                throw new RuntimeException("Error instantiation statusinformer " + className, ex);
+            }
+        }
     }
 
     private Loader constructLoader(String loaderClass)
@@ -307,7 +346,7 @@ public class AsapVirtualHuman
 
     private void loadBMLRoutingSection() throws IOException
     {
-        attrMap = theTokenizer.getAttributes();
+        HashMap<String, String> attrMap = theTokenizer.getAttributes();
 
         theTokenizer.takeSTag("BMLRouting");
         while (theTokenizer.atSTag("Route"))
