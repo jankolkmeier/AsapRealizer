@@ -15,6 +15,7 @@ import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.TMUSetupException;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
+import asap.motionunit.MUPlayException;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.OffsetPeg;
@@ -77,13 +78,13 @@ public class ForwardRestGaze implements RestGaze
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg, String bmlId, String id,
+    public TimedAnimationMotionUnit createTransitionToRest(GazeInfluence influence, FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg, String bmlId, String id,
             BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
         AnimationUnit mu;
         try
         {
-            mu = createTransitionToRest();
+            mu = createTransitionToRest(influence);
         }
         catch (MUSetupException e)
         {
@@ -98,39 +99,51 @@ public class ForwardRestGaze implements RestGaze
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, String bmlId, String id,
+    public TimedAnimationMotionUnit createTransitionToRest(GazeInfluence influence, FeedbackManager fbm, double startTime, String bmlId, String id,
             BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
-        TimePeg endPeg = new OffsetPeg(startPeg, getTransitionToRestDuration());
-        return createTransitionToRest(fbm, startPeg, endPeg, bmlId, id, bmlBlockPeg, pb);
+        TimePeg endPeg = new OffsetPeg(startPeg, getTransitionToRestDuration(influence));
+        return createTransitionToRest(influence, fbm, startPeg, endPeg, bmlId, id, bmlBlockPeg, pb);
     }
 
     @Override
-    public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration, String bmlId, String id,
+    public TimedAnimationMotionUnit createTransitionToRest(GazeInfluence influence, FeedbackManager fbm, double startTime, double duration, String bmlId, String id,
             BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException
     {
         TimePeg startPeg = new TimePeg(bmlBlockPeg);
         startPeg.setGlobalValue(startTime);
         TimePeg endPeg = new OffsetPeg(startPeg, duration);
-        return createTransitionToRest(fbm, startPeg, endPeg, bmlId, id, bmlBlockPeg, pb);
+        return createTransitionToRest(influence, fbm, startPeg, endPeg, bmlId, id, bmlBlockPeg, pb);
     }
 
     @Override
-    public double getTransitionToRestDuration()
+    public double getTransitionToRestDuration(GazeInfluence influence)
     {
-        // FIXME: real duration calcuration here
-        return 2;
+        try
+        {
+            DynamicGazeMU mu = createTransitionToRest(influence);
+            mu.setStartPose();
+            return mu.getPreferedReadyDuration();
+        }
+        catch (MUSetupException e)
+        {
+            throw new RuntimeException(e);
+        }
+        catch (MUPlayException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public AnimationUnit createTransitionToRest() throws MUSetupException
+    public DynamicGazeMU createTransitionToRest(GazeInfluence inf) throws MUSetupException
     {
         DynamicGazeMU mu = new DynamicGazeMU();
-        mu = mu.copy(aPlayer);
-        mu.setInfluence(influence);
+        mu.setInfluence(inf);
         mu.setGazeDirection(Vec3f.getVec3f(0, 0, 1));
+        mu = mu.copy(aPlayer);        
         return mu;
     }
 

@@ -140,14 +140,14 @@ public class GazeTMU extends TimedAnimationMotionUnit
         if (isSubUnit()) return;
         TimePeg relaxPeg = getTimePeg("relax");
         TimePeg endPeg = getTimePeg("end");
-        double retractionDuration = aniPlayer.getGazeTransitionToRestDuration();
+        double retractionDuration = aniPlayer.getGazeTransitionToRestDuration(gmu.getInfluence());
         if (pegBoard.getPegKeys(endPeg).size() == 1 && !endPeg.isAbsoluteTime())
         {
             endPeg.setGlobalValue(relaxPeg.getGlobalValue() + retractionDuration);
         }
         try
         {
-            relaxUnit = aniPlayer.getRestGaze().createTransitionToRest(NullFeedbackManager.getInstance(), relaxPeg, endPeg, getBMLId(),
+            relaxUnit = aniPlayer.getRestGaze().createTransitionToRest(gmu.getInfluence(), NullFeedbackManager.getInstance(), relaxPeg, endPeg, getBMLId(),
                     getId(), bmlBlockPeg, pegBoard);
         }
         catch (TMUSetupException e)
@@ -168,6 +168,6 @@ public class GazeTMU extends TimedAnimationMotionUnit
 
         // XXX: should relax and end pegs also be detached if other behaviors are connected to them?
         getTimePeg("relax").setGlobalValue(time);
-        getTimePeg("end").setGlobalValue(time + aniPlayer.getGazeTransitionToRestDuration());
+        getTimePeg("end").setGlobalValue(time + aniPlayer.getGazeTransitionToRestDuration(gmu.getInfluence()));
     }
 }

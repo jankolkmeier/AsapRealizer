@@ -2,19 +2,11 @@
  *******************************************************************************/
 package asap.animationengine.gaze;
 
-import hmi.animation.VJoint;
-import hmi.math.Quat4f;
-import hmi.math.Vec3f;
-import hmi.neurophysics.EyeSaturation;
-import hmi.neurophysics.ListingsLaw;
-import hmi.util.StringUtil;
-import hmi.worldobjectenvironment.WorldObject;
-import hmi.worldobjectenvironment.WorldObjectManager;
-
 import java.util.List;
 import java.util.Set;
 
-import saiba.bml.core.OffsetDirection;
+import com.google.common.collect.ImmutableSet;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.TimedAnimationMotionUnit;
 import asap.motionunit.MUPlayException;
@@ -27,8 +19,17 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.ParameterNotFoundException;
-
-import com.google.common.collect.ImmutableSet;
+import hmi.animation.VJoint;
+import hmi.math.Quat4f;
+import hmi.math.Vec3f;
+import hmi.neurophysics.EyeSaturation;
+import hmi.neurophysics.ListingsLaw;
+import hmi.util.StringUtil;
+import hmi.worldobjectenvironment.WorldObject;
+import hmi.worldobjectenvironment.WorldObjectManager;
+import lombok.Getter;
+import lombok.Setter;
+import saiba.bml.core.OffsetDirection;
 
 public abstract class AbstractGazeMU implements GazeMU
 {
@@ -37,7 +38,10 @@ public abstract class AbstractGazeMU implements GazeMU
     protected static final double RELATIVE_READY_TIME = 0.25;
     protected static final double RELATIVE_RELAX_TIME = 0.75;    
     
+    @Getter
+    @Setter
     protected GazeInfluence influence = GazeInfluence.NECK;
+    
     protected boolean isLocal = false;
     protected VJoint rEye;
     protected VJoint lEye;
@@ -58,11 +62,6 @@ public abstract class AbstractGazeMU implements GazeMU
     protected WorldObjectManager woManager;
     
     private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-    
-    protected void setInfluence(GazeInfluence influence)
-    {
-        this.influence = influence;
-    }
     
     protected void setupKeyPositions()
     {

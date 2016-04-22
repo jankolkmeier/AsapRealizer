@@ -4,7 +4,8 @@ package asap.animationengine.gaze;
 
 import java.util.Set;
 
-import lombok.Delegate;
+import com.google.common.collect.ImmutableSet;
+
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
@@ -16,8 +17,7 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
-
-import com.google.common.collect.ImmutableSet;
+import lombok.Delegate;
 
 /**
  * Testing stub for the GazeMU
@@ -141,5 +141,11 @@ public class StubGazeMU implements GazeMU
     public Set<String> getAdditiveJoints()
     {
         return ImmutableSet.of();
+    }
+
+    @Override
+    public GazeInfluence getInfluence()
+    {
+        return GazeInfluence.EYES;
     }
 }

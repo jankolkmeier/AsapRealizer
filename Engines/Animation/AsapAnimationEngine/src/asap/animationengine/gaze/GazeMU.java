@@ -16,15 +16,17 @@ public interface GazeMU extends AnimationUnit
      */
     double getPreferedStayDuration();
     
-    public double getPreferedRelaxDuration();
+    double getPreferedRelaxDuration();
     
-    public double getPreferedReadyDuration();
+    double getPreferedReadyDuration();
     
-    public void setDurations(double prepDur, double relaxDur);
+    void setDurations(double prepDur, double relaxDur);
     
     void setEndRotation(float[] gazeDir);
     
     void setStartPose() throws MUPlayException;
     
-    public void setTarget();
+    void setTarget();
+    
+    GazeInfluence getInfluence();
 }

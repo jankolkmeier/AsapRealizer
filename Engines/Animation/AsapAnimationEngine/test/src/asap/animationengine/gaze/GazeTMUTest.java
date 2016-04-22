@@ -10,12 +10,6 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import hmi.animation.VJoint;
-import hmi.math.Vec3f;
-import hmi.testutil.animation.HanimBody;
-import hmi.worldobjectenvironment.VJointWorldObject;
-import hmi.worldobjectenvironment.WorldObject;
-import hmi.worldobjectenvironment.WorldObjectManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +20,8 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import saiba.bml.core.GazeBehaviour;
-import saiba.bml.parser.Constraint;
 import asap.animationengine.AnimationPlayer;
 import asap.animationengine.AnimationPlayerMock;
-import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.MUSetupException;
 import asap.animationengine.motionunit.StubAnimationUnit;
 import asap.animationengine.motionunit.TMUSetupException;
@@ -48,6 +39,14 @@ import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
 import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 import asap.realizertestutil.util.TimePegUtil;
+import hmi.animation.VJoint;
+import hmi.math.Vec3f;
+import hmi.testutil.animation.HanimBody;
+import hmi.worldobjectenvironment.VJointWorldObject;
+import hmi.worldobjectenvironment.WorldObject;
+import hmi.worldobjectenvironment.WorldObjectManager;
+import saiba.bml.core.GazeBehaviour;
+import saiba.bml.parser.Constraint;
 
 /**
  * Unit test cases for the GazeTMU
@@ -142,6 +141,12 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
         public void setTarget()
         {
         }
+
+        @Override
+        public GazeInfluence getInfluence()
+        {
+            return GazeInfluence.EYES;
+        }
     }
 
     private GazeTMU setupPlanUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String id, String bmlId)
@@ -164,9 +169,9 @@ public class GazeTMUTest extends AbstractTimedPlanUnitTest
 
         RestGaze mockRestGaze = mock(RestGaze.class);
         TimedAnimationMotionUnit mockTMU = mock(TimedAnimationMotionUnit.class);
-        when(mockAnimationPlayer.getGazeTransitionToRestDuration()).thenReturn(2d);
+        when(mockAnimationPlayer.getGazeTransitionToRestDuration(GazeInfluence.EYES)).thenReturn(2d);
         when(mockAnimationPlayer.getRestGaze()).thenReturn(mockRestGaze);
-        when(mockRestGaze.createTransitionToRest(any(FeedbackManager.class), any(TimePeg.class), any(TimePeg.class), anyString(),
+        when(mockRestGaze.createTransitionToRest(any(GazeInfluence.class), any(FeedbackManager.class), any(TimePeg.class), any(TimePeg.class), anyString(),
                 anyString(), any(BMLBlockPeg.class), eq(pegBoard))).thenReturn(mockTMU);
 
         return new GazeTMU(bfm, bbPeg, bmlId, id, mu, pegBoard, mockAnimationPlayer);

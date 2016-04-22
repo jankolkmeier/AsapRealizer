@@ -36,30 +36,30 @@ public interface RestGaze
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, 
+    TimedAnimationMotionUnit createTransitionToRest(GazeInfluence influence, FeedbackManager fbm, double startTime, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException;
     
     /**
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, double startTime, double duration, 
+    TimedAnimationMotionUnit createTransitionToRest(GazeInfluence influence, FeedbackManager fbm, double startTime, double duration, 
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException;
     
     /**
      * Create a transition TMU that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg,
+    TimedAnimationMotionUnit createTransitionToRest(GazeInfluence influence, FeedbackManager fbm, TimePeg startPeg, TimePeg endPeg,
             String bmlId, String id, BMLBlockPeg bmlBlockPeg, PegBoard pb) throws TMUSetupException;
     
-    double getTransitionToRestDuration();
+    double getTransitionToRestDuration(GazeInfluence influence);
     
     /**
      * Create a MotionUnit that moves the joints from their current position 
      * to a position dictated by this resting pose.  
      */
-    AnimationUnit createTransitionToRest() throws MUSetupException;
+    AnimationUnit createTransitionToRest(GazeInfluence influence) throws MUSetupException;
     
     void setParameterValue(String name, String value) throws ParameterException;
     

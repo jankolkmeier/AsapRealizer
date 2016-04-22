@@ -28,6 +28,7 @@ import com.google.common.collect.ImmutableList;
 
 import lombok.extern.slf4j.Slf4j;
 import net.jcip.annotations.GuardedBy;
+import asap.animationengine.gaze.GazeInfluence;
 import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.mixed.MixedPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
@@ -192,9 +193,9 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         return app.getRestPose().getTransitionToRestDuration(vCurr, joints);
     }
 
-    public double getGazeTransitionToRestDuration()
+    public double getGazeTransitionToRestDuration(GazeInfluence influence)
     {
-        return app.getRestGaze().getTransitionToRestDuration();
+        return app.getRestGaze().getTransitionToRestDuration(influence);
     }
 
     public TimedAnimationUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, double duration,
