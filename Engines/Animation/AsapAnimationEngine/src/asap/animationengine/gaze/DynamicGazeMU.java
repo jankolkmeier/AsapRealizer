@@ -372,8 +372,8 @@ public class DynamicGazeMU extends AbstractGazeMU
             break;
         default:
         case NECK:
-            cervicalJointsCur = ImmutableList.copyOf(VJointUtils.gatherJoints(NECK_JOINTS, player.getVNext()));
-            cervicalJointsNext = ImmutableList.copyOf(VJointUtils.gatherJoints(NECK_JOINTS, player.getVCurr()));
+            cervicalJointsCur = ImmutableList.copyOf(VJointUtils.gatherJoints(NECK_JOINTS, player.getVCurr()));
+            cervicalJointsNext = ImmutableList.copyOf(VJointUtils.gatherJoints(NECK_JOINTS, player.getVNext()));
             thoracicJointsCur = ImmutableList.of();
             thoracicJointsNext = ImmutableList.of();            
             break;
