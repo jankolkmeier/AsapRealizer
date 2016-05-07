@@ -232,6 +232,8 @@ public class CoarticulationLipSyncProvider implements LipSynchProvider
             String currentPhoneme = PhonemeUtil.phonemeIntToString(phonemesOfSequence.get(currentVisemeNumber).getNumber());
             // To get the parameter from the HashMap we need the sound-class of the phoneme
             String soundclass = phonemeClass.get(currentPhoneme);
+            if (soundclass==null) soundclass="vowel"; // do not deadlock on unexpected phoneme
+            //System.out.printf("--- addLipSyncMovement() -     phoneme %s  class %s ---\n", currentPhoneme, soundclass);
 
             // -------------------- DEFINE THE PREDECESSORS AND SUCCESSORS OF FIRST AND SECOND ORDER AND THEIR SOUND-CLASSES --------------------
 
@@ -246,11 +248,13 @@ public class CoarticulationLipSyncProvider implements LipSynchProvider
             {
                 predecessor = PhonemeUtil.phonemeIntToString(phonemesOfSequence.get(currentVisemeNumber - 1).getNumber());
                 predecessorSoundClass = phonemeClass.get(predecessor);
+                if (predecessorSoundClass==null) predecessorSoundClass="vowel"; // see soudclass above.
             }
             if (currentVisemeNumber != phonemesOfSequence.size() - 1)
             {
                 successor = PhonemeUtil.phonemeIntToString(phonemesOfSequence.get(currentVisemeNumber + 1).getNumber());
                 successorSoundClass = phonemeClass.get(successor);
+                if (successorSoundClass==null) successorSoundClass="vowel"; // see soudclass above.
             }
 
             // Initialize the second order neighbors
@@ -264,11 +268,13 @@ public class CoarticulationLipSyncProvider implements LipSynchProvider
             {
                 predecessorSecondOrder = PhonemeUtil.phonemeIntToString(phonemesOfSequence.get(currentVisemeNumber - 2).getNumber());
                 predecessorSecondOrderSoundClass = phonemeClass.get(predecessorSecondOrder);
+                if (predecessorSecondOrderSoundClass==null) predecessorSecondOrderSoundClass="vowel"; // see soudclass above.
             }
             if (currentVisemeNumber < phonemesOfSequence.size() - 2)
             {
                 successorSecondOrder = PhonemeUtil.phonemeIntToString(phonemesOfSequence.get(currentVisemeNumber + 2).getNumber());
                 successorSecondOrderSoundClass = phonemeClass.get(successorSecondOrder);
+                if (successorSecondOrderSoundClass==null) successorSecondOrderSoundClass="vowel"; // see soudclass above.
             }
 
             // -------------------- //DEFINE THE PREDECESSORS AND SUCCESSORS OF FIRST AND SECOND ORDER AND THEIR SOUND-CLASSES// --------------------
@@ -485,6 +491,7 @@ public class CoarticulationLipSyncProvider implements LipSynchProvider
 
             // -------------------- //PASS PARAMETERS AND SET THE AMOUNT OF BLENDING// --------------------
         }
+        System.out.println("--- addLipSyncMovement() - COMPLETED ---");
 
     }
 
@@ -508,8 +515,10 @@ public class CoarticulationLipSyncProvider implements LipSynchProvider
         startOffsetMultiplicator = dominanceParameters.get(soundclass).getStartOffsetMultiplicator();
         endOffsetMultiplicator = dominanceParameters.get(soundclass).getEndOffsetMultiplicator();
 
+        Double raw_magnitude =  phonemeMagnitudes.get(currentPhoneme);
+        if (raw_magnitude==null) raw_magnitude = 0.5; // do not deadlock on missing phoneme
         magnitude = dominanceParameters.get(soundclass).getMagnitude()
-                * phonemeMagnitudes.get(currentPhoneme);
+                * raw_magnitude;
         stretchLeft = dominanceParameters.get(soundclass).getStretchLeft();
         stretchRight = dominanceParameters.get(soundclass).getStretchRight();
         rateLeft = dominanceParameters.get(soundclass).getRateLeft();
