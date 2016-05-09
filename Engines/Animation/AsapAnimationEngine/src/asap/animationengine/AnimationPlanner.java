@@ -2,23 +2,10 @@
  *******************************************************************************/
 package asap.animationengine;
 
-import hmi.animation.SkeletonInterpolator;
-import hmi.util.Resources;
-import hmi.xml.XMLTokenizer;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import saiba.bml.BMLInfo;
-import saiba.bml.core.Behaviour;
-import saiba.bml.core.GazeBehaviour;
-import saiba.bml.core.GazeShiftBehaviour;
-import saiba.bml.core.GestureBehaviour;
-import saiba.bml.core.HeadBehaviour;
-import saiba.bml.core.PointingBehaviour;
-import saiba.bml.core.PostureBehaviour;
-import saiba.bml.core.PostureShiftBehaviour;
 import asap.animationengine.gaze.RestGaze;
 import asap.animationengine.gesturebinding.GestureBinding;
 import asap.animationengine.gesturebinding.HnsHandshape;
@@ -49,6 +36,18 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.PlanManager;
 import asap.realizer.scheduler.TimePegAndConstraint;
+import hmi.animation.SkeletonInterpolator;
+import hmi.util.Resources;
+import hmi.xml.XMLTokenizer;
+import saiba.bml.BMLInfo;
+import saiba.bml.core.Behaviour;
+import saiba.bml.core.GazeBehaviour;
+import saiba.bml.core.GazeShiftBehaviour;
+import saiba.bml.core.GestureBehaviour;
+import saiba.bml.core.HeadBehaviour;
+import saiba.bml.core.PointingBehaviour;
+import saiba.bml.core.PostureBehaviour;
+import saiba.bml.core.PostureShiftBehaviour;
 
 /**
  * Main use: take BML based behaviors, resolve timepegs, add to player. Uses GestureBinding to map BML behavior classes to, e.g., ProcAnimations
@@ -166,7 +165,8 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             }
             catch (TMUSetupException e)
             {
-                throw new BehaviourPlanningException(b, "MURMLGestureBehaviour " + b.id + " could not be constructed: " + e.getMessage(), e);
+                throw new BehaviourPlanningException(b, "MURMLGestureBehaviour " + b.id + " could not be constructed: " + e.getMessage(),
+                        e);
             }
         }
         else if (b instanceof PostureShiftBehaviour)
@@ -234,15 +234,65 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             }
             tmu = mu.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
         }
+        else if (b instanceof BMLTProcAnimationBehaviour && (b.hasContent() || ((BMLTProcAnimationBehaviour) b).getFileName() != null))
+        {
+            BMLTProcAnimationBehaviour beh = (BMLTProcAnimationBehaviour) b;            
+            ProcAnimationMU mu = new ProcAnimationMU();            
+            if (beh.getContent() != null)
+            {
+                mu.readXML(beh.getContent());
+            }
+            else if (beh.getFileName() != null)
+            {
+                try
+                {
+                    mu.readXML(new Resources("").getReader(beh.getFileName()));
+                }
+                catch (IOException e)
+                {
+                    throw new BehaviourPlanningException(b, "BMLTProcAnimationBehaviour " + b.id + " could not be constructed.", e);
+                }
+            }
+            else
+            {
+                throw new BehaviourPlanningException(b, "BMLTProcAnimationBehaviour " + b.id
+                        + " could not be constructed, no filename or inner ProcAnimation defined.");
+            }            
+
+            try
+            {
+                if (beh.specifiesParameter("mirror"))
+                {
+                    mu.setParameterValue("mirror", beh.getStringParameterValue("mirror"));
+                }
+                if (beh.specifiesParameter("joints"))
+                {
+                    mu.setParameterValue("joints", beh.getStringParameterValue("joints"));
+                }
+            }
+            catch (ParameterException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTProcAnimationBehaviour " + b.id + " could not be constructed.", e);
+            }
+            try
+            {
+                mu = mu.copy(player);
+            }
+            catch (MUSetupException e)
+            {
+                throw new BehaviourPlanningException(b, "BMLTProcAnimationBehaviour " + b.id + " could not be constructed.", e);
+            }
+            tmu = mu.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
+        }
         else if (b instanceof BMLTProcAnimationGestureBehaviour)
         {
             BMLTProcAnimationGestureBehaviour beh = (BMLTProcAnimationGestureBehaviour) b;
             ProcAnimationMU mup = new ProcAnimationMU();
-            if(beh.getContent()!=null)
+            if (beh.getContent() != null)
             {
                 mup.readXML(beh.getContent());
             }
-            else if(beh.getFileName()!=null)
+            else if (beh.getFileName() != null)
             {
                 try
                 {
@@ -255,20 +305,21 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             }
             else
             {
-                throw new BehaviourPlanningException(b, "BMLTProcAnimationGestureBehaviour " + b.id + " could not be constructed, no filename or inner ProcAnimation defined.");
+                throw new BehaviourPlanningException(b, "BMLTProcAnimationGestureBehaviour " + b.id
+                        + " could not be constructed, no filename or inner ProcAnimation defined.");
             }
             ProcAnimationGestureMU mu = new ProcAnimationGestureMU();
-          
+
             try
             {
                 mu = mu.copy(player);
-                mu.setGestureUnit(mup);                
+                mu.setGestureUnit(mup);
             }
             catch (MUSetupException e)
             {
                 throw new BehaviourPlanningException(b, "BMLTProcAnimationGestureBehaviour " + b.id + " could not be constructed.", e);
             }
-            
+
             try
             {
                 if (beh.specifiesParameter("mirror"))
@@ -284,7 +335,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             {
                 throw new BehaviourPlanningException(b, "BMLTKeyframeBehaviour " + b.id + " could not be constructed.", e);
             }
-            
+
             tmu = mu.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
         }
         else

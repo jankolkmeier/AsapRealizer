@@ -412,7 +412,8 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
 
         // 2 resolve stroke
         strokeStartDuration = mu.getStrokeDuration() * mu.getRelativeStrokePos();
-        strokeEndDuration = mu.getStrokeDuration() - (mu.getStrokeDuration() * mu.getRelativeStrokePos());
+        strokeEndDuration = mu.getStrokeDuration() - (mu.getStrokeDuration() * mu.getRelativeStrokePos());       
+        
         Set<TimePeg> strokePegSet = new HashSet<TimePeg>();
         if (strokeStartPeg != null && !changeAblePegs.contains(strokeStartPeg)) strokePegSet.add(strokeStartPeg);
         if (strokeEndPeg != null && !changeAblePegs.contains(strokeEndPeg)) strokePegSet.add(strokeEndPeg);
@@ -424,22 +425,23 @@ public class ProcAnimationGestureTMU extends TimedAnimationMotionUnit
             double scale = 1;
             if (strokePegSet.contains(strokeStartPeg) && strokePegSet.contains(strokePeg))
             {
-                scale = strokePeg.getGlobalValue() - strokePeg.getGlobalValue() / strokeStartDuration;
+                scale = (strokePeg.getGlobalValue() - strokeStartPeg.getGlobalValue()) / strokeStartDuration;
+            }
+            else if (strokePegSet.contains(strokeStartPeg) && strokePegSet.contains(strokeEndPeg))
+            {
+                scale = (strokeEndPeg.getGlobalValue() - strokeStartPeg.getGlobalValue()) / mu.getStrokeDuration();
             }
             else if (strokePegSet.contains(strokePeg) && strokePegSet.contains(strokeEndPeg))
             {
-                scale = strokeEndPeg.getGlobalValue() - strokeStartPeg.getGlobalValue() / mu.getStrokeDuration();
-            }
-            else if (strokePegSet.contains(strokePeg) && strokePegSet.contains(strokeEndPeg))
-            {
-                scale = strokeEndPeg.getGlobalValue() - strokePeg.getGlobalValue() / strokeEndDuration;
+                scale = (strokeEndPeg.getGlobalValue() - strokePeg.getGlobalValue()) / strokeEndDuration;
             }
             strokeStartDuration *= scale;
             strokeEndDuration *= scale;
         }
         strokeStartDuration = resolveLeftRight(strokeStartDuration, strokeStartPeg, strokePeg, changeAblePegs);
         strokeEndDuration = resolveLeftRight(strokeEndDuration, strokePeg, strokeEndPeg, changeAblePegs);
-
+        
+        
         updatePreparationDuration();
         updateRetractionDuration();
         if (startPeg != null && endPeg != null)

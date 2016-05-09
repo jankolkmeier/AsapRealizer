@@ -53,7 +53,7 @@ public class BMLTProcAnimationBehaviourTest extends AbstractBehaviourTest
         BMLTProcAnimationBehaviour beh = new BMLTProcAnimationBehaviour("bmla", new XMLTokenizer(bmlString));
         assertEquals("bmla", beh.getBmlId());
         assertEquals("a1", beh.id);
-        assertEquals("ani1", beh.name);
+        assertEquals("ani1", beh.getName());
         assertEquals(10, beh.getFloatParameterValue("amplitude"), PARAMETER_PRECISION);
         assertEquals("nod1", beh.getSyncPoints().get(0).getRef().sourceId);
         assertEquals("end", beh.getSyncPoints().get(0).getRef().syncId);
@@ -71,7 +71,7 @@ public class BMLTProcAnimationBehaviourTest extends AbstractBehaviourTest
 
         assertEquals("bmla", behOut.getBmlId());
         assertEquals("a1", behOut.id);
-        assertEquals("ani1", behOut.name);
+        assertEquals("ani1", behOut.getName());
         assertEquals(10, behOut.getFloatParameterValue("amplitude"), PARAMETER_PRECISION);
         assertEquals("nod1", behOut.getSyncPoints().get(0).getRef().sourceId);
         assertEquals("end", behOut.getSyncPoints().get(0).getRef().syncId);
@@ -90,7 +90,7 @@ public class BMLTProcAnimationBehaviourTest extends AbstractBehaviourTest
         BMLTProcAnimationBehaviour beh = (BMLTProcAnimationBehaviour) g.descBehaviour;
         assertEquals("bmla", beh.getBmlId());
         assertEquals("a1", beh.id);
-        assertEquals("ani1", beh.name);
+        assertEquals("ani1", beh.getName());
         assertEquals(10, beh.getFloatParameterValue("amplitude"), PARAMETER_PRECISION);
         assertEquals("nod1", beh.getSyncPoints().get(0).getRef().sourceId);
         assertEquals("end", beh.getSyncPoints().get(0).getRef().syncId);
