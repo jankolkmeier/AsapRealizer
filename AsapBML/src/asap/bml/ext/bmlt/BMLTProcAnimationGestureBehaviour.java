@@ -38,7 +38,8 @@ public class BMLTProcAnimationGestureBehaviour extends BMLTBehaviour
         readXML(tokenizer);
     }
 
-    private static final List<String> DEFAULT_SYNCS = ImmutableList.of("start", "end");
+    private static final List<String> DEFAULT_SYNCS = ImmutableList.of("start", "ready", "strokeStart", "stroke", "strokeEnd", "relax",
+            "end");
 
     public static List<String> getDefaultSyncPoints()
     {
