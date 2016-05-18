@@ -21,7 +21,8 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Can generate a mixed system given a list of required and desired physical joints
+ * Can generate a mixed system given a list of required and desired physical joints.
+ * Unfinished, currently not used.
  * @author Herwin
  *
  */

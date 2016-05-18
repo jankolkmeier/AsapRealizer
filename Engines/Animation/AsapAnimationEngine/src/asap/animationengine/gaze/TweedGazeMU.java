@@ -24,7 +24,7 @@ import com.google.common.collect.ImmutableSet;
 
 /**
  * Timing: ready: gaze target reached relax: start to move back to rest pose
- * 
+ * Neck + eyes, static targets only.
  * @author welberge
  * 
  *         Theoretical background
