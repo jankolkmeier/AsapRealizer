@@ -11,7 +11,7 @@ import saiba.bml.core.SpeechBehaviour;
 
 /**
  * Speech Synthesis Markup Language behaviour.
- * Content contains the speech text, minus the &ltspeak&gt tag. 
+ * Content contains the speech text, minus the &lt;speak&gt; tag. 
  * This allows implementations to send a custom speak header (in Mary TTS's case with the correct language locale for the currently selected voice).  
  * @author Herwin
  */

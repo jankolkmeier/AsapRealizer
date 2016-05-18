@@ -2,7 +2,7 @@
  *******************************************************************************/
 
 /**
- * RealizerBridge implementations that are specific to the AsapRealizer.
+ * FeedbackManager interface and standard implementations
  */
 @hmi.util.NoEmptyClassWarning
-package asap.realizer.bridge;
+package asap.realizer.feedback;

@@ -13,7 +13,7 @@ import asap.realizer.planunit.TimedPlanUnitPlayException;
 import asap.realizer.scheduler.BMLScheduler;
 
 /**
- * Implementation of the bmlt activate behavior.
+ * Implementation of the bmla activate behavior.
  * Activates preplanned bml blocks 
  * @author welberge
  */

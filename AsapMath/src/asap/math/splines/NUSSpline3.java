@@ -84,7 +84,7 @@ public class NUSSpline3 extends NUBSpline3
     /**
      * data points x[0]...x[l]
      * times t[0]...t[l]
-     * sparse (!) velocities at v[0]...v[k] (k<=l)
+     * sparse (!) velocities at v[0]...v[k] (k &lt;=l)
      */
     public void interpolate3(List<float[]> data, List<Double> times, List<SparseVelocityDef> vel)
     {

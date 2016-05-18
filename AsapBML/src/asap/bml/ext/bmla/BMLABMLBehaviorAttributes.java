@@ -26,7 +26,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableSet;
 
 /**
- * Attributes added to the &ltbml&gt tag by bmlb
+ * Attributes added to the &lt;bml&gt; tag by bmla
  * @author hvanwelbergen
  */
 public class BMLABMLBehaviorAttributes implements BMLBehaviorAttributeExtension
