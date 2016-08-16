@@ -93,7 +93,7 @@ public class FACS2MorphFU implements FaceUnit {
     public void startUnit(double t) {
 
     }
-
+    
     @Override
     public void setFloatParameterValue(String name, float value) throws ParameterException {
         if (name.equals("intensity")) {
@@ -110,7 +110,8 @@ public class FACS2MorphFU implements FaceUnit {
             setFloatParameterValue(name, Float.parseFloat(value));
         } else {
             throw new InvalidParameterException(name, value);
-        }*/
+        }
+        */
         
         if (name.equals("au"))
         {
@@ -143,9 +144,9 @@ public class FACS2MorphFU implements FaceUnit {
         intensity.set(intens);
         prevIntensity.set(intens);
         
-        if (!hasValidParameters())
+        if (!auHasValidParameters())
         {
-            log.warn("Parameters not valid for setAU");
+            //log.warn("Parameters not valid for setAU");
             return;
         }
         facsConfig = new FACSConfiguration();
@@ -183,6 +184,11 @@ public class FACS2MorphFU implements FaceUnit {
     @Override
     public boolean hasValidParameters()
     {
+    	if (facs2morphConverter != null) return true; // TODO: the below conditions are for AU2Morph...
+    	return auHasValidParameters();
+    }
+
+    private boolean auHasValidParameters() {
         ActionUnit au = FACS.getActionUnit(aunr);
         if (au == null) return false;
         if (intensity.floatValue() > 1) return false;
@@ -190,7 +196,7 @@ public class FACS2MorphFU implements FaceUnit {
 
         return (side != null);
     }
-
+    
     public void setConfig(FACSConfiguration fc) {
         facsConfig = fc;
         if (facs2morphConverter != null)

@@ -103,24 +103,34 @@ class FaceUnitAssembler extends XMLStructureAdapter
         }
         else if (type.equals("AU2Morph"))
         {
-            logger.warn("AT AU2MORPH");
             FACS2MorphFU fu = new FACS2MorphFU();
             faceUnit = fu;
             FACS2MorphConverter f2mconv = null;
 
-            logger.warn("AT AU2MORPH 2");
-        	
             String f2mResourcePath = getOptionalAttribute("facs2morphmappingresources", attrMap, "");
             String f2mResourceFileName = getOptionalAttribute("facs2morphmappingfilename", attrMap, "");
             if (!f2mResourceFileName.equals(""))
             {
-                logger.warn("AT AU2MORPH 3");
             	f2mconv = new FACS2MorphConverter();
             	f2mconv.readXML(new Resources(f2mResourcePath).getReader(f2mResourceFileName));
             }
             
             fu.setFACS2MorphConverter(f2mconv);
         }
+        else if (type.equals("FACS2Morph"))
+        {
+			FACS2MorphFU fu = new FACS2MorphFU();
+			faceUnit = fu;
+			String filename = getRequiredAttribute("filename", attrMap, null);
+			FACSConfiguration fc = new FACSConfiguration();
+			try {
+				fc.readXML(new Resources("").getReader(filename));
+				fu.setConfig(fc);
+			} catch (Exception e) {
+				faceUnit = null;
+				logger.warn("Cannot read FACS configuration from file \"{}\"; error: {}", filename, e.getMessage());
+			}
+		} 
         else if (type.equals("FACS"))
         {
             FACSFU fu = new FACSFU();
