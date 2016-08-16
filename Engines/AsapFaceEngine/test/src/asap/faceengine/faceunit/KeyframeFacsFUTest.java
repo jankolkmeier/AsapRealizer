@@ -33,7 +33,7 @@ private FaceController mockFaceController = mock(FaceController.class);
         FaceInterpolator mi = new FaceInterpolator();
         mi.readXML("<FaceInterpolator parts=\"1.BOTH 2.LEFT\">1 0.1 0.2\n 2 0.3 0.4</FaceInterpolator>");
         fu = new KeyframeFacsFU(mi);
-        fu = fu.copy(mockFaceController, fconv, null);
+        fu = fu.copy(mockFaceController, fconv, null, null);
     }
     
     @Test

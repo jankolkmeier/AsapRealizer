@@ -12,6 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.xml.XMLTokenizer;
 
@@ -86,7 +87,7 @@ public class FacePlannerTest
     public void setup()
     {
         facePlayer = new DefaultPlayer(new SingleThreadedPlanPlayer<TimedFaceUnit>(fbManager, planManager));
-        facePlanner = new FacePlanner(fbManager, mockFaceController, null, null, mockFaceBinding, planManager, pegBoard);
+        facePlanner = new FacePlanner(fbManager, mockFaceController, null, null, null, mockFaceBinding, planManager, pegBoard);
         plannerTests = new PlannerTests<TimedFaceUnit>(facePlanner, bbPeg);
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(beList).build());
         TimedFaceUnit tmu = new TimedFaceUnit(fbManager, bbPeg, BMLID, "nod1", stubFaceUnit, pegBoard);
@@ -94,7 +95,7 @@ public class FacePlannerTest
         tmus.add(tmu);
         when(
                 mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (Behaviour) any(), (FaceController) any(),
-                        (FACSConverter) any(), (EmotionConverter) any(),eq(pegBoard))).thenReturn(tmus);
+                        (FACSConverter) any(), (EmotionConverter) any(), (FACS2MorphConverter) any(), eq(pegBoard))).thenReturn(tmus);
     }
 
     public FaceLexemeBehaviour createFaceBehaviour() throws IOException

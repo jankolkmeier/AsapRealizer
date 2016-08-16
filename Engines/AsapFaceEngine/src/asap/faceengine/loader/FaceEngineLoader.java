@@ -8,6 +8,7 @@ import hmi.environmentbase.Loader;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.FaceControllerPose;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.faceanimationui.converters.EmotionConverterFrame;
 import hmi.faceanimationui.converters.FACSConverterFrame;
@@ -49,6 +50,7 @@ public class FaceEngineLoader implements EngineLoader
     private Player facePlayer = null;
     private EmotionConverter econv;
     private FACSConverter fconv = null;
+    private FACS2MorphConverter f2mconv = null;
     private PlanManager<TimedFaceUnit> planManager = null;
     private String id = "";
     // some variables cached during loading
@@ -102,11 +104,19 @@ public class FaceEngineLoader implements EngineLoader
         if (tokenizer.atSTag("FaceBinding"))
         {
             attrMap = tokenizer.getAttributes();
-            facebinding = new FaceBinding();
             
             String resourcePath = adapter.getOptionalAttribute("resources", attrMap, "");
             String fileName = adapter.getRequiredAttribute("filename", attrMap, tokenizer);
+            facebinding = new FaceBinding();
             facebinding.readXML(new Resources(resourcePath).getReader(fileName));
+            String f2mResourcePath = adapter.getOptionalAttribute("facs2morphmappingresources", attrMap, "");
+            String f2mResourceFileName = adapter.getOptionalAttribute("facs2morphmappingfilename", attrMap, "");
+            if (!f2mResourceFileName.equals(""))
+            {
+            	f2mconv = new FACS2MorphConverter();
+            	f2mconv.readXML(new Resources(f2mResourcePath).getReader(f2mResourceFileName));
+            }
+
             tokenizer.takeEmptyElement("FaceBinding");
         }
         else if (tokenizer.atSTag("FACSConverterData"))
@@ -138,7 +148,8 @@ public class FaceEngineLoader implements EngineLoader
         facePlayer = new DefaultPlayer(new FaceAnimationPlanPlayer(are.getFeedbackManager(),planManager,fcp));
         econv = new EmotionConverter();
         if (fconv==null)fconv = new FACSConverter();
-        FacePlanner facePlanner = new FacePlanner(are.getFeedbackManager(), fcp, fconv, econv,
+        if (f2mconv==null)f2mconv = new FACS2MorphConverter();
+        FacePlanner facePlanner = new FacePlanner(are.getFeedbackManager(), fcp, fconv, econv, f2mconv,
                 facebinding, planManager, are.getPegBoard());
         engine = new DefaultEngine<TimedFaceUnit>(facePlanner, facePlayer, planManager);
         engine.setId(id);

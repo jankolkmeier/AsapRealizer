@@ -226,7 +226,7 @@ public class CoarticulationLipSyncProvider implements LipSynchProvider
             // The DominanceFU is used for modelling the visual representation of the phoneme
             DominanceFU fu = new DominanceFU();
             fu.setTargets(desc.getMorphNames());
-            fu = fu.copy(faceController, null, null);
+            fu = fu.copy(faceController, null, null, null);
 
             // The current phoneme represented as a String
             String currentPhoneme = PhonemeUtil.phonemeIntToString(phonemesOfSequence.get(currentVisemeNumber).getNumber());

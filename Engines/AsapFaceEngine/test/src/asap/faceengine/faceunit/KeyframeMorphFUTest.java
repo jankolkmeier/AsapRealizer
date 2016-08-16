@@ -29,7 +29,7 @@ public class KeyframeMorphFUTest
         FaceInterpolator mi = new FaceInterpolator();
         mi.readXML("<FaceInterpolator parts=\"morph1 morph2\">1 0.1 0.2\n 2 0.3 0.4</FaceInterpolator>");
         fu = new KeyframeMorphFU(mi);
-        fu = fu.copy(mockFaceController, null, null);
+        fu = fu.copy(mockFaceController, null, null, null);
     }
     
     @Test
