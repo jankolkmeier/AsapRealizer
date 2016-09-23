@@ -25,6 +25,7 @@ import asap.bml.ext.msapi.MSApiBehaviour;
 import asap.bml.ext.murml.MURMLFaceBehaviour;
 import asap.bml.ext.murml.MURMLGestureBehaviour;
 import asap.bml.ext.ssml.SSMLBehaviour;
+import asap.bml.ext.fluency.FluencyBehaviour;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -54,6 +55,7 @@ public final class BMLTInfo
             .put(BMLAActivateBehaviour.xmlTag(), BMLAActivateBehaviour.class)
             .put(BMLAParameterValueChangeBehaviour.xmlTag(), BMLAParameterValueChangeBehaviour.class)            
             .put(SSMLBehaviour.xmlTag(), SSMLBehaviour.class)
+            .put(FluencyBehaviour.xmlTag(), FluencyBehaviour.class)
             .put(MSApiBehaviour.xmlTag(), MSApiBehaviour.class)
             .put(MaryXMLBehaviour.xmlTag(), MaryXMLBehaviour.class)            
             .build();
@@ -66,6 +68,7 @@ public final class BMLTInfo
             .put(BMLTKeyframeBehaviour.xmlTag(), BMLTKeyframeBehaviour.class)
             .put("application/msapi+xml", MSApiBehaviour.class)
             .put("application/ssml+xml", SSMLBehaviour.class)
+            .put("application/fluency", FluencyBehaviour.class)
             .put("maryxml", MaryXMLBehaviour.class)
             .put("marywords", MaryWordsBehaviour.class)
             .put("maryallophones", MaryAllophonesBehaviour.class)

@@ -20,6 +20,10 @@ public class FluencyBehaviour extends SpeechBehaviour
     {
         super(bmlId, tokenizer);        
     }
+    public FluencyBehaviour(String bmlId, String id, XMLTokenizer tokenizer) throws IOException
+    {
+        super(bmlId, id, tokenizer);        
+    }
 
     @Override
     public void decodeAttributes(HashMap<String, String> attrMap,
@@ -64,6 +68,8 @@ public class FluencyBehaviour extends SpeechBehaviour
         return XMLTAG;
     }
     
+    static final String NAMESPACE = "http://www.fluency.nl/";
+
     @Override
-    public  String getNamespace() { return null; }
+    public  String getNamespace() { return NAMESPACE; }
 }
