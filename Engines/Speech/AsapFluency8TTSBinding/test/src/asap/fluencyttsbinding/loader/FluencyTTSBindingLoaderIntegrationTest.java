@@ -41,7 +41,7 @@ public class FluencyTTSBindingLoaderIntegrationTest
     {
         //@formatter:off
         String bindingXML=
-        "<Loader id=\"l1\" loader=\"asap.fluencyttsbinding.loader.FluencyTTSBindingLoader\"/>";
+        "<Loader id=\"l1\" loader=\"asap.fluencyttsbinding.loader.FluencyTTSBindingLoader\"><PhonemeToVisemeMapping resources=\"visemes/\" filename=\"fluency2ikp.xml\"/></Loader>";
         //@formatter:on        
         FluencyTTSBindingLoader loader = new FluencyTTSBindingLoader();
         XMLTokenizer tok = new XMLTokenizer(bindingXML);

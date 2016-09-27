@@ -1,0 +1,83 @@
+<PhonemeToVisemeMapping>
+<!-- completely random... -->
+	<phoneme viseme="1" phoneme="_"/>
+		
+	<phoneme viseme="2" phoneme="h"/>
+	<phoneme viseme="3" phoneme="H"/>
+	<phoneme viseme="4" phoneme="?"/>
+		
+	<phoneme viseme="5" phoneme="i"/>
+	<phoneme viseme="6" phoneme="J"/>
+		
+	<phoneme viseme="1" phoneme="p"/>
+	<phoneme viseme="2" phoneme="b"/>
+	<phoneme viseme="4" phoneme="m"/>
+	<phoneme viseme="4" phoneme="w"/>
+		
+	<phoneme viseme="2" phoneme="t"/>
+	<phoneme viseme="2" phoneme="d"/>
+	<phoneme viseme="2" phoneme="D"/>
+	<phoneme viseme="3" phoneme="n"/>
+	<phoneme viseme="3" phoneme="nj"/>
+	<phoneme viseme="3" phoneme="n0"/>
+		
+	<phoneme viseme="2" phoneme="k"/>
+	<phoneme viseme="2" phoneme="g"/>
+	<phoneme viseme="2" phoneme="N"/>
+		
+	<phoneme viseme="7" phoneme="f"/>
+	<phoneme viseme="8" phoneme="v"/>
+		
+	<phoneme viseme="6" phoneme="s"/>
+	<phoneme viseme="6" phoneme="z"/>
+		
+	<phoneme viseme="7" phoneme="S"/>
+	<phoneme viseme="8" phoneme="Z"/>
+	<phoneme viseme="9" phoneme="tj"/>
+	<phoneme viseme="10" phoneme="dj"/>
+	<phoneme viseme="4" phoneme="nj"/>
+		
+	<phoneme viseme="7" phoneme="x"/>
+	<phoneme viseme="8" phoneme="G"/>
+		
+	<phoneme viseme="3" phoneme="l"/>
+	<phoneme viseme="3" phoneme="L"/>
+	<phoneme viseme="9" phoneme="r"/>
+	<phoneme viseme="2" phoneme="R"/>
+	<phoneme viseme="3" phoneme="j"/>
+		
+	<phoneme viseme="1" phoneme="a"/>
+	<phoneme viseme="2" phoneme="Au"/>
+		
+	<phoneme viseme="5" phoneme="y"/>
+	<phoneme viseme="6" phoneme="u"/>
+	<phoneme viseme="8" phoneme="2"/>
+	<phoneme viseme="9" phoneme="W"/>
+		
+	<phoneme viseme="3" phoneme="e"/>
+		
+	<phoneme viseme="6" phoneme="o"/>
+		
+	<phoneme viseme="5" phoneme="I"/>
+	<phoneme viseme="7" phoneme="I:"/>
+		
+	<phoneme viseme="8" phoneme="E"/>
+	<phoneme viseme="7" phoneme="Ei"/>
+		
+	<phoneme viseme="6" phoneme="Y"/>
+	<phoneme viseme="5" phoneme="Y:"/>
+	<phoneme viseme="4" phoneme="Y~"/>
+		
+	<phoneme viseme="3" phoneme="O"/>
+	<phoneme viseme="2" phoneme="O:"/>
+	<phoneme viseme="1" phoneme="O~"/>
+		
+	<phoneme viseme="9" phoneme="A"/>
+	<phoneme viseme="8" phoneme="Q"/>
+	<phoneme viseme="7" phoneme="A~"/>
+	<phoneme viseme="6" phoneme="9y"/>
+		
+	<phoneme viseme="5" phoneme="@"/>
+    
+   
+</PhonemeToVisemeMapping>
