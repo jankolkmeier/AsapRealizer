@@ -56,7 +56,7 @@ public class FaceEngineLoader implements EngineLoader
 
     private AsapRealizerEmbodiment are = null;
     private FaceControllerPose fcp;
-    
+    private FaceControllerPose fcp2 = null;
     @Override
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
             Loader... requiredLoaders) throws IOException
@@ -83,6 +83,7 @@ public class FaceEngineLoader implements EngineLoader
             throw new RuntimeException("FaceEngineLoader requires an EmbodimentLoader containing a AsapRealizerEmbodiment");
         }
         fcp = new FaceControllerPose(m4e.getFaceController());
+        fcp2 = new FaceControllerPose(m4e.getFaceController());
         while (!tokenizer.atETag("Loader"))
         {
             readSection(tokenizer);
@@ -135,7 +136,14 @@ public class FaceEngineLoader implements EngineLoader
        
         if (facebinding == null) throw tokenizer.getXMLScanException("facebinding is null, cannot build faceplanner ");
         planManager = new PlanManager<TimedFaceUnit>();
-        facePlayer = new DefaultPlayer(new FaceAnimationPlanPlayer(are.getFeedbackManager(),planManager,fcp));
+        if (initUI)
+        {
+            facePlayer = new DefaultPlayer(new FaceAnimationPlanPlayer(are.getFeedbackManager(),planManager,fcp,fcp2)); //fcp2 needed for UI 
+        }
+        else
+        {
+            facePlayer = new DefaultPlayer(new FaceAnimationPlanPlayer(are.getFeedbackManager(),planManager,fcp));
+        }
         econv = new EmotionConverter();
         if (fconv==null)fconv = new FACSConverter();
         FacePlanner facePlanner = new FacePlanner(are.getFeedbackManager(), fcp, fconv, econv,
@@ -157,7 +165,7 @@ public class FaceEngineLoader implements EngineLoader
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e)
                 {
-                    new FACSConverterFrame(fconv, fcp);
+                    new FACSConverterFrame(fconv, fcp2);
                 }
             });
             faceUIPanel.add(showFACSConverter);
@@ -169,7 +177,7 @@ public class FaceEngineLoader implements EngineLoader
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e)
                 {
-                    new EmotionConverterFrame(econv, fcp);
+                    new EmotionConverterFrame(econv, fcp2);
                 }
             });
             faceUIPanel.add(showEmotionConverter);
@@ -181,7 +189,7 @@ public class FaceEngineLoader implements EngineLoader
                 @Override
                 public void actionPerformed(java.awt.event.ActionEvent e)
                 {
-                    new MPEG4ControllerFrame(fcp);
+                    new MPEG4ControllerFrame(fcp2);
                 }
             });
             faceUIPanel.add(showDirectMPEG4Control);
