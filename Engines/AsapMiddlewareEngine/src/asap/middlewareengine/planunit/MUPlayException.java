@@ -1,0 +1,47 @@
+/*******************************************************************************
+ * Copyright (C) 2009 Human Media Interaction, University of Twente, the Netherlands
+ * 
+ * This file is part of the Elckerlyc BML realizer.
+ * 
+ * Elckerlyc is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * 
+ * Elckerlyc is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License
+ * along with Elckerlyc.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
+package asap.middlewareengine.planunit;
+
+
+/**
+ * Thrown whenever a MiddlewareUnit fails during play
+ * @author Dennis
+ */
+public class MUPlayException extends Exception
+{
+    private static final long serialVersionUID = 1423L;
+    private final MiddlewareUnit ru;
+    
+    public MUPlayException(String str, MiddlewareUnit ru, Exception ex)
+    {
+        this(str,ru);
+        initCause(ex);
+    }
+    
+    public MUPlayException(String str, MiddlewareUnit ru)
+    {
+        super(str);
+        this.ru = ru;
+    }
+    
+    public final MiddlewareUnit getMiddlewareUnit()
+    {
+        return ru;
+    }
+}
