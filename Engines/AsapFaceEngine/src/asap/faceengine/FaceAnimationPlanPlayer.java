@@ -17,12 +17,20 @@ import asap.realizer.planunit.TimedPlanUnitState;
 public class FaceAnimationPlanPlayer implements PlanPlayer
 {
     private final SingleThreadedPlanPlayer<TimedFaceUnit> defPlayer;
-    private final FaceControllerPose facePose;
+    /** used to construct faceplan settings before copying them in one go */
+    private final FaceControllerPose facePose; 
+    /** potential additional controller to manipulate face outside of engine. Usef for faceanimationUI stuff */
+    private final FaceControllerPose facePose2;
     
     public FaceAnimationPlanPlayer(FeedbackManager fbm, PlanManager<TimedFaceUnit> planManager, FaceControllerPose fcp)
     {
+        this(fbm,planManager, fcp, null);
+    }
+    public FaceAnimationPlanPlayer(FeedbackManager fbm, PlanManager<TimedFaceUnit> planManager, FaceControllerPose fcp, FaceControllerPose fcp2)
+    {
         defPlayer = new SingleThreadedPlanPlayer<>(fbm, planManager);
         facePose = fcp;
+        facePose2 = fcp2;
     }
 
     @Override
@@ -31,6 +39,7 @@ public class FaceAnimationPlanPlayer implements PlanPlayer
         facePose.clear();
         defPlayer.play(t);
         facePose.toTarget();
+        if (facePose2!=null)facePose2.toTargetAdditive();
     }
 
     @Override
