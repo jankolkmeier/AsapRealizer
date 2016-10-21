@@ -1,5 +1,3 @@
-/*******************************************************************************
- *******************************************************************************/
 package asap.middlewareengine.lipsync;
 
 import java.util.ArrayList;
@@ -33,6 +31,10 @@ public class TimedMiddlewareUnitLipSynchProvider implements LipSynchProvider
     private final PlanManager<TimedMiddlewareUnit> mwPlanManager;
     private final PegBoard pegBoard;
     
+    //TODO: make this configurable
+    //this value controls how much a viseme is offset when sending.. set a negative value if viseme should be sent before its being spoken
+    private static final double VISEME_OFFSET = -0.2d;
+    
     public TimedMiddlewareUnitLipSynchProvider(MiddlewareVisemeBinding visBinding, MiddlewareEmbodiment mwe, PlanManager<TimedMiddlewareUnit>mwPlanManager, PegBoard pb)
     {
         visemeBinding = visBinding;
@@ -56,9 +58,9 @@ public class TimedMiddlewareUnitLipSynchProvider implements LipSynchProvider
         for (Visime vis : timing.getVisimes())
         {
             // visemes lopen nu vanaf de peak van de vorige viseme tot aan de peak van deze viseme 
-            double start = totalDuration / 1000d - prevDuration / 2000;
-            double peak = totalDuration / 1000d + vis.getDuration() / 2000d;
-            double end = totalDuration / 1000d + vis.getDuration() / 1000d;
+            double start = (totalDuration / 1000d - prevDuration / 2000);
+            double peak = (totalDuration / 1000d + vis.getDuration() / 2000d);
+            double end = (totalDuration / 1000d + vis.getDuration() / 1000d);
 
             tmwu = visemeBinding.getVisemeUnit(bbPeg, beh, vis.getNumber(), mwe, pegBoard);
 
@@ -79,10 +81,10 @@ public class TimedMiddlewareUnitLipSynchProvider implements LipSynchProvider
         // and now link viseme units to the speech timepeg!
         for (TimedMiddlewareUnit plannedMWU : tmwus)
         {
-            TimePeg startPeg = new OffsetPeg(bs.getTimePeg("start"), startTimes.get(plannedMWU));
+            TimePeg startPeg = new OffsetPeg(bs.getTimePeg("start"), startTimes.get(plannedMWU) + VISEME_OFFSET);
 
             plannedMWU.setTimePeg("start", startPeg);
-            TimePeg endPeg = new OffsetPeg(bs.getTimePeg("start"), endTimes.get(plannedMWU));
+            TimePeg endPeg = new OffsetPeg(bs.getTimePeg("start"), endTimes.get(plannedMWU) + VISEME_OFFSET);
             plannedMWU.setTimePeg("end", endPeg);
             log.debug("adding mw movement at {}-{}", plannedMWU.getStartTime(), plannedMWU.getEndTime());
         }        
