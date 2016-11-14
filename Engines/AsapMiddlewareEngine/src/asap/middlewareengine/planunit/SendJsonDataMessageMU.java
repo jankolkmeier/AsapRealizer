@@ -151,7 +151,7 @@ public class SendJsonDataMessageMU implements MiddlewareUnit
     }
 
     /** start the unit. */
-    public void startUnit(double time) throws MUPlayException
+    public void startUnit(double startTime, double endTime) throws MUPlayException
     {
     	if (loaderclass == null || loaderclass.equals(""))
     	{

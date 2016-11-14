@@ -37,6 +37,7 @@ import asap.realizer.planunit.KeyPositionManager;
 import asap.realizer.planunit.KeyPositionManagerImpl;
 import asap.realizer.planunit.ParameterException;
 import hmi.util.Resources;
+import hmi.util.StringUtil;
 import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 
@@ -71,10 +72,13 @@ public class SendJsonTemplateMessageMU implements MiddlewareUnit
 	private MiddlewareEmbodiment mwe;
 	private ObjectMapper om = new ObjectMapper();
 	
+	private double duration;
+	
 	private boolean running;
 
     public SendJsonTemplateMessageMU()
     {
+    	duration = 0d;
         KeyPosition start = new KeyPosition("start", 0d, 1d);
         KeyPosition end = new KeyPosition("end", 1d, 1d);
         addKeyPosition(start);
@@ -114,8 +118,10 @@ public class SendJsonTemplateMessageMU implements MiddlewareUnit
 			for(String p : ps){
 				props.put(p.substring(0,p.indexOf(':')),p.substring(p.indexOf(':')+1));
 			}
-
-		} else 
+		} else if (StringUtil.isNumeric(value) && name.equals("duration")) {
+			duration = Double.parseDouble(value);
+			templateParameterMap.put(name, value);
+        } else 
 		{
 			templateParameterMap.put(name, value);
 		}
@@ -149,8 +155,9 @@ public class SendJsonTemplateMessageMU implements MiddlewareUnit
     }
 
     /** start the unit. */
-    public void startUnit(double time) throws MUPlayException
+    public void startUnit(double startTime, double endTime) throws MUPlayException
     {
+		templateParameterMap.put("duration", (endTime-startTime)+"");
     	prepareMessage();
     	if (loaderclass == null || loaderclass.equals(""))
     	{
@@ -249,7 +256,7 @@ public class SendJsonTemplateMessageMU implements MiddlewareUnit
     @Override
     public double getPreferredDuration()
     {
-        return 0d;
+        return duration;
     }
 
 	@Override
