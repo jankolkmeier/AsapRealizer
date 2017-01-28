@@ -234,7 +234,7 @@ public class AnimationPlanner extends AbstractPlanner<TimedAnimationUnit>
             }
             tmu = mu.createTMU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
         }
-        else if (b instanceof BMLTProcAnimationBehaviour && (b.hasContent() || ((BMLTProcAnimationBehaviour) b).getFileName() != null))
+        else if (b instanceof BMLTProcAnimationBehaviour && ((BMLTProcAnimationBehaviour) b).getName() == null && (((BMLTProcAnimationBehaviour) b).hasContent() || ((BMLTProcAnimationBehaviour) b).getFileName() != null))
         {
             BMLTProcAnimationBehaviour beh = (BMLTProcAnimationBehaviour) b;            
             ProcAnimationMU mu = new ProcAnimationMU();            
