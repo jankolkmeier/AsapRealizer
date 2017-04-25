@@ -112,7 +112,7 @@
    <!-- targets: -->
    <target name="buildAll" depends="cleanAll, compileAll" description="cleanAll, compileAll"/>  
   
-   <target name="compileAll"  description="compile HMI projects">     
+   <target name="compileAll"  description="compile AsapRealizer projects">     
     <delegate target="compile" list="rebuildList" verbose="true"/>
    </target>
    
@@ -120,19 +120,19 @@
     <delegate target="compilelist" list="rebuildList" verbose="true"/>     
    </target> 
     
-   <target name="cleanAll"  description="cleans HMI projects">     
+   <target name="cleanAll"  description="cleans AsapRealizer projects">     
         <delegate target="clean" list="rebuildList" verbose="true"/>
    </target>
  
-   <target name="compile-testsAll"  description="Runs junit tests on all HMI projects">     
+   <target name="compile-testsAll"  description="Runs junit tests on all AsapRealizer projects">     
         <delegate target="compile-tests" list="rebuildList"/>
    </target>
     
-   <target name="junitAll"  description="Runs junit tests on all HMI projects">     
+   <target name="junitAll"  description="Runs junit tests on all AsapRealizer projects">     
         <delegate target="-junit" list="rebuildList"/>
    </target>
  
-     <target name="junitreportAll"  depends="junitAll" description="Runs junit tests on all HMI projects and produces html report">     
+     <target name="junitreportAll"  depends="junitAll" description="Runs junit tests on all AsapRealizer projects and produces html report">     
       <delete dir="${test.report.dir}" failonerror="false"/>
       <mkdir dir="${test.report.dir}"/>
       <mkdir dir="${build.test.results.dir}"/>
@@ -145,7 +145,7 @@
       </junitreport>
    </target>
    
-   <target name="findbugsAll"  description="Runs findbugs on all HMI projects">     
+   <target name="findbugsAll"  description="Runs findbugs on all AsapRealizer projects">     
         <delegate target="findbugsxml" list="rebuildList"/>
    </target>
 
@@ -165,14 +165,14 @@
 	  out="build/cpd.html" />
     </target>
 
-   <target name="checkstyleAll"  description="Runs checkstyle on all HMI projects">     
+   <target name="checkstyleAll"  description="Runs checkstyle on all AsapRealizer projects">     
         <delegate target="checkstylexml" list="rebuildList"/>
    </target>
    
    <target name="eclipseAll"  description="Create eclipse projects for all Asap projects">   
 		<delegate target="eclipseproject" list="rebuildList"/>
 	</target>
-	<target name="eclipsesourceAll"  description="Create eclipse projects for all HMI projects">   
+	<target name="eclipsesourceAll"  description="Create eclipse projects for all AsapRealizer projects">   
 		<delegate target="eclipsesourceproject" list="rebuildList" verbose="true"/>
 	</target>
 
@@ -186,7 +186,7 @@
 	  <delegate target="-pre-doc" list="rebuildList" verbose="true"/>
    </target>
    
-   <target name="docall" depends="-pre-docAll" description="Generate integrated Javadoc for all HMI/* projects">     
+   <target name="docall" depends="-pre-docAll" description="Generate integrated Javadoc for all AsapRealizer/* projects">     
         <javadoc source="1.8"
             destdir="${javadoc.dir}"            
             doctitle="API Documentation for Asap packages, including the Asap Realizer"
@@ -204,7 +204,7 @@
                 <group title="AsapEngineUtils" packages="asap.motionunit*,asap.binding*,asap.timemanipulator*"/>
                 <group title="AsapEnvironment" packages="asap.environment*,asap.realizerembodiments*"/>
 				<group title="AsapIpaaca" packages="asap.ipaaca*"/>
-				<group title="AsapTTS" packages="asap.opensmile*,asap.marytts*,asap.tts*,asap.ipaacatts*,asap.visualprosody*,asap.sapitts*,asap.speechengine*"/>
+				<group title="AsapTTS" packages="asap.opensmile*,asap.marytts*,asap.tts*,asap.ipaacatts*,asap.visualprosody*,asap.sapitts*,asap.fluencytts*,asap.speechengine*"/>
 				<group title="AsapAnimation" packages="asap.animationengine*,asap.faceengine*,asap.murml*,asap.hns*"/>
 				<group title="AsapEmitter" packages="asap.emitter*,asap.blink*,asap.breath*"/>
 				<group title="AsapPicture" packages="asap.picture*"/>
@@ -214,37 +214,34 @@
                 
 			
 				<sourcepath>
-                    <pathelement path="AsapAnimationEngine/${src.doc.dir}"/>										
-					<pathelement path="AsapTextEngine/${src.doc.dir}"/>							
-					<pathelement path="AsapBinding/${src.doc.dir}"/>
-					<pathelement path="AsapAudioEngine/${src.doc.dir}"/>					
+                    <pathelement path="Engines/Animation/AsapAnimationEngine/${src.doc.dir}"/>										
+					<pathelement path="Engines/AsapTextEngine/${src.doc.dir}"/>							
+					<pathelement path="Engines/Utils/AsapBinding/${src.doc.dir}"/>
+					<pathelement path="Engines/AsapAudioEngine/${src.doc.dir}"/>					
 					<pathelement path="AsapBML/${src.doc.dir}"/>
-					<pathelement path="AsapEmitterEngine/${src.doc.dir}"/>
-					<pathelement path="AsapEnvironment/${src.doc.dir}"/>					
-					<pathelement path="AsapFaceEngine/${src.doc.dir}"/>
-					<pathelement path="AsapIpaacaIURealizerAdapters/${src.doc.dir}"/>					
-					<pathelement path="AsapIpaacaRealizerAdapters/java/${src.doc.dir}"/>
-					<pathelement path="AsapIpaacaWorldEnvironment/${src.doc.dir}"/>
-					<pathelement path="AsapJNaoQiEmbodiment/${src.doc.dir}"/>					
+					<pathelement path="Engines/AsapEmitterEngine/${src.doc.dir}"/>
+					<pathelement path="Environments/AsapEnvironment/${src.doc.dir}"/>					
+					<pathelement path="Engines/AsapFaceEngine/${src.doc.dir}"/>
+					<pathelement path="BMLAdapters/AsapIpaacaIURealizerAdapters/${src.doc.dir}"/>					
+					<pathelement path="BMLAdapters/AsapIpaacaRealizerAdapters/java/${src.doc.dir}"/>
 					<pathelement path="AsapLiveMocapEngine/${src.doc.dir}"/>
-                    <pathelement path="AsapMaryTTS5Binding/${src.doc.dir}"/>
+                    <pathelement path="Engines/Speech/AsapMaryTTS5Binding/${src.doc.dir}"/>
 					<pathelement path="AsapMath/${src.doc.dir}"/>
-					<pathelement path="AsapMotionUnit/${src.doc.dir}"/>										
-					<pathelement path="AsapMURML/${src.doc.dir}"/>	
-					<pathelement path="AsapNaoEngine/${src.doc.dir}"/>
+					<pathelement path="Engines/Utils/AsapMotionUnit/${src.doc.dir}"/>										
+					<pathelement path="Engines/Animation/AsapMURML/${src.doc.dir}"/>	
 					<pathelement path="AsapOpenSmile/${src.doc.dir}"/>
-					<pathelement path="AsapPictureEngine/${src.doc.dir}"/>                                   
+					<pathelement path="Engines/AsapPictureEngine/${src.doc.dir}"/>                                   
 					<pathelement path="AsapRealizer/${src.doc.dir}"/>                                        
-					<pathelement path="AsapRealizerEmbodiments/${src.doc.dir}"/>
-					<pathelement path="AsapRealizerIntegrationTests/${src.doc.dir}"/>
-                    <pathelement path="AsapRealizerPort/java/${src.doc.dir}"/>                                        
-					<pathelement path="AsapRealizerTester/${src.doc.dir}"/>
-					<pathelement path="AsapRealizerTestUtil/${src.doc.dir}"/>					
-					<pathelement path="AsapRsbWorldEnvironment/java/${src.doc.dir}"/>						
-					<pathelement path="AsapSapi5TTSBinding/${src.doc.dir}"/>						
-					<pathelement path="AsapSpeechEngine/${src.doc.dir}"/>		
-					<pathelement path="AsapTestUtil/${src.doc.dir}"/>    				
-					<pathelement path="AsapTTSIpaaca/${src.doc.dir}"/>										
+					<pathelement path="Environments/AsapRealizerEmbodiments/${src.doc.dir}"/>
+					<pathelement path="Testing/AsapRealizerIntegrationTests/${src.doc.dir}"/>
+                    <pathelement path="BMLAdapters/AsapRealizerPort/java/${src.doc.dir}"/>                                        
+					<pathelement path="Testing/AsapRealizerTester/${src.doc.dir}"/>
+					<pathelement path="Testing/AsapRealizerTestUtil/${src.doc.dir}"/>											
+					<pathelement path="Engines/Speech/AsapSapi5TTSBinding/${src.doc.dir}"/>					
+                    <pathelement path="Engines/Speech/AsapFluency8TTSBinding/${src.doc.dir}"/>						
+					<pathelement path="Engines/Speech/AsapSpeechEngine/${src.doc.dir}"/>		
+					<pathelement path="Testing/AsapTestUtil/${src.doc.dir}"/>    				
+					<pathelement path="Engines/Speech/AsapTTSIpaaca/${src.doc.dir}"/>										
 					<pathelement path="AsapVisualProsody/${src.doc.dir}"/>									
                 </sourcepath>
         </javadoc>
