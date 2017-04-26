@@ -357,6 +357,7 @@ public class DynamicGazeMU extends AbstractGazeMU
         {
             cerv.add(0, cerv.get(0).getParent());
         }
+        cerv.remove(grp);
         return cerv;
     }
     
