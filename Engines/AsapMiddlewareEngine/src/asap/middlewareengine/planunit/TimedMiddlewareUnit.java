@@ -69,7 +69,14 @@ public class TimedMiddlewareUnit extends TimedAbstractPlanUnit
     protected void startUnit(double time) throws TimedPlanUnitPlayException
     {
         try {
-            ru.startUnit(time);
+    		double endTime = puTimeManager.getEndTime();
+    		if (endTime > time) {
+    			ru.startUnit(time, endTime);
+    		} else {
+    			ru.startUnit(time, time+1.0);
+    		}
+            //ru.setParameterValue("duration", );
+        	
         } catch (MUPlayException ex) {
             TimedPlanUnitPlayException e = new TimedPlanUnitPlayException(ex.getMessage(), this);
             e.initCause(ex);

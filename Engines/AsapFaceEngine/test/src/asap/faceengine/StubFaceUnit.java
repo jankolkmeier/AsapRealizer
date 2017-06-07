@@ -4,6 +4,7 @@ package asap.faceengine;
 
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import lombok.Delegate;
 import asap.faceengine.faceunit.FaceUnit;
@@ -81,7 +82,7 @@ public class StubFaceUnit implements FaceUnit
     }
 
     @Override
-    public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
+    public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv, FACS2MorphConverter f2mconv)
     {
         return this;
     }

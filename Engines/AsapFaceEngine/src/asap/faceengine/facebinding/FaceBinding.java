@@ -4,6 +4,7 @@ package asap.faceengine.facebinding;
 
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.xml.XMLStructureAdapter;
 import hmi.xml.XMLTokenizer;
@@ -49,24 +50,20 @@ public class FaceBinding extends XMLStructureAdapter
      * Gets a list of timed face units that satisfy the constraints of behaviour b
      */
     public List<TimedFaceUnit> getFaceUnit(FeedbackManager fbManager, BMLBlockPeg bbPeg, Behaviour b, FaceController fc,
-            FACSConverter fconv, EmotionConverter econv, PegBoard pb)
+            FACSConverter fconv, EmotionConverter econv, FACS2MorphConverter f2mconv, PegBoard pb)
     {
         ArrayList<TimedFaceUnit> fus = new ArrayList<TimedFaceUnit>();
-        // System.out.println("Mapping face binding for "+b.getXMLTag());
         for (FaceUnitSpec s : specs)
         {
-            // System.out.println("testing "+s.getType());
             if (s.getType().equals(b.getXMLTag())
                     && hasEqualNameSpace(b,s.getSpecnamespace()))
             {
                 if (s.satisfiesConstraints(b))
                 {
-                    // System.out.println("Found type and constraint match");
-                    FaceUnit fuCopy = s.faceUnit.copy(fc, fconv, econv);
+                    FaceUnit fuCopy = s.faceUnit.copy(fc, fconv, econv, f2mconv);
                     TimedFaceUnit tfu = fuCopy.createTFU(fbManager, bbPeg, b.getBmlId(), b.id, pb);
                     fus.add(tfu);
 
-                    // System.out.println("set def params");
                     // set default parameter values
                     for (SpecParameterDefault fupc : s.getParameterDefaults())
                     {
@@ -81,7 +78,6 @@ public class FaceBinding extends XMLStructureAdapter
                         logger.debug("Setting parameter {} to default {}", fupc.name, fupc.value);
                     }
 
-                    // System.out.println("Map params");
                     // map parameters
                     for (String param : s.getParameters())
                     {

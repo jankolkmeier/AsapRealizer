@@ -44,7 +44,7 @@ public class FACSVisemeBinding implements VisemeBinding
             visemeFU.setConfig(facsConf);
         }
 
-        TimedFaceUnit tfu = visemeFU.copy(fc, fconv, null).createTFU(bfm, bbPeg, b.getBmlId(), b.id, pb);
+        TimedFaceUnit tfu = visemeFU.copy(fc, fconv, null, null).createTFU(bfm, bbPeg, b.getBmlId(), b.id, pb);
         // time pegs not yet set. Here we just arrange relative timing
         tfu.getKeyPosition("attackPeak").time = 0.5;
         tfu.getKeyPosition("relax").time = 0.5;

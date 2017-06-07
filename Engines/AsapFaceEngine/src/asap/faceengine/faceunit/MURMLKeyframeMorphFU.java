@@ -4,6 +4,7 @@ package asap.faceengine.faceunit;
 
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 
 import java.util.List;
@@ -89,7 +90,7 @@ public class MURMLKeyframeMorphFU extends KeyFrameMotionUnit implements FaceUnit
     }
 
     @Override
-    public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
+    public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv, FACS2MorphConverter f2mconv)
     {
         MURMLKeyframeMorphFU copy = new MURMLKeyframeMorphFU(ImmutableList.copyOf(targets), interp.copy(), manip, ImmutableList.copyOf(keyFrames),
                 nrOfDofs, allowDynamicStart);

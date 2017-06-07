@@ -4,6 +4,7 @@ package asap.faceengine.faceunit;
 
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.util.StringUtil;
 
@@ -255,7 +256,7 @@ public class MorphFU implements FaceUnit
     /**
      * Create a copy of this face unit and link it to the facecontroller
      */
-    public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
+    public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv, FACS2MorphConverter f2mconv)
     {
         MorphFU result = new MorphFU();
         result.setFaceController(fc);

@@ -2,6 +2,7 @@ package asap.faceengine.lipsync;
 
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.util.StringUtil;
 
@@ -227,7 +228,7 @@ public class DominanceFU implements FaceUnit
     }
 
     @Override
-    public DominanceFU copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
+    public DominanceFU copy(FaceController fc, FACSConverter fconv, EmotionConverter econv, FACS2MorphConverter f2mconv)
     {
         DominanceFU fu = new DominanceFU();
         fu.setFaceController(fc);

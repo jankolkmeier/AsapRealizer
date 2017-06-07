@@ -5,6 +5,7 @@ package asap.faceengine;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.FaceInterpolator;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 
 import java.util.ArrayList;
@@ -50,7 +51,8 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
     private FaceController faceController;
     private FACSConverter facsConverter;
     private EmotionConverter emotionConverter;
-
+    private FACS2MorphConverter f2mConverter;
+    
     private final FaceBinding faceBinding;
     private UniModalResolver resolver;
     private final PegBoard pegBoard;
@@ -62,7 +64,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
         BMLInfo.addDescriptionExtension(MURMLFaceBehaviour.xmlTag(), MURMLFaceBehaviour.class);
     }
 
-    public FacePlanner(FeedbackManager bfm, FaceController fc, FACSConverter fconv, EmotionConverter econv, FaceBinding fb,
+    public FacePlanner(FeedbackManager bfm, FaceController fc, FACSConverter fconv, EmotionConverter econv, FACS2MorphConverter f2mconv ,FaceBinding fb, 
             PlanManager<TimedFaceUnit> planManager, PegBoard pb)
     {
         super(bfm, planManager);
@@ -70,6 +72,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
         faceController = fc;
         facsConverter = fconv;
         emotionConverter = econv;
+        f2mConverter = f2mconv;
         pegBoard = pb;
         resolver = new LinearStretchResolver();
     }
@@ -85,7 +88,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
         if (b instanceof MURMLFaceBehaviour)
         {
             FaceUnit fu = MURMLFUBuilder.setup(((MURMLFaceBehaviour) b).getMurmlDescription());
-            FaceUnit fuCopy = fu.copy(faceController, facsConverter, emotionConverter);
+            FaceUnit fuCopy = fu.copy(faceController, facsConverter, emotionConverter, f2mConverter);
             tfu = fuCopy.createTFU(fbManager, bbPeg, b.getBmlId(), b.id, pegBoard);
         }
         else if (b instanceof BMLTFaceKeyframeBehaviour && !b.specifiesParameter("name"))
@@ -102,7 +105,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
                 break;
             case FACS:
                 KeyframeFacsFU kfu = new KeyframeFacsFU(mi);
-                kfu = kfu.copy(faceController, facsConverter, emotionConverter);
+                kfu = kfu.copy(faceController, facsConverter, emotionConverter, f2mConverter);
                 fu = kfu;
                 break;
             case FAPS:
@@ -114,7 +117,7 @@ public class FacePlanner extends AbstractPlanner<TimedFaceUnit>
         }
         else
         {
-            List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager, bbPeg, b, faceController, facsConverter, emotionConverter,
+            List<TimedFaceUnit> tfus = faceBinding.getFaceUnit(fbManager, bbPeg, b, faceController, facsConverter, emotionConverter, f2mConverter,
                     pegBoard);
             if (tfus.isEmpty())
             {

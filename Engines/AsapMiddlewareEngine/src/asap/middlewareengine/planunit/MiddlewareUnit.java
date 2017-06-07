@@ -41,7 +41,7 @@ public interface MiddlewareUnit extends KeyPositionManager
     void prepareUnit();
     
     /** start the unit.*/
-    void startUnit(double time) throws MUPlayException;
+    void startUnit(double start, double end) throws MUPlayException;
         
     /**
      * Executes the  unit (generally by sending a message somewhere)

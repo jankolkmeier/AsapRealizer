@@ -185,7 +185,7 @@ public class InterpolatingJsonTemplateMessageMU implements MiddlewareUnit
     }
 
     /** start the unit. */
-    public void startUnit(double time) throws MUPlayException
+    public void startUnit(double startTime, double endTime) throws MUPlayException
     {
     	prepareMessage();
     	play(0);

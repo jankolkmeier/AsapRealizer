@@ -2,6 +2,7 @@
  *******************************************************************************/
 package asap.faceengine.facebinding;
 
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.model.FACSConfiguration;
 import hmi.util.Resources;
 import hmi.xml.XMLStructureAdapter;
@@ -15,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import asap.faceengine.faceunit.AUFU;
+import asap.faceengine.faceunit.FACS2MorphFU;
 import asap.faceengine.faceunit.FACSFU;
 import asap.faceengine.faceunit.FaceUnit;
 import asap.faceengine.faceunit.MorphFU;
@@ -98,7 +100,37 @@ class FaceUnitAssembler extends XMLStructureAdapter
         {
             AUFU fu = new AUFU();
             faceUnit = fu;
-        }       
+        }
+        else if (type.equals("AU2Morph"))
+        {
+            FACS2MorphFU fu = new FACS2MorphFU();
+            faceUnit = fu;
+            FACS2MorphConverter f2mconv = null;
+
+            String f2mResourcePath = getOptionalAttribute("facs2morphmappingresources", attrMap, "");
+            String f2mResourceFileName = getOptionalAttribute("facs2morphmappingfilename", attrMap, "");
+            if (!f2mResourceFileName.equals(""))
+            {
+            	f2mconv = new FACS2MorphConverter();
+            	f2mconv.readXML(new Resources(f2mResourcePath).getReader(f2mResourceFileName));
+            }
+            
+            fu.setFACS2MorphConverter(f2mconv);
+        }
+        else if (type.equals("FACS2Morph"))
+        {
+			FACS2MorphFU fu = new FACS2MorphFU();
+			faceUnit = fu;
+			String filename = getRequiredAttribute("filename", attrMap, null);
+			FACSConfiguration fc = new FACSConfiguration();
+			try {
+				fc.readXML(new Resources("").getReader(filename));
+				fu.setConfig(fc);
+			} catch (Exception e) {
+				faceUnit = null;
+				logger.warn("Cannot read FACS configuration from file \"{}\"; error: {}", filename, e.getMessage());
+			}
+		} 
         else if (type.equals("FACS"))
         {
             FACSFU fu = new FACSFU();

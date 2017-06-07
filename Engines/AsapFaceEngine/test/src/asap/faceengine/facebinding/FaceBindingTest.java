@@ -110,7 +110,7 @@ public class FaceBindingTest
 
         BMLBlockPeg bbPeg = new BMLBlockPeg("bml1", 0.3);
         List<TimedFaceUnit> fus = faceBinding.getFaceUnit(mockFeedbackManager, bbPeg, fbeh, mockFaceController, mockFacsConverter,
-                mockEmotionConverter, pegBoard);
+                mockEmotionConverter, null, pegBoard);
         assertEquals(1, fus.size());
         assertEquals(fus.get(0).getBMLId(), "bml1");
         assertEquals(fus.get(0).getId(), "face1");
@@ -126,7 +126,7 @@ public class FaceBindingTest
         FaceFacsBehaviour fbeh = new FaceFacsBehaviour("bml1", new XMLTokenizer(str));
         BMLBlockPeg bbPeg = new BMLBlockPeg("bml1", 0.3);
         List<TimedFaceUnit> fus = faceBinding.getFaceUnit(mockFeedbackManager, bbPeg, fbeh, mockFaceController, mockFacsConverter,
-                mockEmotionConverter, pegBoard);
+                mockEmotionConverter, null, pegBoard);
 
         assertEquals(1, fus.size());
         assertEquals(fus.get(0).getBMLId(), "bml1");
@@ -143,7 +143,7 @@ public class FaceBindingTest
         FaceFacsBehaviour fbeh = new FaceFacsBehaviour("bml1", new XMLTokenizer(str));
         BMLBlockPeg bbPeg = new BMLBlockPeg("bml1", 0.3);
         List<TimedFaceUnit> fus = faceBinding.getFaceUnit(mockFeedbackManager, bbPeg, fbeh, mockFaceController, mockFacsConverter,
-                mockEmotionConverter, pegBoard);
+                mockEmotionConverter, null, pegBoard);
 
         assertEquals(2, fus.size());
         assertEquals(fus.get(0).getBMLId(), "bml1");

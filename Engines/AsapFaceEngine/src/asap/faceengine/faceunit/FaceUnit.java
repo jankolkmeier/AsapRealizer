@@ -4,6 +4,7 @@ package asap.faceengine.faceunit;
 
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import asap.motionunit.MotionUnit;
 import asap.realizer.feedback.FeedbackManager;
@@ -30,7 +31,7 @@ public interface FaceUnit extends MotionUnit
     /**
      * Create a copy of this face unit and link it to the faceplayer
      */
-    FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv); 
-    
+    FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv, FACS2MorphConverter f2mconv); 
+
     void interruptFromHere();
 }

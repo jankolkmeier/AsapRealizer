@@ -5,6 +5,7 @@ package asap.faceengine.faceunit;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.FaceInterpolator;
 import hmi.faceanimation.converters.EmotionConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.converters.FACSConverter;
 import hmi.faceanimation.model.FACS.Side;
 import hmi.faceanimation.model.FACSConfiguration;
@@ -55,7 +56,7 @@ public class KeyframeFacsFU extends KeyframeFaceUnit
     }
 
     @Override
-    public KeyframeFacsFU copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
+    public KeyframeFacsFU copy(FaceController fc, FACSConverter fconv, EmotionConverter econv, FACS2MorphConverter f2mconv)
     {
         KeyframeFacsFU copy = new KeyframeFacsFU(mi);
         setupCopy(copy, fc);
