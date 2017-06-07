@@ -5,6 +5,7 @@ package asap.faceengine.faceunit;
 import hmi.faceanimation.FaceController;
 import hmi.faceanimation.converters.EmotionConverter;
 import hmi.faceanimation.converters.FACSConverter;
+import hmi.faceanimation.converters.FACS2MorphConverter;
 import hmi.faceanimation.model.ActionUnit;
 import hmi.faceanimation.model.ActionUnit.Symmetry;
 import hmi.faceanimation.model.FACS;
@@ -26,6 +27,7 @@ import asap.realizer.planunit.ParameterNotFoundException;
  */
 public class AUFU extends FACSFU
 {
+
     enum AUFUSide
     {
         LEFT, RIGHT, BOTH
@@ -133,7 +135,7 @@ public class AUFU extends FACSFU
     /**
      * Create a copy of this face unit and link it to the faceContrller
      */
-    public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv)
+    public FaceUnit copy(FaceController fc, FACSConverter fconv, EmotionConverter econv, FACS2MorphConverter f2mconv)
     {
         AUFU result = new AUFU();
         result.setFaceController(fc);
