@@ -218,14 +218,14 @@ public class AsapRealizer
         }
         catch (InstantiationException e)
         {
-            String bmlId = "<no id>";
+            String bmlId = "&lt;no id&gt;";
             String exceptionText = "InstantiationException " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
             scheduler.warn(new BMLWarningFeedback(bmlId, "InstantiationException", exceptionText), scheduler.getSchedulingTime());
             return;
         }
         catch (IllegalAccessException e)
         {
-            String bmlId = "<no id>";
+            String bmlId = "&lt;no id&gt;";
             String exceptionText = "IllegalAccessException " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace()) + "\n";
             scheduler.warn(new BMLWarningFeedback(bmlId, "IllegalAccessException", exceptionText), scheduler.getSchedulingTime());
             return;
@@ -236,7 +236,7 @@ public class AsapRealizer
         }
         catch (XMLScanException e)
         {
-            String bmlId = "<no id>";
+            String bmlId = "&lt;no id&gt;";
             String exceptionText = "Parsing BML failed: see stack trace for more info. " + e.getLocalizedMessage() + "\n"
                     + Arrays.toString(e.getStackTrace()) + "\n";
             scheduler.warn(new BMLWarningFeedback(bmlId, BMLWarningFeedback.PARSING_FAILURE, exceptionText), scheduler.getSchedulingTime());
@@ -244,7 +244,7 @@ public class AsapRealizer
         }
         catch (IOException e)
         {
-            String bmlId = "<no id>";
+            String bmlId = "&lt;no id&gt;";
             String exceptionText = "IO Exception reading BML. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace())
                     + "\n";
             scheduler.warn(new BMLWarningFeedback(bmlId, "IOException", exceptionText), scheduler.getSchedulingTime());
@@ -252,7 +252,7 @@ public class AsapRealizer
         }
         catch (Exception e)
         { // DO NOT REMOVE THIS CLAUSE!
-            String bmlId = "<no id>";
+            String bmlId = "&lt;no id&gt;";
             String exceptionText = "Exception reading the XML. " + e.getLocalizedMessage() + "\n" + Arrays.toString(e.getStackTrace())
                     + "\n";
             scheduler.warn(new BMLWarningFeedback(bmlId, "Exception", exceptionText), scheduler.getSchedulingTime());
