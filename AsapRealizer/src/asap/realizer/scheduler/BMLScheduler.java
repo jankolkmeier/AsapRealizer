@@ -51,25 +51,25 @@ import com.google.common.primitives.Doubles;
  * @author Herwin van Welbergen
  */
 @Slf4j
-public final class BMLScheduler
+public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inheritance
 {
-    private Map<String, BehaviourBlock> bmlBlockMap = new ConcurrentHashMap<String, BehaviourBlock>();
+	protected Map<String, BehaviourBlock> bmlBlockMap = new ConcurrentHashMap<String, BehaviourBlock>();
 
-    private final BMLParser parser;
+    protected final BMLParser parser;
 
-    private final BMLBlockManager bmlBlocksManager;
+    protected final BMLBlockManager bmlBlocksManager;
 
-    private final Map<Class<? extends Behaviour>, Engine> planSelector;
+    protected final Map<Class<? extends Behaviour>, Engine> planSelector;
 
-    private final Set<Engine> engines;
+    protected final Set<Engine> engines;
 
-    private final PegBoard pegBoard;
+    protected final PegBoard pegBoard;
 
-    private final Clock schedulingClock;
+    protected final Clock schedulingClock;
 
-    private final SchedulingHandler schedulingHandler;
+    protected final SchedulingHandler schedulingHandler;
 
-    private interface FeedbackManagerDelegates
+    protected interface FeedbackManagerDelegates
     {
         void warn(BMLWarningFeedback w, double time);
 
@@ -83,7 +83,7 @@ public final class BMLScheduler
     }
 
     @Delegate(types = FeedbackManagerDelegates.class)
-    private final FeedbackManager fbManager;
+    protected final FeedbackManager fbManager;
 
     public double getSchedulingTime()
     {
@@ -406,7 +406,7 @@ public final class BMLScheduler
         pegBoard.removeBehaviour(bmlId, behaviourId);
     }
 
-    boolean isPending(String bmlId, Set<String> bmlIdsChecked)
+    public boolean isPending(String bmlId, Set<String> bmlIdsChecked)
     {
         return bmlBlocksManager.isPending(bmlId, bmlIdsChecked);
     }

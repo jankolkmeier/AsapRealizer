@@ -78,6 +78,7 @@ public class TextEngineLoader implements EngineLoader
         engine = new DefaultEngine<TimedSpeechTextUnit>(textPlanner, textPlayer, textPlanManager);
 
         engine.setId(id);
+        engine.setCharacterId(vhId);
 
         // add engine to realizer;
         are.addEngine(engine);

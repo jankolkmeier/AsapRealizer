@@ -63,6 +63,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private List<String> handShapeDir = new ArrayList<>();
 
     private String id = "";
+    private String characterId = "";
     // some variables cached during loading
     private GestureBinding gesturebinding = null;
 
@@ -70,11 +71,13 @@ public class MixedAnimationEngineLoader implements EngineLoader
     private WorldObjectEnvironment we = null;
     private RestPose pose;
     
+    
     @Override
     public void readXML(XMLTokenizer tokenizer, String loaderId, String vhId, String vhName, Environment[] environments,
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
+        characterId = vhId;
         mae = ArrayUtils.getFirstClassOfType(environments, MixedAnimationEnvironment.class);
         we = ArrayUtils.getFirstClassOfType(environments, WorldObjectEnvironment.class);
 
@@ -353,6 +356,7 @@ public class MixedAnimationEngineLoader implements EngineLoader
 
         engine = new DefaultEngine<TimedAnimationUnit>(animationPlanner, animationPlayer, animationPlanManager);
         engine.setId(id);
+        engine.setCharacterId(characterId);
 
         // propagate avatar resetpose into the animation player, vnext etc, ikbodies,
         // phumans... and also as reset poses for same.

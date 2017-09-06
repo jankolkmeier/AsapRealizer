@@ -64,7 +64,8 @@ public class AudioEngineLoader implements EngineLoader
         AudioPlanner audioPlanner = new AudioPlanner(are.getFeedbackManager(), new Resources(""), audioPlanManager, aue.getSoundManager());
         engine = new DefaultEngine<TimedAbstractAudioUnit>(audioPlanner, audioPlayer, audioPlanManager);
         engine.setId(id);
-
+        engine.setCharacterId(vhId);
+        
         // add engine to realizer;
         are.addEngine(engine);
 

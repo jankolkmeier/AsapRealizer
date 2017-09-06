@@ -52,6 +52,7 @@ public class WaitEngineLoader implements EngineLoader
         wPlanner = new WaitPlanner(are.getFeedbackManager(), wPlanManager);
         engine = new DefaultEngine<TimedWaitUnit>(wPlanner, wPlayer, wPlanManager);
         engine.setId(id);
+        engine.setCharacterId(vhId);
         are.addEngine(engine);
 
     }

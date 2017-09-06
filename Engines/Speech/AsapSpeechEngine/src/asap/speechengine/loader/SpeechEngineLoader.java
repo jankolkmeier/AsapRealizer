@@ -80,7 +80,8 @@ public class SpeechEngineLoader implements EngineLoader
     private TTSBinding ttsBinding;
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
 
-    String id = "";
+    private String id = "";
+    private String characterId = "";
 
     private AsapRealizerEmbodiment are = null;
 
@@ -92,6 +93,7 @@ public class SpeechEngineLoader implements EngineLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
+        characterId = vhId;
 
         TTSBindingLoader ttsBL = ArrayUtils.getFirstClassOfType(requiredLoaders, TTSBindingLoader.class);        
         if (ttsBL == null)
@@ -197,8 +199,8 @@ public class SpeechEngineLoader implements EngineLoader
         speechPlanner = getTTSPlanner(ttsBinding);
 
         engine = new DefaultEngine<TimedTTSUnit>(speechPlanner, speechPlayer, speechPlanManager);
-
         engine.setId(id);
+        engine.setCharacterId(characterId);
 
         // add engine to realizer;
         are.addEngine(engine);

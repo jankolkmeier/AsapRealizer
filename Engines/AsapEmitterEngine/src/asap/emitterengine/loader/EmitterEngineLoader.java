@@ -35,6 +35,7 @@ public class EmitterEngineLoader implements EngineLoader
     private PlanManager<TimedEmitterUnit> planManager = null;
     private Player player = null;
     private String id = "";
+    private String characterId = "";
 
     private Class<?> emitterInfoClass = null;
 
@@ -45,6 +46,7 @@ public class EmitterEngineLoader implements EngineLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
+        characterId = vhId;
         for (Loader e : requiredLoaders)
         {
             if (e instanceof EmbodimentLoader && ((EmbodimentLoader) e).getEmbodiment() instanceof AsapRealizerEmbodiment) are = (AsapRealizerEmbodiment) ((EmbodimentLoader) e)
@@ -109,6 +111,7 @@ public class EmitterEngineLoader implements EngineLoader
         EmitterPlanner planner = new EmitterPlanner(are.getFeedbackManager(), planManager, ei, are.getRealizerPort());
         engine = new DefaultEngine<TimedEmitterUnit>(planner, player, planManager);
         engine.setId(id);
+        engine.setCharacterId(characterId);
 
         // add engine to realizer;
         are.addEngine(engine);

@@ -64,6 +64,7 @@ public class LiveMocapEngineLoader implements EngineLoader
         LiveMocapPlanner planner = new LiveMocapPlanner(fbm, planManager, inputBinding, outputBinding);
         DefaultPlayer player = new DefaultPlayer(new SingleThreadedPlanPlayer<LiveMocapTMU>(fbm, planManager));
         engine = new DefaultEngine<LiveMocapTMU>(planner, player, planManager);
+        engine.setCharacterId(vhId);
 
         // add engine to realizer;
         are.addEngine(engine);
