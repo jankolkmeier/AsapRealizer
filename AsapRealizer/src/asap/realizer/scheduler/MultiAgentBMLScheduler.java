@@ -54,14 +54,17 @@ import com.google.common.primitives.Doubles;
 @Slf4j
 public final class MultiAgentBMLScheduler extends BMLScheduler
 {
-    private final Hashtable<String, Set<Engine>> characterEngineMap;
+    private final Map<String, Map<Class<? extends Behaviour>, Engine>> characterPlanSelector;
+    
+    //private final Hashtable<String, Set<Engine>> characterEngines;
 
     public MultiAgentBMLScheduler(BMLParser s, FeedbackManager bfm, Clock c, SchedulingHandler sh, BMLBlockManager bbm,
             PegBoard pb)
     {
     	super("", s, bfm, c, sh, bbm, pb);
     	
-        characterEngineMap = new Hashtable<String, Set<Engine>>();
+        //characterEngines = new Hashtable<String, Set<Engine>>();
+        characterPlanSelector = new HashMap<String, Map<Class<? extends Behaviour>, Engine>>();
     }
 
     /**
@@ -73,13 +76,100 @@ public final class MultiAgentBMLScheduler extends BMLScheduler
         for (BehaviourBlock bb : parser.getBehaviourBlocks())
         {
         	String bbCharacterId = bb.getCharacterId();
-        	if (bbCharacterId == null || characterEngineMap.containsKey(bbCharacterId)) {
+        	if (bbCharacterId == null || !characterPlanSelector.containsKey(bbCharacterId)) {
+                log.warn("Ignored BehaviorBlock "+bb.id+ " in MultiAgentScheduler. characterId in block was set to: "+bbCharacterId);
+        	} else {
                 bmlBlockMap.put(bb.id, bb);
                 schedulingHandler.schedule(bb, this, getSchedulingTime());
-        	} else {
-                log.warn("Ignored BehaviorBlock "+bb.id+ " in MultiAgentScheduler. characterId in block was set to: "+bb.getCharacterId());
         	}
         }
         parser.clear();
     }
+    
+    /**
+     * Adds an engine that can plan Behaviour class c
+     * 
+     * @param c
+     *            behaviour class the engine can plan
+     * @param e
+     *            the engine
+     */
+    public void addEngine(Class<? extends Behaviour> c, Engine e)
+    {
+    	String vhId = e.getCharacterId();
+    	if (!characterPlanSelector.containsKey(vhId)) {
+    		characterPlanSelector.put(vhId, new HashMap<Class<? extends Behaviour>, Engine>());
+    	}
+    	
+		characterPlanSelector.get(vhId).put(c, e);
+		engines.add(e);
+		
+    	//if (!characterEngines.containsKey(vhId)) {
+    	//	characterEngines.put(vhId, new HashSet<Engine>());
+    	//}
+		//characterEngines.get(vhId).add(e);
+    }
+    
+    /**
+     * Get the engine that can plan Behaviour class c
+     * 
+     * @param c
+     *            behaviour class the engine can plan
+     *            
+     * @param characterId
+     * 			  character for which the behavior is intended
+     */
+    @Override
+    public Engine getEngine(Class<? extends Behaviour> c, String characterId) // throws NoEngineForBehaviourException
+    {
+    	if (!characterPlanSelector.containsKey(characterId) || 
+    		!characterPlanSelector.get(characterId).containsKey(c)) {
+            // throw new NoEngineForBehaviourException(c);
+    		return null;
+    	}
+    	
+    	return characterPlanSelector.get(characterId).get(c);
+    }
+    
+    @Override
+    public Engine getEngine(Class<? extends Behaviour> c) // throws NoEngineForBehaviourException
+    {
+    	if (characterPlanSelector.keySet().size() < 1) {
+            // throw new NoEngineForBehaviourException(c);
+    		return null;
+    	}
+    	
+    	return getEngine(c, characterPlanSelector.keySet().iterator().next());
+    }
+
+    @Override
+    public double getRigidity(Behaviour beh, String vhId) // throws NoEngineForBehaviourException
+    {
+    	Engine e = null;
+    	if (!characterPlanSelector.containsKey(vhId)) return 0;
+        e = characterPlanSelector.get(vhId).get(beh.getClass());
+        
+        if (e == null) {
+            // throw new NoEngineForBehaviourException(beh);
+            return 0;
+        }
+        
+        return e.getRigidity(beh);
+    }
+    
+    
+
+    @Override
+    public void addBMLBlock(BMLBBlock bbm)
+    {
+        for (Engine e : getEngines())
+        {
+        	if (e.getCharacterId().equals(bbm.getCharacterId())) {
+        		e.setBMLBlockState(bbm.getBMLId(), TimedPlanUnitState.PENDING);
+        	}
+        }
+    }
+    
+    
+    
 }

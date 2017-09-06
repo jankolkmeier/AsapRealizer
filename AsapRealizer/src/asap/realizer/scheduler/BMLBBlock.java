@@ -33,6 +33,7 @@ import com.google.common.collect.Sets;
 public class BMLBBlock
 {
     private final String bmlId;
+    private final String characterId;
     private final BMLScheduler scheduler;
     private AtomicReference<TimedPlanUnitState> state = new AtomicReference<TimedPlanUnitState>();
     private final Set<String> droppedBehaviours = new CopyOnWriteArraySet<String>();
@@ -44,10 +45,15 @@ public class BMLBBlock
     private final Set<String> chunkAfterSet = new CopyOnWriteArraySet<String>();
     private final PegBoard pegBoard;
     
-
     public BMLBBlock(String id, BMLScheduler s, PegBoard pb, Set<String> appendAfter, List<String> onStart, Set<String> chunkAfter)
     {
+    	this(id, "", s, pb, appendAfter, onStart, chunkAfter);
+    }
+    
+    public BMLBBlock(String id, String vhId, BMLScheduler s, PegBoard pb, Set<String> appendAfter, List<String> onStart, Set<String> chunkAfter)
+    {
         bmlId = id;
+        characterId = vhId;
         scheduler = s;
         state.set(TimedPlanUnitState.IN_PREP);
         pegBoard = pb;
@@ -62,6 +68,11 @@ public class BMLBBlock
     public String getBMLId()
     {
         return bmlId;
+    }
+    
+    public String getCharacterId()
+    {
+        return characterId;
     }
     
     /**
@@ -137,10 +148,15 @@ public class BMLBBlock
     {
         return Collections.unmodifiableSet(chunkAfterSet);
     }
-
+    
     public BMLBBlock(String id, BMLScheduler s, PegBoard pb)
     {
-        this(id, s, pb, new HashSet<String>(), new ArrayList<String>(), new HashSet<String>());
+        this(id, "", s, pb, new HashSet<String>(), new ArrayList<String>(), new HashSet<String>());
+    }
+    
+    public BMLBBlock(String id, String vhId, BMLScheduler s, PegBoard pb)
+    {
+        this(id, vhId, s, pb, new HashSet<String>(), new ArrayList<String>(), new HashSet<String>());
     }
 
     // assumes that for all behaviors in the cluster, their start is resolved and listed on the PegBoard
