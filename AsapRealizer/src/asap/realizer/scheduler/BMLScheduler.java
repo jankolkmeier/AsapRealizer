@@ -51,7 +51,7 @@ import com.google.common.primitives.Doubles;
  * @author Herwin van Welbergen
  */
 @Slf4j
-public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inheritance
+public class BMLScheduler
 {
 	protected Map<String, BehaviourBlock> bmlBlockMap = new ConcurrentHashMap<String, BehaviourBlock>();
 
