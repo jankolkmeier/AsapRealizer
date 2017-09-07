@@ -146,6 +146,12 @@ public final class BMLBlockManager
         }
         return b.getState();
     }
+    
+    public String getCharacterId(String bmlId)
+    {
+        BMLBBlock b = bmlBlocks.get(bmlId);
+        return b.getCharacterId();
+    }
 
     public synchronized Set<String> getBMLBlocks()
     {
