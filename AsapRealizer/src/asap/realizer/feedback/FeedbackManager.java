@@ -21,8 +21,10 @@ import com.google.common.collect.ImmutableSet;
 public interface FeedbackManager
 {
     void addFeedbackListener(BMLFeedbackListener fb);
-    
+
     void feedback(BMLSyncPointProgressFeedback fb);
+    
+    void feedback(BMLSyncPointProgressFeedback fb, String vhId);
     
     /**
      * Send a list of feedback (in list-order) to the BMLFeedbackListeners. The listeners will
@@ -31,17 +33,27 @@ public interface FeedbackManager
      */
     void feedback(List<BMLSyncPointProgressFeedback> fbs);
     
+    void feedback(List<BMLSyncPointProgressFeedback> fbs, String vhId);
+    
     void removeAllFeedbackListeners();
     
     void removeFeedbackListener(BMLFeedbackListener fb);
     
     ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId);
     
+    ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId, String vhId);
+
     void blockProgress(BMLABlockProgressFeedback psf);
+    
+    void blockProgress(BMLABlockProgressFeedback psf, String vhId);
     
     void puException(TimedPlanUnit timedMU, String message, double time);
     
-    void prediction(BMLAPredictionFeedback bpsf);    
+    void puException(TimedPlanUnit timedMU, String message, double time, String vhId);
     
+    void prediction(BMLAPredictionFeedback bpsf);    
+
     void warn(BMLWarningFeedback w, double time);
+    
+    void warn(BMLWarningFeedback w, double time, String vhId);
 }

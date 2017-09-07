@@ -28,16 +28,16 @@ import com.google.common.collect.ImmutableSet;
 public class FeedbackManagerImpl implements FeedbackManager
 {
     private final BMLBlockManager bmlBlockManager;
+    private final String defaultCharacterId;
 
     @GuardedBy("feedbackListeners")
     private final List<BMLFeedbackListener> feedbackListeners = Collections.synchronizedList(new ArrayList<BMLFeedbackListener>());
 
-    private final String characterId;
 
-    public FeedbackManagerImpl(BMLBlockManager bbm, String characterId)
+    public FeedbackManagerImpl(BMLBlockManager bbm, String vhId)
     {
         bmlBlockManager = bbm;
-        this.characterId = characterId;
+        defaultCharacterId = vhId;
     }
 
     @Override
@@ -45,19 +45,25 @@ public class FeedbackManagerImpl implements FeedbackManager
     {
         feedbackListeners.add(fb);
     }
-
+    
     @Override
     public void puException(TimedPlanUnit timedMU, String message, double time)
     {
-        String bmlId = timedMU.getBMLId();        
-        String exceptionText = message + "\nBehavior " + timedMU.getBMLId() + ":" + timedMU.getId() + " dropped.";
-        warn(new BMLWarningFeedback(bmlId+":"+timedMU.getId(), "EXECUTION_FAILURE",exceptionText), time);
+    	puException(timedMU, message, time, defaultCharacterId);
     }
     
-    private BMLASyncPointProgressFeedback constructBMLASyncPointProgressFeedback(BMLSyncPointProgressFeedback fb)
+    @Override
+    public void puException(TimedPlanUnit timedMU, String message, double time, String vhId)
+    {
+        String bmlId = timedMU.getBMLId();        
+        String exceptionText = message + "\nBehavior " + timedMU.getBMLId() + ":" + timedMU.getId() + " dropped.";
+        warn(new BMLWarningFeedback(bmlId+":"+timedMU.getId(), "EXECUTION_FAILURE",exceptionText), time, vhId);
+    }
+    
+    private BMLASyncPointProgressFeedback constructBMLASyncPointProgressFeedback(BMLSyncPointProgressFeedback fb, String vhId)
     {
         BMLASyncPointProgressFeedback fba = BMLASyncPointProgressFeedback.build(fb);        
-        fba.setCharacterId(characterId);
+        fba.setCharacterId(vhId);
         fba.setPosixTime(System.currentTimeMillis());
         return fba;
     }
@@ -65,7 +71,13 @@ public class FeedbackManagerImpl implements FeedbackManager
     @Override
     public void feedback(BMLSyncPointProgressFeedback fb)
     {
-        BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb);
+    	feedback(fb, defaultCharacterId);
+    }
+    
+    @Override
+    public void feedback(BMLSyncPointProgressFeedback fb, String vhId)
+    {
+        BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb, vhId);
         synchronized (feedbackListeners)
         {
             for (BMLFeedbackListener fbl : feedbackListeners)
@@ -83,15 +95,20 @@ public class FeedbackManagerImpl implements FeedbackManager
         bmlBlockManager.syncProgress(fb);
     }
 
-    
     @Override
     public void feedback(List<BMLSyncPointProgressFeedback> fbs)
+    {
+        feedback(fbs, defaultCharacterId);
+    }
+    
+    @Override
+    public void feedback(List<BMLSyncPointProgressFeedback> fbs, String vhId)
     {
         synchronized (feedbackListeners)
         {
             for (BMLSyncPointProgressFeedback fb : fbs)
             {
-                BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb);
+                BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb, vhId);
                 for (BMLFeedbackListener fbl : feedbackListeners)
                 {
                     try
@@ -116,8 +133,15 @@ public class FeedbackManagerImpl implements FeedbackManager
     {
         feedbackListeners.clear();
     }
-
+    
+    @Override
     public ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId)
+    {
+        return getSyncsPassed(bmlId, behaviorId, defaultCharacterId);
+    }
+    
+    @Override
+    public ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId, String vhId)
     {
         return bmlBlockManager.getSyncsPassed(bmlId, behaviorId);
     }
@@ -127,11 +151,17 @@ public class FeedbackManagerImpl implements FeedbackManager
     {
         feedbackListeners.remove(fb);
     }
-
+    
     @Override
     public void blockProgress(BMLABlockProgressFeedback psf)
     {
-        psf.setCharacterId(characterId);
+    	blockProgress(psf, defaultCharacterId);
+    }
+    
+    @Override
+    public void blockProgress(BMLABlockProgressFeedback psf, String vhId)
+    {
+        psf.setCharacterId(vhId);
         synchronized (feedbackListeners)
         {
             for (BMLFeedbackListener fbl : feedbackListeners)
@@ -147,7 +177,7 @@ public class FeedbackManagerImpl implements FeedbackManager
             }
         }
         bmlBlockManager.blockProgress(psf);
-    }    
+    }
 
     
     @Override
@@ -173,7 +203,13 @@ public class FeedbackManagerImpl implements FeedbackManager
     @Override
     public void warn(BMLWarningFeedback w, double time)
     {
-        w.setCharacterId(characterId);
+    	warn(w, time, defaultCharacterId);
+    }
+    
+    @Override
+    public void warn(BMLWarningFeedback w, double time, String vhId)
+    {
+        w.setCharacterId(vhId);
         synchronized (feedbackListeners)
         {
             for (BMLFeedbackListener wl : feedbackListeners)
@@ -189,5 +225,6 @@ public class FeedbackManagerImpl implements FeedbackManager
             }
         }
         bmlBlockManager.warn(w, time);
-    }    
+    }
+    
 }
