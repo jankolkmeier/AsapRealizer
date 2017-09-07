@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
@@ -39,6 +40,7 @@ import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
 import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedPlanUnitState;
+import asap.realizer.scheduler.BMLScheduler.FeedbackManagerDelegates;
 import asap.realizerport.BMLFeedbackListener;
 
 import com.google.common.collect.ImmutableSet;
@@ -54,6 +56,7 @@ import com.google.common.primitives.Doubles;
 @Slf4j
 public final class MultiAgentBMLScheduler extends BMLScheduler
 {
+	
     private final Map<String, Map<Class<? extends Behaviour>, Engine>> characterPlanSelector;
     
     //private final Hashtable<String, Set<Engine>> characterEngines;
@@ -162,14 +165,138 @@ public final class MultiAgentBMLScheduler extends BMLScheduler
     @Override
     public void addBMLBlock(BMLBBlock bbm)
     {
+    	String vhId = bbm.getCharacterId();
         for (Engine e : getEngines())
         {
-        	if (e.getCharacterId().equals(bbm.getCharacterId())) {
-        		e.setBMLBlockState(bbm.getBMLId(), TimedPlanUnitState.PENDING);
-        	}
+        	if (!e.getCharacterId().equals(vhId)) continue;
+        	e.setBMLBlockState(bbm.getBMLId(), TimedPlanUnitState.PENDING);
         }
     }
     
+    @Override
+    public void blockStopFeedback(String bmlId, BMLABlockStatus status, double time)
+    {
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", time, status), vhId);
+    }
+
+    @Override
+    public void blockStartFeedback(String bmlId, double time)
+    {
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", time, BMLABlockStatus.IN_EXEC), vhId);
+    }
     
+    @Override
+    public double predictSubsidingTime(String bmlId)
+    {
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+        List<Double> subsidingTimes = new ArrayList<Double>();
+        subsidingTimes.add(schedulingClock.getMediaSeconds());
+        for (Engine e : getEngines())
+        {
+        	if (!e.getCharacterId().equals(vhId)) continue;
+            subsidingTimes.add(e.getBlockSubsidingTime(bmlId));
+        }
+        return Collections.max(subsidingTimes);
+    }
+
+    @Override
+    public void interruptBehavior(String bmlId, String behaviourId, double time)
+    {
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+        for (Engine e : getEngines())
+        {
+        	if (!e.getCharacterId().equals(vhId)) continue;
+            e.interruptBehaviour(bmlId, behaviourId, schedulingClock.getMediaSeconds());
+        }
+        bmlBlocksManager.updateBlocks(time);
+    }
+
+    @Override
+    public void interruptBlock(String bmlId, double time)
+    {
+        if (!bmlBlocksManager.getBMLBlocks().contains(bmlId))
+        {
+            log.debug("Attempting to stop non existing bml block {}", bmlId);
+            return;
+        }
+
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+    	
+        for (Engine e : getEngines())
+        {
+        	if (!e.getCharacterId().equals(vhId)) continue;
+            e.interruptBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
+        }
+        bmlBlocksManager.interruptBlock(bmlId, time);
+        bmlBlocksManager.removeBMLBlock(bmlId, time);
+    }
+
+    @Override
+    public void removeBehaviour(String bmlId, String behaviourId)
+    {
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+        for (Engine e : getEngines())
+        {
+        	if (!e.getCharacterId().equals(vhId)) continue;
+            e.stopBehaviour(bmlId, behaviourId, schedulingClock.getMediaSeconds());
+        }
+        pegBoard.removeBehaviour(bmlId, behaviourId);
+    }
+
+    @Override
+    public void stopBehavior(String bmlId, String behaviourId, double time)
+    {
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+        for (Engine e : getEngines())
+        {
+        	if (!e.getCharacterId().equals(vhId)) continue;
+            e.stopBehaviour(bmlId, behaviourId, schedulingClock.getMediaSeconds());
+        }
+        bmlBlocksManager.updateBlocks(time);
+    }
+    
+    // TODO: MA - investigate what "update timings" means - 
+    //       could this make changes to the pegboard that other engines don't like?
+    @Override
+    public void updateTiming(String bmlId)
+    {
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+        for (Engine e : getEngines())
+        {
+        	if (!e.getCharacterId().equals(vhId)) continue;
+            e.updateTiming(bmlId);
+        }
+    }
+
+    @Override
+    public double getEndTime(String bmlId, String behId)
+    {
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+        for (Engine e : getEngines())
+        {
+        	if (!e.getCharacterId().equals(vhId)) continue;
+            double endTime = e.getEndTime(bmlId, behId);
+            if (endTime != TimePeg.VALUE_UNKNOWN)
+            {
+                return endTime;
+            }
+        }
+        return TimePeg.VALUE_UNKNOWN;
+    }
+
+    @Override
+    public Set<String> getBehaviours(String bmlId)
+    {
+    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
+        HashSet<String> behaviours = new HashSet<String>();
+        for (Engine e : getEngines())
+        {
+        	if (!e.getCharacterId().equals(vhId)) continue;
+            behaviours.addAll(e.getBehaviours(bmlId));
+        }
+        return behaviours;
+    }
     
 }

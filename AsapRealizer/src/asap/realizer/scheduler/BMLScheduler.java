@@ -194,8 +194,6 @@ public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inherit
         throw new BehaviorNotFoundException(bmlId, behId);
     }
 
-    // TODO: MA - is it okay to update timing of a bml that was never added to an engine?
-    //           ... (see stopBehavior)
     public void updateTiming(String bmlId)
     {
         for (Engine e : getEngines())
@@ -404,7 +402,6 @@ public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inherit
         return getEngine(c);
     }
 
-    // TODO: MA - is it okay to remove bml that was never added to an engine?
     public void removeBehaviour(String bmlId, String behaviourId)
     {
         for (Engine e : getEngines())
@@ -429,7 +426,6 @@ public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inherit
         return pegBoard.getBMLBlockTime(bmlId);
     }
 
-    // TODO: MA - should we only look at engines that are responsible for character in BML?
     public double getEndTime(String bmlId, String behId)
     {
         for (Engine e : getEngines())
@@ -443,7 +439,6 @@ public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inherit
         return TimePeg.VALUE_UNKNOWN;
     }
 
-    // TODO: MA - should we try to get behaviors from engines that are responsible for bml with bmlId?
     public Set<String> getBehaviours(String bmlId)
     {
         HashSet<String> behaviours = new HashSet<String>();
@@ -457,7 +452,6 @@ public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inherit
     /**
      * predict the subsiding time of a BML blocks
      */
-    // TODO: MA - ....
     public double predictSubsidingTime(String bmlId)
     {
         List<Double> subsidingTimes = new ArrayList<Double>();
@@ -529,9 +523,6 @@ public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inherit
         parser.clear();
     }
 
-    // TODO: MA - is it okay to stop a bml that was never added to an engine?
-    //           ... otherwise we can just check with block manager to which 
-    //           ... character the bml with bmlId belongs (and then ignore other engines)
     public void stopBehavior(String bmlId, String behaviourId, double time)
     {
         for (Engine e : getEngines())
@@ -541,8 +532,6 @@ public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inherit
         bmlBlocksManager.updateBlocks(time);
     }
 
-    // TODO: MA - is it okay to interrupt a bml that was never added to an engine?
-    //           ... (see stopBehavior) 
     public void interruptBehavior(String bmlId, String behaviourId, double time)
     {
         for (Engine e : getEngines())
@@ -563,8 +552,6 @@ public class BMLScheduler // TODO: MA Removed 'final' attribute to allow inherit
             return;
         }
         
-        // TODO: MA - is it okay to interrupt a bml that was never added to an engine?
-        //           ... (see stopBehavior)
         for (Engine e : getEngines())
         {
             e.interruptBehaviourBlock(bmlId, schedulingClock.getMediaSeconds());
