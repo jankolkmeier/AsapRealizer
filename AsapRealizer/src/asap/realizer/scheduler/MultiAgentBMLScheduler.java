@@ -5,46 +5,24 @@ package asap.realizer.scheduler;
 import hmi.util.Clock;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
-import lombok.Delegate;
 import lombok.extern.slf4j.Slf4j;
 import saiba.bml.core.Behaviour;
 import saiba.bml.core.BehaviourBlock;
-import saiba.bml.feedback.BMLBlockPredictionFeedback;
-import saiba.bml.feedback.BMLPredictionFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
-import saiba.bml.feedback.BMLWarningFeedback;
 import saiba.bml.parser.BMLParser;
-import saiba.bml.parser.InvalidSyncRefException;
-import saiba.bml.parser.SyncPoint;
-import asap.bml.ext.bmla.feedback.BMLABlockPredictionFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockProgressFeedback;
 import asap.bml.ext.bmla.feedback.BMLABlockStatus;
-import asap.bml.ext.bmla.feedback.BMLAPredictionFeedback;
-import asap.realizer.BehaviorNotFoundException;
 import asap.realizer.Engine;
-import asap.realizer.SyncPointNotFoundException;
-import asap.realizer.TimePegAlreadySetException;
 import asap.realizer.feedback.FeedbackManager;
-import asap.realizer.pegboard.BMLBlockPeg;
 import asap.realizer.pegboard.PegBoard;
 import asap.realizer.pegboard.TimePeg;
-import asap.realizer.planunit.ParameterException;
 import asap.realizer.planunit.TimedPlanUnitState;
-import asap.realizer.scheduler.BMLScheduler.FeedbackManagerDelegates;
-import asap.realizerport.BMLFeedbackListener;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.common.primitives.Doubles;
 
 /**
  * MultiAgentBMLScheduler, handles BML block states, feedback listeners and maintains engines and
@@ -58,15 +36,11 @@ public final class MultiAgentBMLScheduler extends BMLScheduler
 {
 	
     private final Map<String, Map<Class<? extends Behaviour>, Engine>> characterPlanSelector;
-    
-    //private final Hashtable<String, Set<Engine>> characterEngines;
 
     public MultiAgentBMLScheduler(BMLParser s, FeedbackManager bfm, Clock c, SchedulingHandler sh, BMLBlockManager bbm,
             PegBoard pb)
     {
     	super("", s, bfm, c, sh, bbm, pb);
-    	
-        //characterEngines = new Hashtable<String, Set<Engine>>();
         characterPlanSelector = new HashMap<String, Map<Class<? extends Behaviour>, Engine>>();
     }
 
@@ -106,11 +80,6 @@ public final class MultiAgentBMLScheduler extends BMLScheduler
     	
 		characterPlanSelector.get(vhId).put(c, e);
 		engines.add(e);
-		
-    	//if (!characterEngines.containsKey(vhId)) {
-    	//	characterEngines.put(vhId, new HashSet<Engine>());
-    	//}
-		//characterEngines.get(vhId).add(e);
     }
     
     /**
@@ -123,22 +92,21 @@ public final class MultiAgentBMLScheduler extends BMLScheduler
      * 			  character for which the behavior is intended
      */
     @Override
-    public Engine getEngine(Class<? extends Behaviour> c, String characterId) // throws NoEngineForBehaviourException
+    public Engine getEngine(Class<? extends Behaviour> c, String characterId)
     {
     	if (!characterPlanSelector.containsKey(characterId) || 
     		!characterPlanSelector.get(characterId).containsKey(c)) {
-            // throw new NoEngineForBehaviourException(c);
     		return null;
     	}
     	
-    	return characterPlanSelector.get(characterId).get(c);
+    	Engine res = characterPlanSelector.get(characterId).get(c);
+    	return res;
     }
     
     @Override
-    public Engine getEngine(Class<? extends Behaviour> c) // throws NoEngineForBehaviourException
+    public Engine getEngine(Class<? extends Behaviour> c)
     {
     	if (characterPlanSelector.keySet().size() < 1) {
-            // throw new NoEngineForBehaviourException(c);
     		return null;
     	}
     	
@@ -146,17 +114,13 @@ public final class MultiAgentBMLScheduler extends BMLScheduler
     }
 
     @Override
-    public double getRigidity(Behaviour beh, String vhId) // throws NoEngineForBehaviourException
+    public double getRigidity(Behaviour beh, String vhId) 
     {
     	Engine e = null;
     	if (!characterPlanSelector.containsKey(vhId)) return 0;
         e = characterPlanSelector.get(vhId).get(beh.getClass());
         
-        if (e == null) {
-            // throw new NoEngineForBehaviourException(beh);
-            return 0;
-        }
-        
+        if (e == null) return 0;
         return e.getRigidity(beh);
     }
     
@@ -257,8 +221,6 @@ public final class MultiAgentBMLScheduler extends BMLScheduler
         bmlBlocksManager.updateBlocks(time);
     }
     
-    // TODO: MA - investigate what "update timings" means - 
-    //       could this make changes to the pegboard that other engines don't like?
     @Override
     public void updateTiming(String bmlId)
     {
