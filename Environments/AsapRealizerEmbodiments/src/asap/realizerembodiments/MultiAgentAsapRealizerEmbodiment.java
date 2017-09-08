@@ -63,6 +63,7 @@ public class MultiAgentAsapRealizerEmbodiment extends AsapRealizerEmbodiment {
         bmlScheduler = spl.getBmlScheduler();
         bmlBlockManager = spl.getBmlBlockManager();
         feedbackManager = spl.getFeedbackManager();
+        pegBoard = spl.getPegBoard();
     }
 
     @Override
