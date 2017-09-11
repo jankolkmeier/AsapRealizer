@@ -92,7 +92,7 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     protected Clock theSchedulingClock = null;
 
     @Getter
-    private final PegBoard pegBoard = new PegBoard();
+    protected PegBoard pegBoard = new PegBoard(); // TODO: Just make an ARE interface...
 
     /** Unload: remove the virtual human from the AsapEnvironment; stop scheduler etc; onload all other loaders */
     public void unload()
