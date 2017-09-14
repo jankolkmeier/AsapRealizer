@@ -96,9 +96,9 @@ public class SharedPortLoader implements Environment {
         return bp;
     }
     
-    protected BMLScheduler readSchedulerSection(BMLBlockManager bm, BMLParser p, FeedbackManager fm)
+    protected MultiAgentBMLScheduler readSchedulerSection(BMLBlockManager bm, BMLParser p, FeedbackManager fm)
             throws IOException {
-        BMLScheduler scheduler;
+    	MultiAgentBMLScheduler scheduler;
         
         if (tokenizer.atSTag(MultiAgentBMLSchedulerAssembler.xmlTag())) {
             MultiAgentBMLSchedulerAssembler assembler = new MultiAgentBMLSchedulerAssembler(p, fm,
