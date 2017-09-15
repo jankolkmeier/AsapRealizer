@@ -47,7 +47,7 @@ public class RestPoseAssembler extends XMLStructureAdapter
             {
                 pose = new SkeletonPose(new XMLTokenizer(resources.getReader(file)));
             }
-            catch (IOException e)
+            catch (XMLScanException | IOException e)
             {
                 throw new XMLScanException("Error reading skeletonpose file " + file, e);
             }
