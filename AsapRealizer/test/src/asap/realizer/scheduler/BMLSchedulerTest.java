@@ -105,10 +105,18 @@ public class BMLSchedulerTest
         private Map<String, Set<String>> behMap = new HashMap<String, Set<String>>();
         private Map<String, Double> blockEndTimeMap = new HashMap<String, Double>();
         private String id;
+        private String characterId;
 
         public StubEngine(String id)
         {
             this.id = id;
+            this.characterId = "";
+        }
+        
+        public StubEngine(String id, String characterId)
+        {
+        	this(id);
+            this.characterId = characterId;
         }
 
         public void addBlockEnd(String bmlId, double time)
@@ -267,7 +275,19 @@ public class BMLSchedulerTest
         {
             return id;
         }
+        
+        @Override
+        public void setCharacterId(String newId)
+        {
+            this.characterId = newId;
+        }
 
+        @Override
+        public String getCharacterId()
+        {
+        	return characterId;
+        }
+        
         @Override
         public void play(double time)
         {

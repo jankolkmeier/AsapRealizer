@@ -37,9 +37,11 @@ public class SortedSmartBodySchedulingStrategy implements SchedulingStrategy
     {
         private final BMLScheduler scheduler;
         private Map<Behaviour, Integer> behOrder = new HashMap<Behaviour, Integer>();
-
-        public SimpleBehaviourComparator(List<Behaviour> behs, BMLScheduler s)
+        private final String characterId;
+        
+        public SimpleBehaviourComparator(String vhId, List<Behaviour> behs, BMLScheduler s)
         {
+        	characterId = vhId;
             scheduler = s;
             int i = 0;
             for (Behaviour b : behs)
@@ -81,7 +83,7 @@ public class SortedSmartBodySchedulingStrategy implements SchedulingStrategy
                     inLoop = true;
                     for(Behaviour beh:ugLoops)
                     {
-                        if(scheduler.getRigidity(beh)>=1) nonRigid = false;                            
+                        if(scheduler.getRigidity(beh, characterId)>=1) nonRigid = false;                            
                     }                        
                 }
             }
@@ -93,8 +95,8 @@ public class SortedSmartBodySchedulingStrategy implements SchedulingStrategy
         {
             int o1AbsConstr = getAbsoluteConstraints(o1);
             int o2AbsConstr = getAbsoluteConstraints(o2);
-            double rig1 = scheduler.getRigidity(o1);
-            double rig2 = scheduler.getRigidity(o2);
+            double rig1 = scheduler.getRigidity(o1, characterId);
+            double rig2 = scheduler.getRigidity(o2, characterId);
 
             // If it's rigid and has an absolute constraint, the timing is completely fixed. Schedule first.
             if (rig1 >= 1 && rig2 < 1)
@@ -136,7 +138,7 @@ public class SortedSmartBodySchedulingStrategy implements SchedulingStrategy
     public void schedule(BMLBlockComposition mechanism, BehaviourBlock bb, BMLBlockPeg bmlBlockPeg, BMLScheduler scheduler,
             double schedulingTime)
     {
-        Collections.sort(bb.behaviours, new SimpleBehaviourComparator(bb.behaviours, scheduler));
+        Collections.sort(bb.behaviours, new SimpleBehaviourComparator(bb.getCharacterId(), bb.behaviours, scheduler));
         strategy.schedule(mechanism, bb, bmlBlockPeg, scheduler, schedulingTime);
         afterConstraintSolver.scheduleAfterConstraints(bb,scheduler);        
     }

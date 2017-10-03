@@ -53,6 +53,7 @@ public class InterruptEngineLoader implements EngineLoader
         iPlanner.setScheduler(are.getBmlScheduler());
         engine = new DefaultEngine<TimedInterruptUnit>(iPlanner, iPlayer, iPlanManager);
         engine.setId(id);
+        engine.setCharacterId(vhId);
         are.addEngine(engine);
 
     }

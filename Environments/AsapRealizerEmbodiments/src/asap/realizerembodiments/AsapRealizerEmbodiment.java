@@ -50,19 +50,20 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
      * Generally you should not use this variable, there is a big chance that access to it
      * will be removed in the future
      */
-    private AsapRealizer elckerlycRealizer = null;
+    @Setter(AccessLevel.PROTECTED)
+    protected AsapRealizer elckerlycRealizer = null;
 
     private Map<String, PipeLoader> pipeLoaders = new HashMap<>();
 
     /** Use the RealizerPort to send BML to the Realizer */
     @Getter
     @Setter(AccessLevel.PROTECTED)
-    private RealizerPort realizerPort = null;
+    protected RealizerPort realizerPort = null;
 
     /** Some engines (interrupt engine, paramvalchange) need access to the scheduler */
     @Getter
     @Setter(AccessLevel.PROTECTED)
-    private BMLScheduler bmlScheduler = null;
+	protected BMLScheduler bmlScheduler = null;
 
     @Getter
     BMLBlockManager bmlBlockManager = null;
@@ -70,28 +71,28 @@ public class AsapRealizerEmbodiment implements EmbodimentLoader, Embodiment
     FeedbackManager feedbackManager = null;
 
     /** "human readable name" */
-    private String name = "<no name>";
+    protected String name = "&lt;no name&gt;";
 
-    private String loaderId = "";
+    protected String loaderId = "";
 
-    private String vhId = "";
+    protected String vhId = "";
 
     /** used for loading the virtual human from an XML specification file */
     private XMLStructureAdapter adapter = new XMLStructureAdapter();
     /** used for loading the virtual human from an XML specification file */
     private HashMap<String, String> attrMap = null;
     /** used for loading the virtual human from an XML specification file */
-    private XMLTokenizer theTokenizer = null;
+    protected XMLTokenizer theTokenizer = null;
 
     /**
      * Needed during the loading process in order to offer all other loaders access to the scheduling clock during load
      * (Some engines, such as interrupt engine and
      * paramvalchange, need access to such internals)
      */
-    private Clock theSchedulingClock = null;
+    protected Clock theSchedulingClock = null;
 
     @Getter
-    private final PegBoard pegBoard = new PegBoard();
+    protected PegBoard pegBoard = new PegBoard(); // TODO: Just make an ARE interface...
 
     /** Unload: remove the virtual human from the AsapEnvironment; stop scheduler etc; onload all other loaders */
     public void unload()

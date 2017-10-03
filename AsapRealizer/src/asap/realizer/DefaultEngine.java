@@ -30,6 +30,8 @@ public class DefaultEngine<T extends TimedPlanUnit> implements Engine
     
     private final PlanManager<T> planManager;
     private boolean verifyNoPlay = false;
+    
+    private String characterId;
 
     public void updateTiming(String bmlId)
     {
@@ -112,6 +114,7 @@ public class DefaultEngine<T extends TimedPlanUnit> implements Engine
         this.player = player;
         this.planManager = planManager;
         this.verifyNoPlay = verifyNoPlay;
+        this.characterId = "";
     }
 
     @Override
@@ -215,6 +218,18 @@ public class DefaultEngine<T extends TimedPlanUnit> implements Engine
     public String getId()
     {
         return id;
+    }
+    
+    @Override
+    public void setCharacterId(String newId)
+    {
+        this.characterId = newId;
+    }
+
+    @Override
+    public String getCharacterId()
+    {
+    	return characterId;
     }
     
     @Override

@@ -53,6 +53,8 @@ public class FaceEngineLoader implements EngineLoader
     private FACS2MorphConverter f2mconv = null;
     private PlanManager<TimedFaceUnit> planManager = null;
     private String id = "";
+    private String characterId = "";
+    
     // some variables cached during loading
     private FaceBinding facebinding = null;
 
@@ -64,6 +66,8 @@ public class FaceEngineLoader implements EngineLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
+        characterId = vhId;
+        
         FaceEmbodiment m4e = null;
         for (Loader e : requiredLoaders)
         {
@@ -161,6 +165,7 @@ public class FaceEngineLoader implements EngineLoader
                 facebinding, planManager, are.getPegBoard());
         engine = new DefaultEngine<TimedFaceUnit>(facePlanner, facePlayer, planManager);
         engine.setId(id);
+        engine.setCharacterId(characterId);
 
         // add engine to realizer;
         are.addEngine(engine);

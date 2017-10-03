@@ -145,5 +145,8 @@ public interface Engine
 
     String getId();
 
+    void setCharacterId(String newId);
+    
+    String getCharacterId();
     
 }

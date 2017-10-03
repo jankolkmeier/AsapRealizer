@@ -54,6 +54,7 @@ public class ParameterValueChangeEngineLoader implements EngineLoader
         pvcPlanner.setScheduler(are.getBmlScheduler());
         engine = new DefaultEngine<TimedParameterValueChangeUnit>(pvcPlanner, pvcPlayer, pvcPlanManager);
         engine.setId(id);
+        engine.setCharacterId(vhId);
         are.addEngine(engine);
 
     }

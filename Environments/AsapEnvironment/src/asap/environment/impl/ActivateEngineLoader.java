@@ -48,6 +48,7 @@ public class ActivateEngineLoader implements EngineLoader
         planner.setScheduler(are.getBmlScheduler());
         engine = new DefaultEngine<TimedActivateUnit>(planner, player, planManager);
         engine.setId(id);
+        engine.setCharacterId(vhId);
         are.addEngine(engine);
 
     }

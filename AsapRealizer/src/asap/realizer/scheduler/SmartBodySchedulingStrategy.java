@@ -70,7 +70,7 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
 
         for (Behaviour b : bb.behaviours)
         {
-            scheduleBehaviour(mechanism, bb.id, bmlBlockPeg, scheduler, scheduleTime, scheduledBehaviors, syncMap, b);
+            scheduleBehaviour(mechanism, bb.id, bb.getCharacterId(), bmlBlockPeg, scheduler, scheduleTime, scheduledBehaviors, syncMap, b);
         }
         timeShiftPass(bb, scheduler, scheduledBehaviors, syncMap);
     }
@@ -134,7 +134,7 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
         }
     }
 
-    private void scheduleBehaviour(BMLBlockComposition mechanism, String bmlId, BMLBlockPeg bmlBlockPeg, BMLScheduler scheduler,
+    private void scheduleBehaviour(BMLBlockComposition mechanism, String bmlId, String characterId, BMLBlockPeg bmlBlockPeg, BMLScheduler scheduler,
             double scheduleTime, ArrayList<Behaviour> scheduledBehaviors, HashMap<Behaviour, ArrayList<TimePegAndConstraint>> syncMap,
             Behaviour b)
     {
@@ -150,7 +150,7 @@ public class SmartBodySchedulingStrategy implements SchedulingStrategy
         ensureStartResolved(bmlBlockPeg, syncList);
 
         // resolve unknown syncs
-        Engine eng = scheduler.getEngine(b.getClass());
+        Engine eng = scheduler.getEngine(b.getClass(), characterId);
         if (eng != null)
         {
             try

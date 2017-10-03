@@ -534,7 +534,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         {
             vj.setRotation(Quat4f.getIdentity());
         }
-        System.out.println("constructing additive body for all joints ");
+        log.info("constructing additive body for all joints ");
         additiveBlender.addVJoint(vAdditive);
         return vAdditive;
     }
@@ -546,7 +546,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         {
             vj.setRotation(Quat4f.getIdentity());
         }
-        System.out.println("constructing additive body for joints " + sids);
+        log.info("constructing additive body for joints " + sids);
         additiveBlender.addVJoint(vAdditive, sids);
         return vAdditive;
     }
@@ -558,7 +558,7 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
 
     public void filterAdditiveBody(VJoint vj, Set<String> sids)
     {
-        System.out.println("filter additive body to joints " + sids);
+    	log.info("filter additive body to joints " + sids);
         additiveBlender.filterVJoint(vj, sids);
     }
 

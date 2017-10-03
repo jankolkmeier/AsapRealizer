@@ -39,6 +39,8 @@ public class PictureEngineLoader implements EngineLoader
     private PlanManager<TimedPictureUnit> planManager = null;
     private Player player = null;
     private String id = "";
+    private String characterId = "";
+    
     // some variables cached during loading
     private PictureBinding pictureBinding = null;
     private AsapRealizerEmbodiment are = null;
@@ -48,6 +50,7 @@ public class PictureEngineLoader implements EngineLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
+        characterId = vhId;
         for (EmbodimentLoader e : ArrayUtils.getClassesOfType(requiredLoaders, EmbodimentLoader.class))
         {
             if (e.getEmbodiment() instanceof PictureEmbodiment)
@@ -114,6 +117,7 @@ public class PictureEngineLoader implements EngineLoader
         PicturePlanner planner = new PicturePlanner(are.getFeedbackManager(), pictureBinding, planManager);
         engine = new DefaultEngine<TimedPictureUnit>(planner, player, planManager);
         engine.setId(id);
+        engine.setCharacterId(characterId);
 
         // add engine to realizer;
         are.addEngine(engine);
