@@ -183,6 +183,12 @@ public class FeedbackManagerImpl implements FeedbackManager
     @Override
     public void prediction(BMLAPredictionFeedback bpf)
     {
+        prediction(bpf, defaultCharacterId);
+    }
+    @Override
+    public void prediction(BMLAPredictionFeedback bpf, String vhId)
+    {
+        bpf.setCharacterId(vhId);
         synchronized (feedbackListeners)
         {
             String feedbackString = bpf.toBMLFeedbackString();       

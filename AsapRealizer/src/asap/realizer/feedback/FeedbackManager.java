@@ -53,6 +53,8 @@ public interface FeedbackManager
     
     void prediction(BMLAPredictionFeedback bpsf);    
 
+    void prediction(BMLAPredictionFeedback bpsf, String vhId);    
+
     void warn(BMLWarningFeedback w, double time);
     
     void warn(BMLWarningFeedback w, double time, String vhId);
