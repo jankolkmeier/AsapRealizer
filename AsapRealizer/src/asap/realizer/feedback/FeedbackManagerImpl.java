@@ -45,25 +45,25 @@ public class FeedbackManagerImpl implements FeedbackManager
     {
         feedbackListeners.add(fb);
     }
+
     
     @Override
     public void puException(TimedPlanUnit timedMU, String message, double time)
     {
-    	puException(timedMU, message, time, defaultCharacterId);
-    }
-    
-    @Override
-    public void puException(TimedPlanUnit timedMU, String message, double time, String vhId)
-    {
         String bmlId = timedMU.getBMLId();        
         String exceptionText = message + "\nBehavior " + timedMU.getBMLId() + ":" + timedMU.getId() + " dropped.";
-        warn(new BMLWarningFeedback(bmlId+":"+timedMU.getId(), "EXECUTION_FAILURE",exceptionText), time, vhId);
+        warn(new BMLWarningFeedback(bmlId+":"+timedMU.getId(), "EXECUTION_FAILURE",exceptionText), time);
     }
     
-    private BMLASyncPointProgressFeedback constructBMLASyncPointProgressFeedback(BMLSyncPointProgressFeedback fb, String vhId)
+    private BMLASyncPointProgressFeedback constructBMLASyncPointProgressFeedback(BMLSyncPointProgressFeedback fb)
     {
+    	String characterId = bmlBlockManager.getCharacterId(fb.getBMLId());
+    	if (characterId.isEmpty()) {
+    		characterId = defaultCharacterId;
+    	}
+    	
         BMLASyncPointProgressFeedback fba = BMLASyncPointProgressFeedback.build(fb);        
-        fba.setCharacterId(vhId);
+        fba.setCharacterId(characterId);
         fba.setPosixTime(System.currentTimeMillis());
         return fba;
     }
@@ -71,13 +71,8 @@ public class FeedbackManagerImpl implements FeedbackManager
     @Override
     public void feedback(BMLSyncPointProgressFeedback fb)
     {
-    	feedback(fb, defaultCharacterId);
-    }
-    
-    @Override
-    public void feedback(BMLSyncPointProgressFeedback fb, String vhId)
-    {
-        BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb, vhId);
+        BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb);
+        
         synchronized (feedbackListeners)
         {
             for (BMLFeedbackListener fbl : feedbackListeners)
@@ -98,17 +93,13 @@ public class FeedbackManagerImpl implements FeedbackManager
     @Override
     public void feedback(List<BMLSyncPointProgressFeedback> fbs)
     {
-        feedback(fbs, defaultCharacterId);
-    }
-    
-    @Override
-    public void feedback(List<BMLSyncPointProgressFeedback> fbs, String vhId)
-    {
         synchronized (feedbackListeners)
         {
             for (BMLSyncPointProgressFeedback fb : fbs)
             {
-                BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb, vhId);
+            	
+                BMLASyncPointProgressFeedback fba = constructBMLASyncPointProgressFeedback(fb);
+                
                 for (BMLFeedbackListener fbl : feedbackListeners)
                 {
                     try
@@ -137,12 +128,6 @@ public class FeedbackManagerImpl implements FeedbackManager
     @Override
     public ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId)
     {
-        return getSyncsPassed(bmlId, behaviorId, defaultCharacterId);
-    }
-    
-    @Override
-    public ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId, String vhId)
-    {
         return bmlBlockManager.getSyncsPassed(bmlId, behaviorId);
     }
 
@@ -154,14 +139,13 @@ public class FeedbackManagerImpl implements FeedbackManager
     
     @Override
     public void blockProgress(BMLABlockProgressFeedback psf)
-    {
-    	blockProgress(psf, defaultCharacterId);
-    }
-    
-    @Override
-    public void blockProgress(BMLABlockProgressFeedback psf, String vhId)
-    {
-        psf.setCharacterId(vhId);
+    {	
+    	String characterId = bmlBlockManager.getCharacterId(psf.getBmlId());
+    	if (characterId.isEmpty()) {
+    		characterId = defaultCharacterId;
+    	}
+    	
+        psf.setCharacterId(characterId);
         synchronized (feedbackListeners)
         {
             for (BMLFeedbackListener fbl : feedbackListeners)
@@ -183,9 +167,10 @@ public class FeedbackManagerImpl implements FeedbackManager
     @Override
     public void prediction(BMLAPredictionFeedback bpf)
     {
+    	
         synchronized (feedbackListeners)
         {
-            String feedbackString = bpf.toBMLFeedbackString();       
+            String feedbackString = bpf.toBMLFeedbackString();
             for (BMLFeedbackListener pl : feedbackListeners)
             {
                 try
@@ -199,17 +184,10 @@ public class FeedbackManagerImpl implements FeedbackManager
             }
         }        
     }    
-
+    
     @Override
     public void warn(BMLWarningFeedback w, double time)
     {
-    	warn(w, time, defaultCharacterId);
-    }
-    
-    @Override
-    public void warn(BMLWarningFeedback w, double time, String vhId)
-    {
-        w.setCharacterId(vhId);
         synchronized (feedbackListeners)
         {
             for (BMLFeedbackListener wl : feedbackListeners)
