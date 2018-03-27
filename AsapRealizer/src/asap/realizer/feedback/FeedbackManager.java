@@ -41,7 +41,7 @@ public interface FeedbackManager
     
     void puException(TimedPlanUnit timedMU, String message, double time);
     
-    void prediction(BMLAPredictionFeedback bpsf);    
+    void prediction(BMLAPredictionFeedback bpsf);        
 
     void warn(BMLWarningFeedback w, double time);
 }

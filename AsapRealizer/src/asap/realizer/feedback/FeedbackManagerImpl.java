@@ -167,7 +167,6 @@ public class FeedbackManagerImpl implements FeedbackManager
     @Override
     public void prediction(BMLAPredictionFeedback bpf)
     {
-    	
         synchronized (feedbackListeners)
         {
             String feedbackString = bpf.toBMLFeedbackString();
