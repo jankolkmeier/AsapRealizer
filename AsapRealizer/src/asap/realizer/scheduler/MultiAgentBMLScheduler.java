@@ -140,15 +140,13 @@ public final class MultiAgentBMLScheduler extends BMLScheduler
     @Override
     public void blockStopFeedback(String bmlId, BMLABlockStatus status, double time)
     {
-    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
-        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", time, status), vhId);
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "end", time, status));
     }
 
     @Override
     public void blockStartFeedback(String bmlId, double time)
     {
-    	String vhId = bmlBlocksManager.getCharacterId(bmlId);
-        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", time, BMLABlockStatus.IN_EXEC), vhId);
+        fbManager.blockProgress(new BMLABlockProgressFeedback(bmlId, "start", time, BMLABlockStatus.IN_EXEC));
     }
     
     @Override

@@ -96,10 +96,11 @@ public class BMLASchedulingHandler implements SchedulingHandler
         handleComposition(bb, scheduler, bmlaAttr, appendAfter, chunkAfter);
 
         double predictedStart = Math.max(scheduler.predictEndTime(appendAfter), scheduler.predictSubsidingTime(chunkAfter));
-        scheduler.planningStart(bb.id, predictedStart);
 
         BMLBBlock bbm = new BMLBBlock(bb.id, bb.getCharacterId(), scheduler, pegBoard, appendAfter, bmlaAttr.getOnStartList(), chunkAfter);
         scheduler.getBMLBlockManager().addBMLBlock(bbm);
+
+        scheduler.planningStart(bb.id, predictedStart);
         if (!checkAndApplyBlockBeforeConstraints(bb, scheduler, bmlaAttr))
         {
             return;

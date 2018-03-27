@@ -323,6 +323,7 @@ public class BMLScheduler
         bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), BMLABlockStatus.IN_EXEC, getSchedulingTime(),
                 predictEndTime(bb.getBmlId())));
         addBehaviorPredictions(bb, bpf);
+        bpf.setCharacterId(bb.getCharacterId());
         return bpf;
     }
 
@@ -332,6 +333,7 @@ public class BMLScheduler
         BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
         bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bb.getBmlId(), status, predictedStart, predictedEnd));
         addBehaviorPredictions(bb, bpf);
+        bpf.setCharacterId(bb.getCharacterId());
         return bpf;
     }
 
@@ -340,6 +342,7 @@ public class BMLScheduler
     {
         BMLAPredictionFeedback bpf = new BMLAPredictionFeedback();
         bpf.addBMLBlockPrediction(createBMLABlockPredictionFeedback(bmlId, status, predictedStart, predictedEnd));
+        bpf.setCharacterId(bmlBlocksManager.getCharacterId(bmlId));
         return bpf;
     }
 
