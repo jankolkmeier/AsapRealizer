@@ -33,27 +33,15 @@ public final class NullFeedbackManager implements FeedbackManager
 
 	@Override
 	public void feedback(BMLSyncPointProgressFeedback fb){}
-	
-    @Override
-    public void feedback(BMLSyncPointProgressFeedback fb, String vhId){}
 
 	@Override
 	public void feedback(List<BMLSyncPointProgressFeedback> fbs){}
-	
-    @Override
-    public void feedback(List<BMLSyncPointProgressFeedback> fbs, String vhId){}
     
     @Override
     public void removeAllFeedbackListeners(){}
 
     @Override
     public void removeFeedbackListener(BMLFeedbackListener fb){}
-    
-    @Override
-    public ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId, String vhId)
-    {
-        return new ImmutableSet.Builder<String>().build();        
-    }
     
     @Override
 	public ImmutableSet<String> getSyncsPassed(String bmlId, String behaviorId)
@@ -63,23 +51,14 @@ public final class NullFeedbackManager implements FeedbackManager
 
 	@Override
 	public void blockProgress(BMLABlockProgressFeedback psf) {}
-	
-    @Override
-    public void blockProgress(BMLABlockProgressFeedback psf, String vhId){}
 
 	@Override
 	public void puException(TimedPlanUnit timedMU, String message, double time){}
-    
-    @Override
-    public void puException(TimedPlanUnit timedMU, String message, double time, String vhId){}
     
     @Override
     public void prediction(BMLAPredictionFeedback bpsf){}
 
     @Override
     public void warn(BMLWarningFeedback w, double time){}
-
-	@Override
-	public void warn(BMLWarningFeedback w, double time, String vhId){}
 
 }
