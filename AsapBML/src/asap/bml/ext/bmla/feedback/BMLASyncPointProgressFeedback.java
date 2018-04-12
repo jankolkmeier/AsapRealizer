@@ -52,16 +52,6 @@ public class BMLASyncPointProgressFeedback extends BMLSyncPointProgressFeedback
     }
 
     @Override
-    public void decodeAttributes(HashMap<String, String> attrMap, XMLTokenizer tokenizer)
-    {
-        super.decodeAttributes(attrMap, tokenizer);
-        if (specifiesCustomStringParameter(POSIXTIME_ID))
-        {
-            setPosixTime(Long.parseLong(getCustomStringParameterValue(POSIXTIME_ID)));
-        }
-    }
-
-    @Override
     public String toBMLFeedbackString(List<XMLNameSpace> xmlNamespaceList)
     {
         return super.toBMLFeedbackString(BMLAPrefix.insertBMLANamespacePrefix(xmlNamespaceList));

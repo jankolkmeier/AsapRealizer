@@ -2,18 +2,17 @@
  *******************************************************************************/
 package asap.bml.ext.bmla.feedback;
 
+import hmi.xml.XMLTokenizer;
+
 import java.io.IOException;
 
-import saiba.bml.feedback.BMLBlockProgressFeedback;
-import saiba.bml.feedback.BMLFeedback;
-import saiba.bml.feedback.BMLFeedbackParser;
-import saiba.bml.feedback.BMLPredictionFeedback;
-import saiba.bml.feedback.BMLSyncPointProgressFeedback;
+
+import saiba.bml.feedback.*;
 
 /**
- * Wraps the BMLFeedbackParser to provide BMLAFeedback
+ * Parses BMLAFeedback. Modified by Dennis wrt original that used to only wrap the BMLFeedbackParser to provide BMLAFeedback
  * @author hvanwelbergen
- *
+ * @author Dennis Reidsma
  */
 public class BMLAFeedbackParser
 {
@@ -23,25 +22,37 @@ public class BMLAFeedbackParser
 
     /**
      * @param str the feedback String
-     * @return the corresponding instance of feedback, null if none matching. Returns either BMLABlockProgressFeedback, 
-     * BMLASyncPointProgressFeedback, BMLAPredictionFeedback, BMLWarningFeedback or null.
-     * @throws IOException
+     * @return the corresponding instance of feedback, null if none matching 
+     * @throws IOException 
      */
     public static final BMLFeedback parseFeedback(String str) throws IOException
     {
-        BMLFeedback fb = BMLFeedbackParser.parseFeedback(str);
-        if (fb instanceof BMLBlockProgressFeedback)
+        XMLTokenizer tok = new XMLTokenizer(str);
+       
+        if(tok.atSTag(BMLABlockProgressFeedback.xmlTag()))
         {
-            return BMLABlockProgressFeedback.build((BMLBlockProgressFeedback) fb);
+            BMLABlockProgressFeedback fb = new BMLABlockProgressFeedback();
+            fb.readXML(tok);
+            return fb;                        
         }
-        else if (fb instanceof BMLSyncPointProgressFeedback)
+        else if(tok.atSTag(BMLAPredictionFeedback.xmlTag()))
         {
-            return BMLASyncPointProgressFeedback.build((BMLSyncPointProgressFeedback) fb);
+            BMLAPredictionFeedback fb = new BMLAPredictionFeedback();
+            fb.readXML(tok);
+            return fb;                        
         }
-        else if (fb instanceof BMLPredictionFeedback)
+        else if(tok.atSTag(BMLWarningFeedback.xmlTag()))
         {
-            return BMLAPredictionFeedback.build((BMLPredictionFeedback)fb);
+            BMLWarningFeedback fb = new BMLWarningFeedback();
+            fb.readXML(tok);
+            return fb;                        
         }
-        return fb;
+        else if(tok.atSTag(BMLASyncPointProgressFeedback.xmlTag()))
+        {
+            BMLASyncPointProgressFeedback fb = new BMLASyncPointProgressFeedback();
+            fb.readXML(tok);
+            return fb;                        
+        }
+        return null;
     }
 }

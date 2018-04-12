@@ -32,6 +32,7 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -64,6 +65,9 @@ import com.google.common.collect.Iterables;
  */
 public class RealizerPortUI extends JPanel
 {
+    private boolean sendResetBlock = true;
+    private JCheckBox resetButton = null;
+    
     @Data
     private static final class DemoScript
     {
@@ -145,11 +149,15 @@ public class RealizerPortUI extends JPanel
         playButton.addActionListener(new PlayListener());
         JButton loadButton = new JButton("LOAD");
         loadButton.addActionListener(new LoadListener());
-
+        resetButton = new JCheckBox("Send Reset Blocks");
+        resetButton.setSelected(sendResetBlock);        
+        resetButton.addActionListener(new resetListener());
+        
         demoScripts = new ArrayList<DemoScript>();
 
         buttonPanel.add(playButton);
         buttonPanel.add(loadButton);
+        buttonPanel.add(resetButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(5, 0)));
 
         getDemoScripts(resource);
@@ -319,7 +327,7 @@ public class RealizerPortUI extends JPanel
     /** Play the content of the BML input box; set the resulting output in the outputArea */
     public void playBMLContent()
     {
-        realizerBridge.performBML(BehaviourBlockBuilder.resetBlock().toXMLString());
+        if (sendResetBlock) realizerBridge.performBML(BehaviourBlockBuilder.resetBlock().toXMLString());
         String bmlContent = bmlInput.getText();
         bmlContent = bmlContent.replaceAll("(?s)<!--.*?-->", "");
         String bmls[] = Iterables.toArray(Splitter.on(Pattern.compile("<bml\\s")).trimResults().omitEmptyStrings().split(bmlContent), String.class);
@@ -373,6 +381,16 @@ public class RealizerPortUI extends JPanel
         public void actionPerformed(ActionEvent e)
         {
             playBMLContent();
+        }
+    }
+    /** toggle reset option  */
+    class resetListener implements ActionListener
+    {
+        @Override
+        public void actionPerformed(ActionEvent e)
+        {
+            sendResetBlock = !sendResetBlock;
+            resetButton.setSelected(sendResetBlock);
         }
     }
 

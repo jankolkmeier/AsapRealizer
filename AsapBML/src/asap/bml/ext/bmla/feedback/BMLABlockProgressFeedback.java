@@ -8,6 +8,11 @@ import hmi.xml.XMLTokenizer;
 import java.util.HashMap;
 import java.util.List;
 
+import hmi.xml.XMLFormatting;
+import hmi.xml.XMLTokenizer;
+
+import saiba.bml.BMLInfo;
+
 import lombok.Getter;
 import saiba.bml.feedback.BMLBlockProgressFeedback;
 import asap.bml.ext.bmla.BMLAInfo;
@@ -15,6 +20,9 @@ import asap.bml.ext.bmla.BMLAPrefix;
 
 /**
  * BMLBlockProgressFeedback with posixTime
+ 
+ revised parsing by Dennis
+ 
  * @author hvanwelbergen
  */
 public class BMLABlockProgressFeedback extends BMLBlockProgressFeedback
