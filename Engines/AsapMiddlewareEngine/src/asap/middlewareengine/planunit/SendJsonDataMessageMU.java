@@ -109,10 +109,10 @@ public class SendJsonDataMessageMU implements MiddlewareUnit
     			}
     			
     		}
-    	} else if (name.equals("middlewareloaderclass"))
+    	} else if (name.equals("middlewareloaderclass") && !"".equals(value))
     	{
     		loaderclass= value;
-		} else if (name.equals("middlewareloaderproperties"))
+		} else if (name.equals("middlewareloaderproperties") && !"".equals(value))
 		{
 			propsAsString=value;
 			props = new Properties();
