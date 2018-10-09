@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import saiba.bml.feedback.BMLWarningFeedback;
 import asap.realizerport.BMLFeedbackListener;
 import asap.realizerport.RealizerPort;
+import java.io.IOException;
+import java.util.HashMap;
 
 import com.google.common.collect.ImmutableList;
 
@@ -28,10 +30,22 @@ public class BMLRealizerToActiveMQAdapter implements RealizerPort, AMQConnection
 
     private AMQConnection amqConnection = null;
 
+    private String feedbackTopic;
+    private String bmlTopic;
+
     public BMLRealizerToActiveMQAdapter()
     {
-        amqConnection = new AMQConnection("BMLRealizerToActiveMQAdapter", new String[] { AMQBMLConstants.BML },
-                new String[] { AMQBMLConstants.BML_FEEDBACK });
+        this(AMQBMLConstants.BML,
+             AMQBMLConstants.BML_FEEDBACK,
+             "tcp://127.0.0.1:61616"
+             );
+    }
+    public BMLRealizerToActiveMQAdapter(String sendTopic, String receiveTopic, String amqBrokerURI)
+    {
+        bmlTopic=sendTopic;
+        feedbackTopic=receiveTopic;
+        amqConnection = new AMQConnection("BMLRealizerToActiveMQAdapter", new String[] { bmlTopic },
+                new String[] { feedbackTopic }, amqBrokerURI);
         amqConnection.addListeners(this);
     }
 
@@ -95,7 +109,7 @@ public class BMLRealizerToActiveMQAdapter implements RealizerPort, AMQConnection
     {
         try
         {
-            amqConnection.sendMessage(AMQBMLConstants.BML, bmlString);
+            amqConnection.sendMessage(bmlTopic, bmlString);
         }
         catch (JMSException e)
         {

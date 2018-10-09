@@ -57,6 +57,7 @@ public class MiddlewareEngineLoader implements EngineLoader
     private PlanManager<TimedMiddlewareUnit> planManager = null;
     private Player player = null;
     private String id = "";
+    private String characterId = "";
     // some variables cached during loading
     private MiddlewareBinding middlewareBinding = null;
     private AsapRealizerEmbodiment are = null;
@@ -66,6 +67,7 @@ public class MiddlewareEngineLoader implements EngineLoader
             Loader... requiredLoaders) throws IOException
     {
         id = loaderId;
+        characterId = vhId;
         for (EmbodimentLoader e : ArrayUtils.getClassesOfType(requiredLoaders, EmbodimentLoader.class))
         {
             if (e.getEmbodiment() instanceof MiddlewareEmbodiment)
@@ -132,6 +134,7 @@ public class MiddlewareEngineLoader implements EngineLoader
         MiddlewarePlanner planner = new MiddlewarePlanner(are.getFeedbackManager(), middlewareBinding, planManager);
         engine = new DefaultEngine<TimedMiddlewareUnit>(planner, player, planManager);
         engine.setId(id);
+        engine.setCharacterId(characterId);
 
         // add engine to realizer;
         are.addEngine(engine);

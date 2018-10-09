@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import nl.utwente.hmi.middleware.Middleware;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.primitives.Floats;
@@ -217,21 +218,31 @@ public class InterpolatingJsonTemplateMessageMU implements MiddlewareUnit
     public void play(double t) throws MUPlayException
     {
     	interpolateMessage((float)t);
-    	if (loaderclass == null || loaderclass.equals(""))
-    	{
-    		if (props!=null)
-    		{
-    			mwe.getMiddleware(props).sendData(msgContentAsJson);
-    		}
-    		else
-    		{
-    			mwe.getMiddleware().sendData(msgContentAsJson);
-    		}
-    	}
-    	else //loaderclass set: then assume props also set; 
-    	{
-    		mwe.getMiddleware(loaderclass, props).sendData(msgContentAsJson);
-    	}
+        Middleware mw = null;
+        try {            
+            if (loaderclass == null || loaderclass.equals(""))
+            {
+                if (props!=null)
+                {
+                     mw = mwe.getMiddleware(props);
+                }
+                else
+                {
+                    mw = mwe.getMiddleware();
+                }
+            }
+            else //loaderclass set: then assume props also set; 
+            {
+                mw = mwe.getMiddleware(loaderclass, props);
+            }
+        } catch (Exception e)
+        {
+            log.error("ERROR LOADING MIDDLEWARE, RETURNING NULL MIDDLEWARE");
+        }
+        if (mw!=null)
+        {
+            mw.sendData(msgContentAsJson);
+        } 
     }
     
     /** 

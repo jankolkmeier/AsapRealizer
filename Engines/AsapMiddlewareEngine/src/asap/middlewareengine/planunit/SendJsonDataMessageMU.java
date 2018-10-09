@@ -26,6 +26,7 @@ import java.util.Properties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import nl.utwente.hmi.middleware.Middleware;
 import asap.middlewareengine.embodiment.MiddlewareEmbodiment;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -153,21 +154,31 @@ public class SendJsonDataMessageMU implements MiddlewareUnit
     /** start the unit. */
     public void startUnit(double startTime, double endTime) throws MUPlayException
     {
-    	if (loaderclass == null || loaderclass.equals(""))
-    	{
-    		if (props!=null)
-    		{
-    			mwe.getMiddleware(props).sendData(msgContentAsJson);
-    		}
-    		else
-    		{
-    			mwe.getMiddleware().sendData(msgContentAsJson);
-    		}
-    	}
-    	else //loaderclass set: then assume props also set; 
-    	{
-    		mwe.getMiddleware(loaderclass, props).sendData(msgContentAsJson);
-    	}
+        Middleware mw = null;
+        try {            
+            if (loaderclass == null || loaderclass.equals(""))
+            {
+                if (props!=null)
+                {
+                     mw = mwe.getMiddleware(props);
+                }
+                else
+                {
+                    mw = mwe.getMiddleware();
+                }
+            }
+            else //loaderclass set: then assume props also set; 
+            {
+                mw = mwe.getMiddleware(loaderclass, props);
+            }
+        } catch (Exception e)
+        {
+            log.error("ERROR LOADING MIDDLEWARE, RETURNING NULL MIDDLEWARE");
+        }
+        if (mw!=null)
+        {
+            mw.sendData(msgContentAsJson);
+        } 
     }
 
     /**

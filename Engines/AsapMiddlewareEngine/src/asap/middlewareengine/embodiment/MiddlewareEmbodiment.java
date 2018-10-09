@@ -160,7 +160,7 @@ public class MiddlewareEmbodiment implements Embodiment, EmbodimentLoader
     	if (mw == null)
     	{
     		log.error("Cannot create requested middleware channel {} with properties {}", specificLoader, ps);
-    		throw new RuntimeException("cannot load middleware");
+    		//throw new RuntimeException("cannot load middleware");
     	}
     	return mw;
     }

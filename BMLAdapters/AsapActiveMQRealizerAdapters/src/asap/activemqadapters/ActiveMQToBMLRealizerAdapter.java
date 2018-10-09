@@ -4,6 +4,8 @@ package asap.activemqadapters;
 
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
+import java.io.IOException;
+import java.util.HashMap;
 
 import lombok.extern.slf4j.Slf4j;
 import asap.realizerport.BMLFeedbackListener;
@@ -26,10 +28,22 @@ public class ActiveMQToBMLRealizerAdapter implements BMLFeedbackListener, AMQCon
     /** The RealizerPort to which the BML requests must be redirected. */
     private final RealizerPort realizerPort;
 
+    private String feedbackTopic;
+    private String bmlTopic;
+    
     public ActiveMQToBMLRealizerAdapter(RealizerPort rp) throws JMSException
     {
-        amqConnection = new AMQConnection("BMLRealizerToActiveMQAdapter", new String[] { AMQBMLConstants.BML_FEEDBACK },
-                new String[] { AMQBMLConstants.BML });
+        this(rp,
+             AMQBMLConstants.BML_FEEDBACK ,
+             AMQBMLConstants.BML,
+             "tcp://127.0.0.1:61616"
+             );
+    }
+    public ActiveMQToBMLRealizerAdapter(RealizerPort rp, String sendTopic, String receiveTopic, String amqBrokerURI) throws JMSException
+    {
+        bmlTopic=receiveTopic;
+        feedbackTopic=sendTopic;
+        amqConnection = new AMQConnection("BMLRealizerToActiveMQAdapter", new String[] {sendTopic}, new String[] {receiveTopic}, amqBrokerURI);
         amqConnection.addListeners(this);
         realizerPort = rp;
         realizerPort.addListeners(this);        
@@ -40,7 +54,7 @@ public class ActiveMQToBMLRealizerAdapter implements BMLFeedbackListener, AMQCon
     {
         try
         {
-            amqConnection.sendMessage(AMQBMLConstants.BML_FEEDBACK, feedback);
+            amqConnection.sendMessage(feedbackTopic, feedback);
         }
         catch (JMSException e)
         {

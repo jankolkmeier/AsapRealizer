@@ -41,16 +41,21 @@ public class AMQConnection implements MessageListener
     private final String[] receiveTopics;
     private final String[] sendTopics;
     private String name = null;
-
+    private String amqBrokerURI="tcp://127.0.0.1:61616";
     private Session session;
     private Map<String, MessageProducer> messageProducers;
 
     public AMQConnection(String name, String[] sendTopics, String[] receiveTopics)
     {
+        this(name,sendTopics,receiveTopics,"tcp://127.0.0.1:61616");
+    }
+    public AMQConnection(String name, String[] sendTopics, String[] receiveTopics, String amqBrokerURI)
+    {
         this.sendTopics = Arrays.copyOf(sendTopics,sendTopics.length);
         this.receiveTopics = Arrays.copyOf(receiveTopics, receiveTopics.length);
         this.name = name;
-
+        this.amqBrokerURI=amqBrokerURI;
+        
         try
         {
             initAMQConnection();
@@ -65,7 +70,7 @@ public class AMQConnection implements MessageListener
     {
         messageProducers = new HashMap<String, MessageProducer>();
 
-        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(url);
+        ConnectionFactory connectionFactory = new ActiveMQConnectionFactory(amqBrokerURI);
         Connection connection = connectionFactory.createConnection();
         connection.start();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);

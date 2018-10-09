@@ -109,7 +109,6 @@ public final class MultiAgentBMLScheduler extends BMLScheduler
     	if (characterPlanSelector.keySet().size() < 1) {
     		return null;
     	}
-    	
     	return getEngine(c, characterPlanSelector.keySet().iterator().next());
     }
 
