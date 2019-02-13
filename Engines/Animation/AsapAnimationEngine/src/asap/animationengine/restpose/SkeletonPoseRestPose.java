@@ -38,15 +38,23 @@ public class SkeletonPoseRestPose implements RestPose
     private AnimationPlayer player;
     private VJoint poseTree;        //Holds the pose on a VJoint structure. Joints not in the pose are set to have identity rotation.
     private SkeletonPose pose;
-
+    private boolean undefinedPartsToIdentity;
+    
     public SkeletonPoseRestPose()
     {
-
+        this.undefinedPartsToIdentity = true;
     }
-
+    
+    public SkeletonPoseRestPose(SkeletonPose pose, boolean unsetToIdentity)
+    {
+        this.pose = pose;
+        this.undefinedPartsToIdentity = unsetToIdentity;
+    }
+    
     public SkeletonPoseRestPose(SkeletonPose pose)
     {
         this.pose = pose;
+        this.undefinedPartsToIdentity = true;
     }
 
     public void setAnimationPlayer(AnimationPlayer player)
@@ -55,7 +63,7 @@ public class SkeletonPoseRestPose implements RestPose
         poseTree = player.getVCurr().copyTree("rest-");
         for (VJoint vj : poseTree.getParts())
         {
-            if (vj.getSid() != null)
+            if (undefinedPartsToIdentity && vj.getSid() != null)
             {
                 vj.setRotation(Quat4f.getIdentity());
             }

@@ -51,7 +51,9 @@ public class RestPoseAssembler extends XMLStructureAdapter
             {
                 throw new XMLScanException("Error reading skeletonpose file " + file, e);
             }
-            restPose = new SkeletonPoseRestPose(pose);
+
+        	boolean undefinedPartsToIdentity = getOptionalBooleanAttribute("undefinedPartsToIdentity", attrMap, true);
+            restPose = new SkeletonPoseRestPose(pose, undefinedPartsToIdentity);
         }
         else if (type.equals("class"))
         {
