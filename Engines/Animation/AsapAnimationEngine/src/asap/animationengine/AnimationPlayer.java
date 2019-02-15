@@ -10,6 +10,7 @@ import hmi.animation.VJoint;
 import hmi.animation.VJointPartsMap;
 import hmi.animation.VObjectTransformCopier;
 import hmi.math.Quat4f;
+import hmi.math.Vec3f;
 import hmi.mixedanimationenvironment.MixedAnimationPlayer;
 import hmi.physics.PhysicalHumanoid;
 import hmi.physics.PhysicalJoint;
@@ -129,8 +130,14 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     private void applyCurrentOnVNext()
     {
         float q[] = Quat4f.getQuat4f();
+        float t[] = Vec3f.getVec3f();
         for (VJoint vj : vNextMap.getJoints())
         {
+        	if (vj.getSid().equals(Hanim.HumanoidRoot)) {
+        		vCurrMap.get(vj.getSid()).getTranslation(t);
+        		vj.setTranslation(t);
+        	}
+        	
             // XXX:ugliness, the eyes move so fast that they might have identity rotation in the next frame and non-identity rotation in the previous
             if (vj.getSid() != null && !vj.getSid().equals(Hanim.l_eyeball_joint) && !vj.getSid().equals(Hanim.r_eyeball_joint))
             {
