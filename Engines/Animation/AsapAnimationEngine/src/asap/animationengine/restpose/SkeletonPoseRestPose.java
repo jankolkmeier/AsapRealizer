@@ -182,6 +182,12 @@ public class SkeletonPoseRestPose implements RestPose
     }
 
     @Override
+    public void initialRestPose(double time, VJoint dst)
+    {
+        VObjectTransformCopier.newInstanceFromVJointTree(poseTree, dst, "T1R").copyConfig();
+    }
+
+    @Override
     public double getTransitionToRestDuration(VJoint vCurrent, Set<String> joints)
     {
         double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(vCurrent, poseTree, joints);

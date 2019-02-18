@@ -222,6 +222,12 @@ public class PhysicalBalanceRestPose implements RestPose
     }
 
     @Override
+    public void initialRestPose(double time, VJoint dst)
+    {
+
+    }
+
+    @Override
     public void setParameterValue(String name, String value) throws ParameterException
     {
         if (name.equals("xmlcontrollers"))
