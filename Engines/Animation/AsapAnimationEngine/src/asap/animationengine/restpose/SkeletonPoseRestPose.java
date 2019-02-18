@@ -107,7 +107,7 @@ public class SkeletonPoseRestPose implements RestPose
                 if (vjSet != null)
                 {
                     vjSet.setRotation(q);                    
-                    if (vj.getSid() == Hanim.HumanoidRoot && pose.getConfigType().equals("T1R")) {
+                    if (vj.getSid() == Hanim.HumanoidRoot && (pose == null || pose.getConfigType().equals("T1R"))) {
                         vj.getTranslation(t);
                         vjSet.setTranslation(t);
                     }
