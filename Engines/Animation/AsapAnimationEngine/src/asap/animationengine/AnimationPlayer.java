@@ -35,6 +35,7 @@ import asap.animationengine.mixed.MixedPlayer;
 import asap.animationengine.motionunit.AnimationUnit;
 import asap.animationengine.motionunit.TimedAnimationUnit;
 import asap.animationengine.restpose.RestPose;
+import asap.animationengine.restpose.SkeletonPoseRestPose;
 import asap.realizer.Player;
 import asap.realizer.feedback.FeedbackManager;
 import asap.realizer.pegboard.BMLBlockPeg;
@@ -645,5 +646,10 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
     public void updateTiming(String bmlId)
     {
         app.updateTiming(bmlId);
+    }
+
+    // Return the default restpose. I.e. the pose that was set on calibration/in start pose
+    public RestPose getDefaultRestPose() {
+        return app.getDefaultRestPose();
     }
 }
