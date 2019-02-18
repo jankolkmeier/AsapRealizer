@@ -54,6 +54,7 @@ public class SkeletonPoseRestPose implements RestPose
     {
         this.player = player;
         poseTree = player.getVCurr().copyTree("rest-");
+        /*
         for (VJoint vj : poseTree.getParts())
         {
             if (vj.getSid() != null)
@@ -61,6 +62,13 @@ public class SkeletonPoseRestPose implements RestPose
                 vj.setRotation(Quat4f.getIdentity());
             }
         }
+        */
+        /*
+        Default behavior (see above) was to default all bones to identity rotation.
+        New behavior (see below) is to default to initial/calibration pose of the agent.
+            TODO: find a good place to configure this behavior (and if not configured, use old default).
+        */
+        player.getDefaultRestPose().initialRestPose(0, poseTree);
         if (pose != null)
         {
             pose.setTargets(poseTree.getParts().toArray(new VJoint[poseTree.getParts().size()]));
