@@ -2,6 +2,7 @@
  *******************************************************************************/
 package asap.animationengine.restpose;
 
+import hmi.animation.Hanim;
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
@@ -83,6 +84,7 @@ public class SkeletonPoseRestPose implements RestPose
     {
         if (poseTree == null) return;
         float q[] = new float[4];
+        float t[] = new float[3];
         for (VJoint vj : poseTree.getParts())
         {
             if (!kinematicJoints.contains(vj.getSid()) && !physicalJoints.contains(vj.getSid()))
@@ -92,6 +94,10 @@ public class SkeletonPoseRestPose implements RestPose
                 if (vjSet != null)
                 {
                     vjSet.setRotation(q);                    
+                    if (vj.getSid() == Hanim.HumanoidRoot && pose.getConfigType().equals("T1R")) {
+                        vj.getTranslation(t);
+                        vjSet.setTranslation(t);
+                    }
                 }                
             }
         }        
@@ -227,7 +233,14 @@ public class SkeletonPoseRestPose implements RestPose
         else if (pose.getConfigType().equals("T1R"))
         {
             float config[]= new float[targetJoints.size()*4+3];
-            poseTree.getTranslation(config);
+            for(VJoint vj:poseTree.getParts())
+            {
+                if(vj.getSid() == Hanim.HumanoidRoot)
+                {
+                    vj.getTranslation(config);
+                    break;
+                }
+            }
             setRotConfig(poseTree, 3, config);
             mu = new T1RTransitionToPoseMU(startJoints, targetJoints, config);
         }
