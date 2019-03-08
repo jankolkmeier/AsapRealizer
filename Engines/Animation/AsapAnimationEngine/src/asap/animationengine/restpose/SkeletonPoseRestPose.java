@@ -2,6 +2,7 @@
  *******************************************************************************/
 package asap.animationengine.restpose;
 
+import hmi.animation.Hanim;
 import hmi.animation.SkeletonPose;
 import hmi.animation.VJoint;
 import hmi.animation.VObjectTransformCopier;
@@ -53,11 +54,24 @@ public class SkeletonPoseRestPose implements RestPose
     {
         this.player = player;
         poseTree = player.getVCurr().copyTree("rest-");
-        for (VJoint vj : poseTree.getParts())
+        RestPose defaultRestPose = player.getDefaultRestPose();
+        /*
+        Default behavior was to default all bones to identity rotation.
+        New behavior is to default to initial/calibration pose of the agent.
+            TODO: find a good place to configure this behavior (and if not configured, use old default).
+        */
+        if (defaultRestPose != null)
         {
-            if (vj.getSid() != null)
+            defaultRestPose.initialRestPose(0, poseTree);
+        }
+        else
+        {
+            for (VJoint vj : poseTree.getParts())
             {
-                vj.setRotation(Quat4f.getIdentity());
+                if (vj.getSid() != null)
+                {
+                    vj.setRotation(Quat4f.getIdentity());
+                }
             }
         }
         if (pose != null)
@@ -83,6 +97,7 @@ public class SkeletonPoseRestPose implements RestPose
     {
         if (poseTree == null) return;
         float q[] = new float[4];
+        float t[] = new float[3];
         for (VJoint vj : poseTree.getParts())
         {
             if (!kinematicJoints.contains(vj.getSid()) && !physicalJoints.contains(vj.getSid()))
@@ -92,6 +107,10 @@ public class SkeletonPoseRestPose implements RestPose
                 if (vjSet != null)
                 {
                     vjSet.setRotation(q);                    
+                    if (vj.getSid() == Hanim.HumanoidRoot && (pose == null || pose.getConfigType().equals("T1R"))) {
+                        vj.getTranslation(t);
+                        vjSet.setTranslation(t);
+                    }
                 }                
             }
         }        
@@ -176,6 +195,12 @@ public class SkeletonPoseRestPose implements RestPose
     }
 
     @Override
+    public void initialRestPose(double time, VJoint dst)
+    {
+        VObjectTransformCopier.newInstanceFromVJointTree(poseTree, dst, "T1R").copyConfig();
+    }
+
+    @Override
     public double getTransitionToRestDuration(VJoint vCurrent, Set<String> joints)
     {
         double duration = MovementTimingUtils.getFittsMaximumLimbMovementDuration(vCurrent, poseTree, joints);
@@ -227,7 +252,14 @@ public class SkeletonPoseRestPose implements RestPose
         else if (pose.getConfigType().equals("T1R"))
         {
             float config[]= new float[targetJoints.size()*4+3];
-            poseTree.getTranslation(config);
+            for(VJoint vj:poseTree.getParts())
+            {
+                if(vj.getSid() == Hanim.HumanoidRoot)
+                {
+                    vj.getTranslation(config);
+                    break;
+                }
+            }
             setRotConfig(poseTree, 3, config);
             mu = new T1RTransitionToPoseMU(startJoints, targetJoints, config);
         }

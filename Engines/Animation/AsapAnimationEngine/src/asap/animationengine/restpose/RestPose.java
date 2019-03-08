@@ -82,6 +82,12 @@ public interface RestPose
      */
     void initialRestPose(double time);
     
+
+    /**
+     * Return a reference to the pose tree
+     */
+    void initialRestPose(double time, VJoint dst);
+
     /**
      * Starts the rest pose, called before first play via the PostureShiftTMU
      */
