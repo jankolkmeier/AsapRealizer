@@ -36,13 +36,15 @@ public class EmitterPlanner extends AbstractPlanner<TimedEmitterUnit>
 
     private EmitterInfo emitterInfo = null;
     private RealizerPort realizerPort = null;
+    private String characterId = null;
 
-    public EmitterPlanner(FeedbackManager bfm, PlanManager<TimedEmitterUnit> planManager, EmitterInfo ei, RealizerPort rp)
+    public EmitterPlanner(FeedbackManager bfm, PlanManager<TimedEmitterUnit> planManager, EmitterInfo ei, RealizerPort rp, String charId)
     {
         super(bfm, planManager);
         resolver = new LinearStretchResolver();
         emitterInfo = ei;
         realizerPort = rp;
+        characterId = charId;
         /* register the Emitter BML behaviors with the BML parser... */
         BMLInfo.addBehaviourType(emitterInfo.getXMLTag(), emitterInfo.getCreateEmitterBehaviour());
 
@@ -66,6 +68,7 @@ public class EmitterPlanner extends AbstractPlanner<TimedEmitterUnit>
                 try
                 {
                     Emitter em = (Emitter) emitterInfo.getEmitterClass().newInstance();
+                    em.setCharacterId(characterId);
                     em.setRealizerPort(realizerPort);
                     eu.setEmitter(em);
                 }
@@ -133,6 +136,7 @@ public class EmitterPlanner extends AbstractPlanner<TimedEmitterUnit>
             try
             {
                 Emitter em = (Emitter) emitterInfo.getEmitterClass().newInstance();
+                em.setCharacterId(characterId);
                 em.setRealizerPort(realizerPort);
                 eu.setEmitter(em);
             }
