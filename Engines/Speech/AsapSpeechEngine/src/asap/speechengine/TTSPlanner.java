@@ -69,13 +69,21 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
         lipSynchers.add(ls);
     }
 
+    private String characterId;
+
     public TTSPlanner(FeedbackManager bfm, TimedTTSUnitFactory suf, TTSBinding ttsBin, PlanManager<TimedTTSUnit> planManager)
+    {
+        this(bfm, suf, ttsBin, planManager, "");
+    }
+
+    public TTSPlanner(FeedbackManager bfm, TimedTTSUnitFactory suf, TTSBinding ttsBin, PlanManager<TimedTTSUnit> planManager, String charId)
     {
         super(bfm, planManager);
         BMLInfo.addCustomFloatAttribute(SpeechBehaviour.class, "http://www.asap-project.org/bmlvp", "amount");
         BMLInfo.addCustomFloatAttribute(SpeechBehaviour.class, "http://www.asap-project.org/bmlvp", "k");
         suFactory = suf;
         ttsBinding = ttsBin;
+        characterId = charId;
     }
 
     @Override
@@ -114,6 +122,10 @@ public class TTSPlanner extends AbstractPlanner<TimedTTSUnit>
 
             // TODO: ultimately, this may be the characterId from the behavior -- but remember that characterId may be empty
             String voiceId = "voice1";
+            if (characterId != null && characterId.length() > 0)
+            {
+                voiceId = characterId;
+            }
 
             TimedTTSUnit bs = suFactory.createTimedTTSUnit(bbPeg, bSpeech.getContent(), voiceId, bSpeech.getBmlId(), bSpeech.id,
                     ttsBinding, b.getClass());

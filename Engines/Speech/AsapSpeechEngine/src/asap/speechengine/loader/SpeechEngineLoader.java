@@ -244,7 +244,7 @@ public class SpeechEngineLoader implements EngineLoader
             System.err.println("cannot initialize this factory, wrong type.");
             return null;
         }
-        TTSPlanner ttsPlanner = new TTSPlanner(are.getFeedbackManager(), ttsFactory, ttsBin, speechPlanManager);
+        TTSPlanner ttsPlanner = new TTSPlanner(are.getFeedbackManager(), ttsFactory, ttsBin, speechPlanManager, characterId);
         ttsPlanner.addAllLipSynchers(lipSyncProviders);
         ttsPlanner.addAllVisualProsodyProviders(visualProsodyProviders);
         
