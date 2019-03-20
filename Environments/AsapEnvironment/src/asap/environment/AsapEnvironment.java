@@ -5,6 +5,7 @@ package asap.environment;
 import hmi.environmentbase.Environment;
 import hmi.util.Clock;
 import hmi.util.ClockListener;
+import hmi.xml.XMLTokenizer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -115,6 +116,18 @@ public class AsapEnvironment implements Environment, ClockListener
             avh.setVhId(id);
             avh.load(resources, fileName, name, environments, schedulingClock);
             // no need to add anywhere; this will be done by the loaders...
+            return avh;
+        }
+    }
+    
+    public AsapVirtualHuman loadVirtualHumanFromSpecString(String id, String spec, String name) throws IOException
+    {
+        synchronized (shutdownSync)
+        {
+            if (shutdownPrepared) return null;
+            AsapVirtualHuman avh = new AsapVirtualHuman();
+            avh.setVhId(id);
+            avh.load(new XMLTokenizer(spec), name, environments, schedulingClock);
             return avh;
         }
     }
