@@ -50,13 +50,14 @@ public class DynamicPointingMU extends PointingMU
     @Override
     public void play(double t) throws MUPlayException
     {
-        woTarget.getTranslation(vecTemp, null);
-        AnalyticalIKSolver.translateToLocalSystem(null, vjShoulder, vecTemp, vecTemp2);        
+        woTarget.getWorldTranslation(vecTemp);
+        AnalyticalIKSolver.translateToLocalSystem(null, vCurrShoulder, vecTemp, vecTemp2);
         setEndRotation(vecTemp2);
-        
-        if(t<0.25)
+
+        double tPrep = 0.25;
+        if(t<tPrep)
         {
-            double remDuration = ( (0.25-t)/0.25)*preparationDuration;
+            double remDuration = ( (tPrep-t)/tPrep)*preparationDuration;
             float deltaT = (float)(player.getStepTime()/remDuration);
             vCurrShoulder.getRotation(qCurrSh);
             Quat4f.interpolate(qTemp, qCurrSh, qShoulder,deltaT);
