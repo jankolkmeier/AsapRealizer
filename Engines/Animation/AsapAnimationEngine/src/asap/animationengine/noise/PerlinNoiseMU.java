@@ -46,22 +46,22 @@ import com.google.common.collect.ImmutableSet;
 @Slf4j
 public class PerlinNoiseMU implements NoiseMU
 {
-    private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
-    private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-    private AnimationPlayer aniPlayer;
-    private PerlinNoise pnx1 = new PerlinNoise(1024, 0, 1);
+	protected HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
+    protected KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+    protected AnimationPlayer aniPlayer;
+    protected PerlinNoise pnx1 = new PerlinNoise(1024, 0, 1);
     /*
      * private PerlinNoise pnx2 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pnx3 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pnx4 = new PerlinNoise(1024,0,1);
      */
-    private PerlinNoise pny1 = new PerlinNoise(1024, 0, 1);
+    protected PerlinNoise pny1 = new PerlinNoise(1024, 0, 1);
     /*
      * private PerlinNoise pny2 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pny3 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pny4 = new PerlinNoise(1024,0,1);
      */
-    private PerlinNoise pnz1 = new PerlinNoise(1024, 0, 1);
+    protected PerlinNoise pnz1 = new PerlinNoise(1024, 0, 1);
     /*
      * private PerlinNoise pnz2 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pnz3 = new PerlinNoise(1024,0,1);
@@ -69,7 +69,7 @@ public class PerlinNoiseMU implements NoiseMU
      */
 
     protected AnimationPlayer player;
-    float[] q = new float[4];
+    protected float[] q = new float[4];
 
     @Override
     public void addKeyPosition(KeyPosition kp)
