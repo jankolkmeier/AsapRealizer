@@ -180,8 +180,11 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         pHuman = mSystems.get(0).getPHuman();
         pHuman.setEnabled(true);
 
+        int humanoidRootIdx = vNext.getParts().indexOf(getVNextPartBySid(Hanim.HumanoidRoot));
         votcNextToCurr = VObjectTransformCopier.newInstanceFromVJointTree(vNext, vCurr, "T1R");
+        votcNextToCurr.setRootTranslationIdx(humanoidRootIdx);
         votcCurrToPrev = VObjectTransformCopier.newInstanceFromVJointTree(vCurr, vPrev, "T1R");
+        votcNextToCurr.setRootTranslationIdx(humanoidRootIdx);
 
         mPlayer = new MixedPlayer(mSystems.get(0), vPrev, vCurr, vNext);
         mPlayer.setH(h);
