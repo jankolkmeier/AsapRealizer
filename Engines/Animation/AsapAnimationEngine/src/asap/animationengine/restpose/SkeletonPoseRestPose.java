@@ -36,9 +36,9 @@ import asap.realizer.planunit.TimedPlanUnitState;
  */
 public class SkeletonPoseRestPose implements RestPose
 {
-    private AnimationPlayer player;
-    private VJoint poseTree;        //Holds the pose on a VJoint structure. Joints not in the pose are set to have identity rotation.
-    private SkeletonPose pose;
+    protected AnimationPlayer player;
+    protected VJoint poseTree;        //Holds the pose on a VJoint structure. Joints not in the pose are set to have identity rotation.
+    protected SkeletonPose pose;
 
     public SkeletonPoseRestPose()
     {
@@ -214,7 +214,7 @@ public class SkeletonPoseRestPose implements RestPose
 
     }
 
-    private void setRotConfig(VJoint poseTree, int startIndex, float[] config)
+    protected void setRotConfig(VJoint poseTree, int startIndex, float[] config)
     {
         int i = 0;
         for(VJoint vj:poseTree.getParts())
