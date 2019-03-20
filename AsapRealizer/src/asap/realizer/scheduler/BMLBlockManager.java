@@ -150,6 +150,11 @@ public final class BMLBlockManager
     public String getCharacterId(String bmlId)
     {
         BMLBBlock b = bmlBlocks.get(bmlId);
+        if (b == null)
+        {
+            log.warn("Failed to get characterId from block {}", bmlId);
+            return "";
+        }
         return b.getCharacterId();
     }
 
