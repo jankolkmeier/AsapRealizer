@@ -2,6 +2,10 @@
  *******************************************************************************/
 package asap.animationengine.procanimation;
 
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
+
 import hmi.animation.AnalyticalIKSolver;
 import hmi.animation.Hanim;
 import hmi.animation.VJoint;
@@ -51,6 +55,8 @@ public class IKBody
     private float yAxis[] = new float[3];
     private float xAxis[] = new float[3];
 
+    private Set<String> kinematicJoints;
+
     /**
      * Constructor
      * 
@@ -95,6 +101,12 @@ public class IKBody
         relbow.getPathTranslation(rshoulder, tv);
         rwrist.getPathTranslation(relbow, sv);
         solverRHand = new AnalyticalIKSolver(sv, tv, AnalyticalIKSolver.LimbPosition.ARM, (Vec3f.length(sv) + Vec3f.length(tv)) * 0.999f);
+
+        kinematicJoints = ImmutableSet.of( root.getSid(),
+                lhip.getSid(), lknee.getSid(), lankle.getSid(),
+                rhip.getSid(), rknee.getSid(), rankle.getSid(),
+                lshoulder.getSid(), lelbow.getSid(), lwrist.getSid(),
+                rshoulder.getSid(), relbow.getSid(), rwrist.getSid() );
     }
 
     /**
@@ -482,5 +494,10 @@ public class IKBody
     public VJoint getHuman()
     {
         return human;
+    }
+
+    public Set<String> getKinematicJoints()
+    {
+        return kinematicJoints;
     }
 }
