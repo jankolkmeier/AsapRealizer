@@ -30,6 +30,8 @@ public class AdditivePerlinNoiseMU extends PerlinNoiseMU {
 
     private VJoint additiveBody;
     private List<String> joints;
+    
+    private double t0 = -1;
 
     public AdditivePerlinNoiseMU()
     {
@@ -45,6 +47,7 @@ public class AdditivePerlinNoiseMU extends PerlinNoiseMU {
     @Override
     public void play(double t) throws MUPlayException
     {
+    	if (t0 < 0) t0 = t;
     	if (joints == null) {
     		joints = new ArrayList<String>();
             try {
@@ -63,6 +66,14 @@ public class AdditivePerlinNoiseMU extends PerlinNoiseMU {
                     * pny1.noise((float) t * getFloatParameterValue("basefreqy"));
             float rotzRad = getFloatParameterValue("offsetz") + getFloatParameterValue("baseamplitudez")
                     * pnz1.noise((float) t * getFloatParameterValue("basefreqz"));
+            
+            double tRel = t - t0;
+            if (tRel < 1.0) {
+            	rotxRad = (float) (tRel * rotxRad);
+            	rotyRad = (float) (tRel * rotyRad);
+            	rotzRad = (float) (tRel * rotzRad);
+            }
+            
             Quat4f.setFromRollPitchYaw(q, rotzRad, rotxRad, rotyRad);
             
             for (String joint : joints) {
