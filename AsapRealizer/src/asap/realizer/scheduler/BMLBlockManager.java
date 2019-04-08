@@ -30,6 +30,8 @@ import com.google.common.collect.SetMultimap;
 @Slf4j
 public final class BMLBlockManager
 {
+    private final ConcurrentHashMap<String, String> charIdLut = new ConcurrentHashMap<String, String>();
+    
     private final ConcurrentHashMap<String, BMLBBlock> finishedBMLBBlocks = new ConcurrentHashMap<String, BMLBBlock>();
 
     private final ConcurrentHashMap<String, BMLBBlock> bmlBlocks = new ConcurrentHashMap<String, BMLBBlock>();
@@ -76,6 +78,8 @@ public final class BMLBlockManager
 
     public synchronized void removeBMLBlock(String bmlId, double time)
     {
+    	String charid = bmlBlocks.get(bmlId).getCharacterId();
+        charIdLut.put(bmlId, charid);
         bmlBlocks.remove(bmlId);
         finishedBMLBBlocks.remove(bmlId);        
         updateBlocks(time);
@@ -150,10 +154,14 @@ public final class BMLBlockManager
     public String getCharacterId(String bmlId)
     {
         BMLBBlock b = bmlBlocks.get(bmlId);
-        if (b == null)
-        {
-            log.warn("Failed to get characterId from block {}", bmlId);
-            return "";
+        if (b == null) {
+        	String charId = charIdLut.get(bmlId);
+            if (charId != null) {
+            	return charIdLut.get(bmlId);
+            } else {
+                log.warn("XXX Failed to get characterId from block {}", bmlId);
+                return "";
+            }
         }
         return b.getCharacterId();
     }
