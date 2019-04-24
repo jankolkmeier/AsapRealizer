@@ -26,11 +26,17 @@ public class JLabelTextOutput implements TextOutput
     {
         label = l;
     }
+    
+    @Override
+    public void setText(String textProgress, String textComplete)
+    {
+    	setText(textProgress);
+    }
 
     @Override
-    public void setText(String text)
+    public void setText(String textProgress)
     {
-        label.setText(text);
+        label.setText(textProgress);
         Font curFont = label.getFont();
         label.setFont(new Font(curFont.getFontName(), curFont.getStyle(), (int) (50 * FONT_PER_VOLUME_PERCENT)));
         // System.out.println("text: "+text);

@@ -83,8 +83,13 @@ public class JLabelTextEmbodiment implements TextEmbodiment, EmbodimentLoader
 
     /** print to stdout */
     @Override
-    public void setText(String text)
+    public void setText(String textProgress)
     {
-        textLabel.setText(text);
+        textLabel.setText(textProgress);
+    }
+    
+    public void setText(String textProgress, String textComplete)
+    {
+    	setText(textProgress);
     }
 }

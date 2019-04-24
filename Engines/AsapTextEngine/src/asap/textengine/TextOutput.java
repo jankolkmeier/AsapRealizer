@@ -14,7 +14,8 @@ public interface TextOutput
     /**
      * Replace current text by text
      */
-    void setText(String text);
+    void setText(String textProgress);
+    void setText(String textProgress, String textComplete);
     
     void setFloatParameterValue(String parameter, float value)throws ParameterException;
     void setParameterValue(String parameter, String value)throws ParameterException;

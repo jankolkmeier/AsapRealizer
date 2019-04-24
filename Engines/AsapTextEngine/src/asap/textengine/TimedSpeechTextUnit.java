@@ -97,6 +97,26 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
         this(NullFeedbackManager.getInstance(), bbPeg, text, bmlId, id, output);
     }
 
+    // Strip all xml tags from a string, except for the tags passed in the second parameter
+    // TODO: move to hmi.tts.util.BMLTextUtil
+    public static String StripTagsExcept(String text, String[] except)
+    {
+    	return text.replaceAll("<\\/?(?!(?:"+String.join("|", except)+")\\s*)[a-z](?:[^>\"']|\"[^\"]*\"|'[^']*')*>", "");
+    }
+    
+    // Convert all ssml/sapi tags to BML sync tags
+    // TODO: move to hmi.tts.util.BMLTextUtil
+    public static String ForeignSyncsToBML(String text)
+    {
+        text = BMLTextUtil.stripSyncNameSpace(text);
+        String res = 
+        	 text.replaceAll("<\\s*bookmark\\s+mark", "<sync id");
+        res = res.replaceAll("</\\s*bookmark\\s*>", "</sync>");
+        res = res.replaceAll("<\\s*mark\\s+name", "<sync id");
+        res = res.replaceAll("</\\s*mark\\s*>", "</sync>");
+        return res;
+    }
+
     public TimedSpeechTextUnit(FeedbackManager bfm, BMLBlockPeg bbPeg, String text, String bmlId, String id, TextOutput output)
     {
         super(bfm, bbPeg, text, bmlId, id);
@@ -105,14 +125,18 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
         syncMap.put("start", 0);
 
         log.debug("text: {}", text);
-
-        String textNoSync = BMLTextUtil.stripSyncs(text);
+        // If using speech description, this will first convert all foreign sync tags to BML sync tags...
+        // ... and then strip all non-sync tags from the bml ...
+        String bmlText = StripTagsExcept(ForeignSyncsToBML(text), new String[] { "sync" });
+        log.debug("text stripped from non-sync: {}", text);
+        String textNoSync = BMLTextUtil.stripSyncs(bmlText);
         words = textNoSync.split(" ");
-        List<SyncAndOffset> syncAndOffsets = BMLTextUtil.getSyncAndOffsetList(text, words.length);
+        List<SyncAndOffset> syncAndOffsets = BMLTextUtil.getSyncAndOffsetList(bmlText, words.length);
 
         for (SyncAndOffset s : syncAndOffsets)
         {
             syncs.add(s.getSync());
+            log.debug("Speech Text Sync: {}-{}", s.getSync(), s.getOffset());
             syncMap.put(s.getSync(), s.getOffset());
         }
 
@@ -191,7 +215,7 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
             sendEndProgress(time);
         }
         progressHandled.clear();
-        output.setText(speechText);
+        output.setText(speechText, speechText);
     }
 
     public double getRelativeTime(double time)
@@ -251,7 +275,7 @@ public class TimedSpeechTextUnit extends TimedAbstractTextUnit
     {
         double t = getRelativeTime(time);
         String str = speechText.substring(0, (int) Math.round((t * (speechText.length()))));
-        output.setText(str);
+        output.setText(str, speechText);
 
         sendProgress(t, time);
     }

@@ -21,9 +21,15 @@ public class EmbodimentTextOutput implements TextOutput
     }
 
     @Override
-    public void setText(String text)
+    public void setText(String textProgress)
     {
-        textEmbodiment.setText(text);
+        textEmbodiment.setText(textProgress);
+    }
+    
+    @Override
+    public void setText(String textProgress, String textComplete)
+    {
+        textEmbodiment.setText(textProgress, textComplete);
     }
 
     @Override
