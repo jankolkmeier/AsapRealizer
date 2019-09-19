@@ -56,25 +56,11 @@ public class IKSkeletonPoseRestPose extends SkeletonPoseRestPose {
 	
 	public IKSkeletonPoseRestPose(XMLTokenizer tokenizer) throws IOException {
 		super(new SkeletonPose(tokenizer));
-		System.out.println("INIT IK POSE");
 	}
 
     public IKSkeletonPoseRestPose() {
 	}
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
     @Override
     public TimedAnimationMotionUnit createTransitionToRest(FeedbackManager fbm, Set<String> joints, double startTime, String bmlId,
             String id, BMLBlockPeg bmlBlockPeg, PegBoard pb)
@@ -112,7 +98,6 @@ public class IKSkeletonPoseRestPose extends SkeletonPoseRestPose {
     @Override
     public TransitionMU createTransitionToRest(Set<String> joints)
     {
-    	System.out.println("TRANS 2");
 		poseTreeToIk.copyConfig();
         updateIK();
         float rotations[] = new float[joints.size() * 4];
@@ -135,7 +120,6 @@ public class IKSkeletonPoseRestPose extends SkeletonPoseRestPose {
     @Override
     public TransitionMU createTransitionToRestFromVJoints(Collection<VJoint> joints)
     {
-    	System.out.println("TRANS 1");
 		poseTreeToIk.copyConfig();
         updateIK();
         float rotations[] = new float[joints.size() * 4];
@@ -183,7 +167,6 @@ public class IKSkeletonPoseRestPose extends SkeletonPoseRestPose {
     public PostureShiftTMU createPostureShiftTMU(FeedbackManager bbf, BMLBlockPeg bmlBlockPeg, String bmlId, String id, PegBoard pb)
             throws MUSetupException
     {
-    	System.out.println("TRANS 3");
 		poseTreeToIk.copyConfig();
         updateIK();
         List<VJoint> targetJoints = new ArrayList<VJoint>();
