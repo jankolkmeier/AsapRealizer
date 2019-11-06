@@ -30,6 +30,8 @@ import com.google.common.collect.SetMultimap;
 @Slf4j
 public final class BMLBlockManager
 {
+	private final ConcurrentHashMap<String, String> charIdLut = new ConcurrentHashMap<String, String>();
+	
     private final ConcurrentHashMap<String, BMLBBlock> finishedBMLBBlocks = new ConcurrentHashMap<String, BMLBBlock>();
 
     private final ConcurrentHashMap<String, BMLBBlock> bmlBlocks = new ConcurrentHashMap<String, BMLBBlock>();
@@ -76,6 +78,8 @@ public final class BMLBlockManager
 
     public synchronized void removeBMLBlock(String bmlId, double time)
     {
+    	String charid = bmlBlocks.get(bmlId).getCharacterId();
+        charIdLut.put(bmlId, charid);
         bmlBlocks.remove(bmlId);
         finishedBMLBBlocks.remove(bmlId);        
         updateBlocks(time);
@@ -150,6 +154,15 @@ public final class BMLBlockManager
     public String getCharacterId(String bmlId)
     {
         BMLBBlock b = bmlBlocks.get(bmlId);
+        if (b == null) {
+        	String charId = charIdLut.get(bmlId); //FIXME: the cache should be emptied at least after reaching a certain size... a circular buffer or something like that
+            if (charId != null) {
+            	return charId;
+            } else {
+                log.error("XXX Failed to get characterId from block {}", bmlId);
+                throw new RuntimeException("The characterID for bml block "+bmlId+" is null -- THIS SHOULD NEVER HAPPEN!");//note: a BMLblock should always have a charid, even if it is ""; and if a BMLblock is removed from this manager, its charid should be cached. So either of these two things went wrong
+            }
+        }
         return b.getCharacterId();
     }
 
