@@ -14,6 +14,9 @@ import asap.bml.ext.maryxml.MaryAllophonesBehaviour;
 import asap.bml.ext.maryxml.MaryWordsBehaviour;
 import asap.bml.ext.maryxml.MaryXMLBehaviour;
 import asap.bml.ext.ssml.SSMLBehaviour;
+import asap.speechengine.offline.OfflineSpeechBehaviour;
+import asap.speechengine.offline.OfflineSpeechGenerator;
+import asap.speechengine.offline.OfflineSpeechMLBridge;
 import asap.speechengine.ttsbinding.TTSBinding;
 
 /**
@@ -25,27 +28,35 @@ import asap.speechengine.ttsbinding.TTSBinding;
 public class MaryTTSBinding extends TTSBinding
 {
     private MaryTTSGenerator maryTTSGenerator;
+    private final OfflineSpeechGenerator offlineSpeechGenerator;
+
     public MaryTTSBinding(PhonemeToVisemeMapping ptv)
     {
         try
         {
             maryTTSGenerator = new MaryTTSGenerator(ptv);
+            offlineSpeechGenerator = new OfflineSpeechGenerator(ptv);
             ttsGenerator = maryTTSGenerator;
         } 
         catch (Exception e)
         {
             throw new RuntimeException(e);
         }        
+
         ttsBridgeMap.put(SpeechBehaviour.class, new BMLTTSBridge(maryTTSGenerator));
         ttsBridgeMap.put(SSMLBehaviour.class, new MarySSMLTTSBridge(maryTTSGenerator));
         ttsBridgeMap.put(MaryXMLBehaviour.class, new MaryXMLTTSBridge(maryTTSGenerator));
         ttsBridgeMap.put(MaryWordsBehaviour.class, new MaryWordsTTSBridge(maryTTSGenerator));
         ttsBridgeMap.put(MaryAllophonesBehaviour.class, new MaryAllophonesTTSBridge(maryTTSGenerator));
         
+        ttsBridgeMap.put(OfflineSpeechBehaviour.class,  new OfflineSpeechMLBridge(offlineSpeechGenerator));
+
         supportedBehaviours.add(SSMLBehaviour.class);
         supportedBehaviours.add(MaryXMLBehaviour.class);
         supportedBehaviours.add(MaryWordsBehaviour.class);
         supportedBehaviours.add(MaryAllophonesBehaviour.class);
+
+        supportedBehaviours.add(OfflineSpeechBehaviour.class);
     }
     @Override
     public void cleanup()
