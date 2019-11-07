@@ -68,7 +68,7 @@ public abstract class AbstractTimedPlanUnitTest
     }
 
     @Before
-    public void setup() 
+    public void genericSetup() 
     {
     	//Many of the tests below use the fbManager, which retrieves a characterId from the BlockManager to construct feedback
     	//However, the characterID may not be null, so we always return a sensible default instead
