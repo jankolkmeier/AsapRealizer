@@ -95,13 +95,15 @@ final class TestUtil
 @PrepareForTest(BMLBlockManager.class)
 public class TTSPlannerIntegrationTest
 {
+    protected static final String CHARACTER_ID = "character1";
+    
     protected TTSBinding mockTTSBinding = mock(TTSBinding.class);
 
     protected TimedTTSUnitFactory mockTTSUnitFactory = mock(TimedTTSUnitFactory.class);
 
     protected BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
 
-    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
 
     protected PlanManager<TimedTTSUnit> planManager = new PlanManager<TimedTTSUnit>();
 
@@ -172,6 +174,7 @@ public class TTSPlannerIntegrationTest
     {
         when(mockTiming.getBookmarks()).thenReturn(BOOKMARKS);
         when(mockTiming.getDuration()).thenReturn(SPEECH_DURATION);
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
         verbalPlayer = new DefaultPlayer(new MultiThreadedPlanPlayer<TimedTTSUnit>(fbManager, planManager));
         ttsPlanner = new TTSPlanner(fbManager, mockTTSUnitFactory, mockTTSBinding, planManager);
         ttsEngine = new DefaultEngine<TimedTTSUnit>(ttsPlanner, verbalPlayer, planManager);

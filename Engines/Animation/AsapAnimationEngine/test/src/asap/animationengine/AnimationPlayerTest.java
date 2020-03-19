@@ -20,6 +20,7 @@ package asap.animationengine;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
@@ -67,13 +68,15 @@ import asap.realizerport.util.ListBMLFeedbackListener;
 @PrepareForTest({TimedAnimationMotionUnit.class,BMLBlockManager.class})
 public class AnimationPlayerTest
 {
+    protected static final String CHARACTER_ID = "character1";
+    
     private AnimationPlayer animationPlayer;
     private List<BMLWarningFeedback> beList;
 
     private PhysicalHumanoid mockPhysicalHumanoid = mock(PhysicalHumanoid.class);
     private TimedAnimationMotionUnit mockTimedMotionUnit = mock(TimedAnimationMotionUnit.class);
     private BMLBlockManager mockBMLBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBMLBlockManager,"character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBMLBlockManager,CHARACTER_ID);
     private PegBoard pegBoard = new PegBoard();
     
     private PlanManager<TimedAnimationUnit> planManager = new PlanManager<>();
@@ -95,6 +98,7 @@ public class AnimationPlayerTest
                 );
         beList = new ArrayList<BMLWarningFeedback>();
         fbManager.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(beList).build());
+    	when(mockBMLBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
     }    
 
     @Test

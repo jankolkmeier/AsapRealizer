@@ -24,10 +24,12 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -54,10 +56,17 @@ import asap.realizertestutil.planunit.AbstractTimedPlanUnitTest;
 @PrepareForTest(BMLBlockManager.class)
 public class SpeechTextUnitTest extends AbstractTimedPlanUnitTest
 {
+    protected static final String CHARACTER_ID = "character1";
     private TextOutput mockOutput = mock(TextOutput.class);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
-
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
+    
+    @Before
+    public void setup()
+    {
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
+    }
+    
     @Override
     protected void assertSubsiding(TimedPlanUnit tpu)
     {

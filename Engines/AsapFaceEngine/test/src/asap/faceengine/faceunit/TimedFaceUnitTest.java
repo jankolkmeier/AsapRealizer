@@ -21,14 +21,17 @@ package asap.faceengine.faceunit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -61,9 +64,10 @@ import asap.testutil.bml.feedback.FeedbackAsserts;
 @PrepareForTest(BMLBlockManager.class)
 public class TimedFaceUnitTest extends AbstractTimedPlanUnitTest
 {
+    protected static final String CHARACTER_ID = "character1";
     private FaceUnit fuMock = mock(FaceUnit.class);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private final PegBoard pegBoard = new PegBoard();
     private static final double PRECISION = 0.01;
 
@@ -71,7 +75,13 @@ public class TimedFaceUnitTest extends AbstractTimedPlanUnitTest
     {
         return new TimedFaceUnit(fbManager, BMLBlockPeg.GLOBALPEG, bmlId, behId, fu, pegBoard);
     }
-
+    
+    @Before
+    public void setup()
+    {
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
+    }
+    
     @Test
     public void testPrepState() throws TimedPlanUnitPlayException, MUPlayException
     {

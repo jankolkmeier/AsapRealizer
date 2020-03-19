@@ -21,6 +21,7 @@ package asap.realizer.parametervaluechange;
 import static asap.realizertestutil.util.TimePegUtil.createTimePeg;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -69,11 +70,12 @@ import com.google.common.collect.ImmutableSet;
 @PrepareForTest({BMLScheduler.class,BMLBlockManager.class})
 public class ParameterValueChangePlannerTest
 {
+    protected static final String CHARACTER_ID = "character1";
     private static final double TIMING_PRECISION = 0.0001;
     private BMLScheduler mockScheduler = mock(BMLScheduler.class);
     private ParameterValueChangePlanner pvcp;
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private PlanManager<TimedParameterValueChangeUnit> planManager = new PlanManager<TimedParameterValueChangeUnit>();
     private PlannerTests<TimedParameterValueChangeUnit> plannerTests;
     
@@ -98,6 +100,7 @@ public class ParameterValueChangePlannerTest
     {
         pvcp = new ParameterValueChangePlanner(fbManager, mockScheduler, new TrajectoryBinding(), planManager);
         plannerTests = new PlannerTests<TimedParameterValueChangeUnit>(pvcp,BMLBlockPeg.GLOBALPEG);
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
     }
 
     @Test

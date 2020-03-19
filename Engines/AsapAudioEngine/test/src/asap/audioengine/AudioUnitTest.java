@@ -21,10 +21,12 @@ package asap.audioengine;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,8 +55,10 @@ import asap.realizerport.util.ListBMLFeedbackListener;
 @PrepareForTest(BMLBlockManager.class)
 public class AudioUnitTest
 {
+    protected static final String CHARACTER_ID = "character1";
+    
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,CHARACTER_ID);
     
     private ListBMLFeedbackListener feedbackListener;
     private List<BMLSyncPointProgressFeedback> feedbackList;
@@ -63,7 +67,8 @@ public class AudioUnitTest
     public void setup()
     {
         feedbackList = new ArrayList<BMLSyncPointProgressFeedback>(); 
-        feedbackListener = new ListBMLFeedbackListener.Builder().feedBackList(feedbackList).build();        
+        feedbackListener = new ListBMLFeedbackListener.Builder().feedBackList(feedbackList).build();    
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);    
     }
     
     @Test

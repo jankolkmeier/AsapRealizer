@@ -20,6 +20,7 @@ package asap.speechengine;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import hmi.tts.TTSException;
@@ -28,6 +29,7 @@ import hmi.tts.TimingInfo;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -56,9 +58,10 @@ import asap.testutil.bml.feedback.FeedbackAsserts;
 @PrepareForTest({ BMLBlockManager.class, TimingInfo.class })
 public class DirectTTSUnitTest extends AbstractTimedPlanUnitTest
 {
+    protected static final String CHARACTER_ID = "character1";
     protected TimedTTSUnit ttsUnit;
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private TTSBinding mockTTSBinding = mock(TTSBinding.class);
     private TimingInfo mockTimingInfo = mock(TimingInfo.class);
 
@@ -66,7 +69,13 @@ public class DirectTTSUnitTest extends AbstractTimedPlanUnitTest
     {
         return new TimedDirectTTSUnit(fbManager, bbPeg, text, bmlId, id, mockTTSBinding, SpeechBehaviour.class);
     }
-
+    
+    @Before
+    public void setup()
+    {
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
+    }
+    
     @Override
     // XXX no stroke in this behavior
     public void testSetStrokePeg()

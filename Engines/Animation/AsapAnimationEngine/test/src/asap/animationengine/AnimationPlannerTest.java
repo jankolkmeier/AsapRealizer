@@ -91,6 +91,8 @@ import asap.realizertestutil.util.TimePegUtil;
 @PrepareForTest({ BMLBlockManager.class })
 public class AnimationPlannerTest
 {
+    protected static final String CHARACTER_ID = "character1";
+    
     private AnimationPlayer mockPlayer = mock(AnimationPlayer.class);
     private GestureBinding mockBinding = mock(GestureBinding.class);
     private RestPose mockRestPose = mock(RestPose.class);
@@ -103,7 +105,7 @@ public class AnimationPlannerTest
     private PegBoard pegBoard = new PegBoard();
 
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private AnimationPlanner animationPlanner;
     private PlannerTests<TimedAnimationUnit> plannerTests;
     private static final String BMLID = "bml1";
@@ -174,6 +176,8 @@ public class AnimationPlannerTest
         when(mockPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
         when(mockPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
     }
 
     public HeadBehaviour createHeadBehaviour() throws IOException

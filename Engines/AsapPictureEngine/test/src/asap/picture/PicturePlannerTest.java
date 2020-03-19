@@ -20,6 +20,7 @@ package asap.picture;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.xml.XMLTokenizer;
@@ -61,10 +62,11 @@ import asap.realizertestutil.PlannerTests;
 @PrepareForTest({ BMLBlockManager.class })
 public class PicturePlannerTest
 {
+    protected static final String CHARACTER_ID = "character1";
     private PlannerTests<TimedPictureUnit> plannerTests;
     private static final String BMLID = "bml1";
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private PictureBinding mockPictureBinding = mock(PictureBinding.class);
     private final PlanManager<TimedPictureUnit> planManager = new PlanManager<TimedPictureUnit>();
     private PicturePlanner picturePlanner;
@@ -79,7 +81,8 @@ public class PicturePlannerTest
         plannerTests = new PlannerTests<TimedPictureUnit>(picturePlanner, bbPeg);
         final List<TimedPictureUnit> tmus = new ArrayList<TimedPictureUnit>();
         tmus.add(new TimedPictureUnit(fbManager, bbPeg, BMLID, "beh1", stubPU));
-        when(mockPictureBinding.getPictureUnit(any(FeedbackManager.class), any(BMLBlockPeg.class), any(Behaviour.class))).thenReturn(tmus);        
+        when(mockPictureBinding.getPictureUnit(any(FeedbackManager.class), any(BMLBlockPeg.class), any(Behaviour.class))).thenReturn(tmus);  
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);      
     }
     
     public SetImageBehavior createSetImageBehaviorBehaviour() throws IOException

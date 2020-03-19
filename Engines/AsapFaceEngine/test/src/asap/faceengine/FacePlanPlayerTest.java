@@ -20,13 +20,16 @@ package asap.faceengine;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -59,13 +62,22 @@ import asap.testutil.bml.feedback.FeedbackAsserts;
 @PrepareForTest(BMLBlockManager.class)
 public class FacePlanPlayerTest
 {
+    protected static final String CHARACTER_ID = "character1";
+    
     private FaceUnit fuMock1 = mock(FaceUnit.class);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
     
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager,"character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private FeedbackManager mockFeedbackManager = mock(FeedbackManager.class);
     private PlanManager<TimedFaceUnit> planManager = new PlanManager<TimedFaceUnit>();
     private final PegBoard pegBoard = new PegBoard();
+
+    @Before
+    public void setup()
+    {
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
+    }
+    
     @Test
     public void testPlayTfu() throws MUPlayException 
     {

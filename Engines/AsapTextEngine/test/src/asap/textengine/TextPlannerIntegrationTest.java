@@ -23,6 +23,8 @@ import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.doThrow;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;
@@ -32,6 +34,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -64,11 +67,18 @@ import asap.realizerport.util.ListBMLFeedbackListener;
 @PrepareForTest({ BMLBlockManager.class, TimedSpeechTextUnit.class })
 public class TextPlannerIntegrationTest
 {
+    protected static final String CHARACTER_ID = "character1";
     TextOutput mockTextOutput = mock(TextOutput.class);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private PlanManager<TimedSpeechTextUnit> planManager = new PlanManager<TimedSpeechTextUnit>();
 
+    @Before
+    public void setup()
+    {
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
+    }
+    
     @Test
     public void testPlayExceptionLeadsToBMLException() throws BehaviourPlanningException, InterruptedException, IOException,
             TimedPlanUnitPlayException

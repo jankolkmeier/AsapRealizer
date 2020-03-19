@@ -23,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -83,12 +84,14 @@ import asap.realizertestutil.util.TimePegUtil;
 @PrepareForTest({ BMLBlockManager.class, TimedFaceUnit.class })
 public class FacePlannerTest
 {
+    protected static final String CHARACTER_ID = "character1";
+    
     private PlannerTests<TimedFaceUnit> plannerTests;
     private FacePlanner facePlanner;
     private static final String BMLID = "bml1";
     private final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private FaceController mockFaceController = mock(FaceController.class);
     private final PlanManager<TimedFaceUnit> planManager = new PlanManager<TimedFaceUnit>();
     private FaceBinding mockFaceBinding = mock(FaceBinding.class);
@@ -112,6 +115,7 @@ public class FacePlannerTest
         when(
                 mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (Behaviour) any(), (FaceController) any(),
                         (FACSConverter) any(), (EmotionConverter) any(), (FACS2MorphConverter) any(), eq(pegBoard))).thenReturn(tmus);
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
     }
 
     public FaceLexemeBehaviour createFaceBehaviour() throws IOException
