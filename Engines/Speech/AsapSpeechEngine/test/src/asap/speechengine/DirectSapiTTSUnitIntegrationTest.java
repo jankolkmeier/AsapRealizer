@@ -23,6 +23,7 @@ import hmi.util.OS;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -42,6 +43,7 @@ import asap.sapittsbinding.SAPITTSBinding;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
+@Ignore("There are some problems with (probably) fluency voices when accessed through SAPI")
 public class DirectSapiTTSUnitIntegrationTest extends AbstractTTSUnitTest
 {
     private SAPITTSBinding sapiBinding;

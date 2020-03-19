@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
 
@@ -41,6 +42,7 @@ import asap.speechengine.DirectTTSUnitFactory;
  * 
  */
 @RunWith(LabelledParameterized.class)
+@Ignore("There are some problems with (probably) fluency voices when accessed through SAPI")
 public class SchedulerSAPIDirectIntegrationTest extends SchedulerParameterizedIntegrationTest
 {
      

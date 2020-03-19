@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -77,6 +78,7 @@ public class TimedWavAudioUnitIntegrationTest
     }
     
     @Test(expected=AudioUnitPlanningException.class)
+    @Ignore("This caused the Java VM to crash... HARD... something with the AL lib 'AL lib: FreeContext: (00000000251A1D20) Deleting 1 Source(s)' 'Forked Java VM exited abnormally. Please note the time in the report does not reflect the time until the VM exit. junit.framework.AssertionFailedError: Forked Java VM exited abnormally. Please note the time in the report does not reflect the time until the VM exit.'")
     public void testInvalidFile() throws AudioUnitPlanningException
     {
         TimedWavAudioUnit twau = new TimedWavAudioUnit(soundManager,mockFeedBackManager,bbPeg, 

@@ -23,6 +23,7 @@ import hmi.util.OS;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -40,6 +41,7 @@ import asap.sapittsbinding.SAPITTSBinding;
     "com.sun.org.apache.xerces.internal.jaxp.*", "ch.qos.logback.*",
     "org.slf4j.*" })
 @RunWith(PowerMockRunner.class)
+@Ignore("There are some problems with (probably) fluency voices when accessed through SAPI")
 @PrepareForTest(BMLBlockManager.class)
 public class TimedWavTTSUnitSAPIIntegrationTest extends AbstractTimedWavTTSUnitTest
 {

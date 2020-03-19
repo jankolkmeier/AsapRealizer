@@ -34,6 +34,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized.Parameters;
@@ -54,6 +55,7 @@ import asap.speechengine.ttsbinding.TTSBinding;
 import asap.speechengine.ttsbinding.TTSBindingFactory;
 
 @RunWith(LabelledParameterized.class)
+@Ignore("There are some problems with (probably) fluency voices when accessed through SAPI")
 public class SpeechUnitParameterizedIntegrationTest
 {
     private TTSBinding ttsBinding;
