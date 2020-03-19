@@ -25,6 +25,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.AdditionalMatchers.eq;
 import static org.mockito.Matchers.anyDouble;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doThrow;
@@ -66,6 +67,7 @@ import asap.realizer.planunit.PlanManager;
 import asap.realizer.planunit.TimedPlanUnitState;
 import asap.realizer.scheduler.BMLBlockManager;
 import asap.realizerport.util.ListBMLFeedbackListener;
+import org.junit.Ignore;	
 
 import com.google.common.collect.ImmutableSet;
 
@@ -81,6 +83,8 @@ import com.google.common.collect.ImmutableSet;
 @PrepareForTest({ BMLBlockManager.class })
 public class AnimationPlanPlayerTest
 {
+    protected static final String CHARACTER_ID = "character1";
+    
     private AnimationUnit muMock1 = mock(AnimationUnit.class);
     private AnimationUnit muMock2 = mock(AnimationUnit.class);
     private TransitionMU muMockTransition = mock(TransitionMU.class);
@@ -91,7 +95,7 @@ public class AnimationPlanPlayerTest
     private RestPose mockRestPose = mock(RestPose.class);
     private RestGaze mockRestGaze = mock(RestGaze.class);
     private AdditiveRotationBlend mockAdditiveRotationBlend = mock(AdditiveRotationBlend.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private PegBoard pegBoard = new PegBoard();
     PlanManager<TimedAnimationUnit> planManager = new PlanManager<>();
 
@@ -107,6 +111,7 @@ public class AnimationPlanPlayerTest
         app.setAdditiveBlender(mockAdditiveRotationBlend);
         app.addFeedbackListener(new ListBMLFeedbackListener.Builder().warningList(exList).build());
         fbManager.addFeedbackListener(fbl);
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
     }
 
     private TimedAnimationMotionUnit createMotionUnit(String behId, String bmlId, AnimationUnit mu)
