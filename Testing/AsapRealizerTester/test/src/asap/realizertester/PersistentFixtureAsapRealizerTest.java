@@ -56,6 +56,7 @@ import asap.realizerport.RealizerPort;
  * @author hvanwelbergen
  * 
  */
+@Ignore("This fails on the headless jenkins server, causes exception: java.awt.HeadlessException No X11 DISPLAY variable was set, but this program performed an operation which requires it.")
 public class PersistentFixtureAsapRealizerTest extends AbstractASAPRealizerTest
 {
 
