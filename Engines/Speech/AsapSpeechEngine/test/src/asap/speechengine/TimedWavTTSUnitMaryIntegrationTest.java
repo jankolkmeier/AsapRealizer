@@ -22,6 +22,7 @@ import hmi.tts.util.NullPhonemeToVisemeMapping;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -35,6 +36,7 @@ import asap.realizer.scheduler.BMLBlockManager;
  */
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
+@Ignore("These tests cause problems on the jenkins server since there is likely no soundcard or driver installed. E.g. we get exceptions: org.lwjgl.LWJGLException: Could not locate OpenAL library. and errors: ALSA lib confmisc.c:768:(parse_card) cannot find card '0'")
 public class TimedWavTTSUnitMaryIntegrationTest extends AbstractTimedWavTTSUnitTest
 {
     @Before
