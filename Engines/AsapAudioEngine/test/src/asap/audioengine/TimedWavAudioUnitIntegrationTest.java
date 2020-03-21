@@ -48,6 +48,7 @@ import asap.realizer.scheduler.BMLBlockManager;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(BMLBlockManager.class)
 @Slf4j
+@Ignore("These tests cause problems on the jenkins server since there is likely no soundcard or driver installed. E.g. we get exceptions: javax.sound.sampled.LineUnavailableException and errors: ALSA lib confmisc.c:768:(parse_card) cannot find card '0'")
 public class TimedWavAudioUnitIntegrationTest
 {
     private FeedbackManager mockFeedBackManager = mock(FeedbackManager.class);
