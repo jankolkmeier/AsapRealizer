@@ -1,5 +1,21 @@
 /*******************************************************************************
- *******************************************************************************/
+ * Copyright (C) 2009-2020 Human Media Interaction, University of Twente, the Netherlands
+ *
+ * This file is part of the Articulated Social Agents Platform BML realizer (ASAPRealizer).
+ *
+ * ASAPRealizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ASAPRealizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ASAPRealizer.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
 package asap.faceengine;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -7,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -67,12 +84,14 @@ import asap.realizertestutil.util.TimePegUtil;
 @PrepareForTest({ BMLBlockManager.class, TimedFaceUnit.class })
 public class FacePlannerTest
 {
+    protected static final String CHARACTER_ID = "character1";
+    
     private PlannerTests<TimedFaceUnit> plannerTests;
     private FacePlanner facePlanner;
     private static final String BMLID = "bml1";
     private final BMLBlockPeg bbPeg = new BMLBlockPeg("Peg1", 0.3);
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private FaceController mockFaceController = mock(FaceController.class);
     private final PlanManager<TimedFaceUnit> planManager = new PlanManager<TimedFaceUnit>();
     private FaceBinding mockFaceBinding = mock(FaceBinding.class);
@@ -96,6 +115,7 @@ public class FacePlannerTest
         when(
                 mockFaceBinding.getFaceUnit((FeedbackManager) any(), (BMLBlockPeg) any(), (Behaviour) any(), (FaceController) any(),
                         (FACSConverter) any(), (EmotionConverter) any(), (FACS2MorphConverter) any(), eq(pegBoard))).thenReturn(tmus);
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
     }
 
     public FaceLexemeBehaviour createFaceBehaviour() throws IOException

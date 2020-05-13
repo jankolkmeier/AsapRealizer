@@ -1,5 +1,21 @@
 /*******************************************************************************
- *******************************************************************************/
+ * Copyright (C) 2009-2020 Human Media Interaction, University of Twente, the Netherlands
+ *
+ * This file is part of the Articulated Social Agents Platform BML realizer (ASAPRealizer).
+ *
+ * ASAPRealizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ASAPRealizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ASAPRealizer.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
 package asap.realizer.scheduler;
 
 import java.util.HashMap;
@@ -30,6 +46,8 @@ import com.google.common.collect.SetMultimap;
 @Slf4j
 public final class BMLBlockManager
 {
+	private final ConcurrentHashMap<String, String> charIdLut = new ConcurrentHashMap<String, String>();
+	
     private final ConcurrentHashMap<String, BMLBBlock> finishedBMLBBlocks = new ConcurrentHashMap<String, BMLBBlock>();
 
     private final ConcurrentHashMap<String, BMLBBlock> bmlBlocks = new ConcurrentHashMap<String, BMLBBlock>();
@@ -76,6 +94,8 @@ public final class BMLBlockManager
 
     public synchronized void removeBMLBlock(String bmlId, double time)
     {
+    	String charid = bmlBlocks.get(bmlId).getCharacterId();
+        charIdLut.put(bmlId, charid);
         bmlBlocks.remove(bmlId);
         finishedBMLBBlocks.remove(bmlId);        
         updateBlocks(time);
@@ -150,6 +170,15 @@ public final class BMLBlockManager
     public String getCharacterId(String bmlId)
     {
         BMLBBlock b = bmlBlocks.get(bmlId);
+        if (b == null) {
+        	String charId = charIdLut.get(bmlId); //FIXME: the cache should be emptied at least after reaching a certain size... a circular buffer or something like that
+            if (charId != null) {
+            	return charId;
+            } else {
+                log.error("XXX Failed to get characterId from block {}", bmlId);
+                throw new RuntimeException("The characterID for bml block "+bmlId+" is null -- THIS SHOULD NEVER HAPPEN!");//note: a BMLblock should always have a charid, even if it is ""; and if a BMLblock is removed from this manager, its charid should be cached. So either of these two things went wrong
+            }
+        }
         return b.getCharacterId();
     }
 
