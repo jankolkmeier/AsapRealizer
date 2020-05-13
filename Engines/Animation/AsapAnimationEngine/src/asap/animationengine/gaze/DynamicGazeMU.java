@@ -254,6 +254,7 @@ public class DynamicGazeMU extends AbstractGazeMU
             int i = 0;
             for (VJoint vj : jointsCur)
             {
+                System.out.println("Joint: " + vj);
                 vj.getRotation(qStart, i);                
                 i += 4;
             }
@@ -346,12 +347,12 @@ public class DynamicGazeMU extends AbstractGazeMU
         Quat4f.setFromVectors(qGaze, Vec3f.getVec3f(0, 0, 1), gazeDir);
     }
 
-    private static final String[] NECK_JOINTS = new String[] { Hanim.vc6, Hanim.vc5, Hanim.vc4, Hanim.vc3, Hanim.vc2, Hanim.vc1,
-            Hanim.skullbase };
+    private static final String[] NECK_JOINTS = new String[] { Hanim.vc6, Hanim.vc5, Hanim.vc4, Hanim.vc3, Hanim.vc2, Hanim.vc1};//, Hanim.skullbase };
+    public static final String[] CERVICAL_JOINTS = new String[] { Hanim.vc7, Hanim.vc6, Hanim.vc5, Hanim.vc4, Hanim.vc3, Hanim.vc2, Hanim.vc1};//, skullbase };
 
     private List<VJoint> getShoulderJoints(VJoint grp)
     {
-        List<VJoint> cerv = VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, grp);
+        List<VJoint> cerv = VJointUtils.gatherJoints(/*Hanim.*/CERVICAL_JOINTS, grp);
         List<VJoint> shoulderPath = grp.getPath(grp.getPartById(Hanim.r_shoulder));
         while (!shoulderPath.contains(cerv.get(0)))
         {
@@ -373,22 +374,22 @@ public class DynamicGazeMU extends AbstractGazeMU
             break;
         default:
         case NECK:
-            cervicalJointsCur = ImmutableList.copyOf(VJointUtils.gatherJoints(NECK_JOINTS, player.getVCurr()));
+            cervicalJointsCur = ImmutableList.copyOf(VJointUtils.gatherJoints(NECK_JOINTS, player.getVPrev()));
             cervicalJointsNext = ImmutableList.copyOf(VJointUtils.gatherJoints(NECK_JOINTS, player.getVNext()));
             thoracicJointsCur = ImmutableList.of();
             thoracicJointsNext = ImmutableList.of();            
             break;
         case SHOULDER:            
-            cervicalJointsCur = ImmutableList.copyOf(getShoulderJoints(player.getVCurr()));
+            cervicalJointsCur = ImmutableList.copyOf(getShoulderJoints(player.getVPrev()));
             cervicalJointsNext = ImmutableList.copyOf(getShoulderJoints(player.getVNext()));
             
             thoracicJointsCur = ImmutableList.of();
             thoracicJointsNext = ImmutableList.of();
             break;
         case WAIST:
-            cervicalJointsCur = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, player.getVCurr()));
-            cervicalJointsNext = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, player.getVNext()));
-            thoracicJointsCur = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.THORACIC_JOINTS, player.getVCurr()));
+            cervicalJointsCur = ImmutableList.copyOf(VJointUtils.gatherJoints(/*Hanim.*/CERVICAL_JOINTS, player.getVPrev()));
+            cervicalJointsNext = ImmutableList.copyOf(VJointUtils.gatherJoints(/*Hanim.*/CERVICAL_JOINTS, player.getVNext()));
+            thoracicJointsCur = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.THORACIC_JOINTS, player.getVPrev()));
             thoracicJointsNext = ImmutableList.copyOf(VJointUtils.gatherJoints(Hanim.THORACIC_JOINTS, player.getVNext()));
             break;
         }
@@ -404,8 +405,8 @@ public class DynamicGazeMU extends AbstractGazeMU
         player = p;
         lEye = p.getVNextPartBySid(Hanim.l_eyeball_joint);
         rEye = p.getVNextPartBySid(Hanim.r_eyeball_joint);
-        lEyeCurr = p.getVCurrPartBySid(Hanim.l_eyeball_joint);
-        rEyeCurr = p.getVCurrPartBySid(Hanim.r_eyeball_joint);
+        lEyeCurr = p.getVPrevPartBySid(Hanim.l_eyeball_joint);
+        rEyeCurr = p.getVPrevPartBySid(Hanim.r_eyeball_joint);
         woManager = p.getWoManager();
     }
 
