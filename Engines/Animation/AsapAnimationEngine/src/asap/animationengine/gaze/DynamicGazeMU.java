@@ -270,7 +270,7 @@ public class DynamicGazeMU extends AbstractGazeMU
             int i = 0;
             for (VJoint vj : jointsCur)
             {
-                System.out.println("Joint: " + vj);
+                //System.out.println("Joint: " + vj);
                 vj.getRotation(qStart, i);                
                 i += 4;
             }
