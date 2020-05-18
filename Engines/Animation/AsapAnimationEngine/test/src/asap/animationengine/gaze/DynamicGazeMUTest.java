@@ -43,6 +43,7 @@ public class DynamicGazeMUTest
     {
         when(mockPlayer.getVCurr()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
+        when(mockPlayer.getVPrev()).thenReturn(HanimBody.getLOA1HanimBody());
     }
     
     @Test

@@ -167,6 +167,7 @@ public class GestureBindingTest
                 + "                </TimedMotionUnit>" + "   </TimedMotionUnitSpec>" + "</gesturebinding>";
         gestureBinding.readXML(s);
         when(mockAniPlayer.getVNext()).thenReturn(human);
+        when(mockAniPlayer.getVPrev()).thenReturn(human);
         when(mockAniPlayer.getVCurr()).thenReturn(human);
         when(mockAniPlayer.getPHuman()).thenReturn(mockPHuman);
         when(mockAniPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));

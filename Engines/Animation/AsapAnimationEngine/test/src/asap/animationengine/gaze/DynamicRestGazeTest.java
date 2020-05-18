@@ -59,8 +59,10 @@ public class DynamicRestGazeTest
     public void setup()
     {
         final VJoint vNext = HanimBody.getLOA1HanimBodyWithEyes();
+        final VJoint vPrev = HanimBody.getLOA1HanimBodyWithEyes();
         final VJoint vCurr = HanimBody.getLOA1HanimBodyWithEyes();
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
+        when(mockAnimationPlayer.getVPrev()).thenReturn(vPrev);
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);        
         
         stub(mockAnimationPlayer.getVCurrPartBySid(any(String.class))).toAnswer(new Answer<VJoint>() {
@@ -73,6 +75,12 @@ public class DynamicRestGazeTest
             public VJoint answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
                 return vNext.getPart((String)args[0]);
+            }
+        });
+        stub(mockAnimationPlayer.getVPrevPartBySid(any(String.class))).toAnswer(new Answer<VJoint>() {
+            public VJoint answer(InvocationOnMock invocation) {
+                Object[] args = invocation.getArguments();
+                return vPrev.getPart((String)args[0]);
             }
         });
         

@@ -364,13 +364,21 @@ public class DynamicGazeMU extends AbstractGazeMU
     }
 
     private static final String[] NECK_JOINTS = new String[] { Hanim.vc6, Hanim.vc5, Hanim.vc4, Hanim.vc3, Hanim.vc2, Hanim.vc1};//, Hanim.skullbase };
-    public static final String[] CERVICAL_JOINTS = new String[] { Hanim.vc7, Hanim.vc6, Hanim.vc5, Hanim.vc4, Hanim.vc3, Hanim.vc2, Hanim.vc1};//, skullbase };
+    public static final String[] CERVICAL_JOINTS = new String[] { Hanim.vc7, Hanim.vc6, Hanim.vc5, Hanim.vc4, Hanim.vc3, Hanim.vc2, Hanim.vc1, Hanim.skullbase};//, skullbase };
 
     private List<VJoint> getShoulderJoints(VJoint grp)
     {
         List<VJoint> cerv = VJointUtils.gatherJoints(/*Hanim.*/CERVICAL_JOINTS, grp);
+        
+        //ugly workaround for when the skeleton has only a connection between vl5 and skullbase, without any of the vc joints in between.. if so, we need to include skullbase in our cerv after all
+        //for example, this is the case for HanimBody.getLOA1HanimBody()
+        //FIXME: find a better workaround for this
+        if(cerv.size()==0) {
+        	cerv = VJointUtils.gatherJoints(Hanim.CERVICAL_JOINTS, grp);
+        }
+        
         List<VJoint> shoulderPath = grp.getPath(grp.getPartById(Hanim.r_shoulder));
-        while (!shoulderPath.contains(cerv.get(0)))
+        while (cerv.size() > 0 && !shoulderPath.contains(cerv.get(0)))
         {
             cerv.add(0, cerv.get(0).getParent());
         }
