@@ -364,7 +364,7 @@ public class DynamicGazeMU extends AbstractGazeMU
     }
 
     private static final String[] NECK_JOINTS = new String[] { Hanim.vc6, Hanim.vc5, Hanim.vc4, Hanim.vc3, Hanim.vc2, Hanim.vc1};//, Hanim.skullbase };
-    public static final String[] CERVICAL_JOINTS = new String[] { Hanim.vc7, Hanim.vc6, Hanim.vc5, Hanim.vc4, Hanim.vc3, Hanim.vc2, Hanim.vc1, Hanim.skullbase};//, skullbase };
+    public static final String[] CERVICAL_JOINTS = new String[] { Hanim.vc7, Hanim.vc6, Hanim.vc5, Hanim.vc4, Hanim.vc3, Hanim.vc2, Hanim.vc1};//, skullbase };
 
     private List<VJoint> getShoulderJoints(VJoint grp)
     {
