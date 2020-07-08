@@ -292,6 +292,14 @@ public class MotionGraphRestPose implements RestPose
         VObjectTransformCopier.newInstanceFromVJointTree(restPoseTree, aniPlayer.getVNext(), "T1R").copyConfig();
         VObjectTransformCopier.newInstanceFromVJointTree(restPoseTree, aniPlayer.getVPrev(), "T1R").copyConfig();
     }
+    
+    @Override
+    public void initialRestPose(double time, VJoint dst)
+    {
+        motion.setTarget(restPoseTree);
+        motion.time(0);
+        VObjectTransformCopier.newInstanceFromVJointTree(restPoseTree, dst, "T1R").copyConfig();
+    }
 
     @Override
     public void setParameterValue(String name, String value) throws ParameterException

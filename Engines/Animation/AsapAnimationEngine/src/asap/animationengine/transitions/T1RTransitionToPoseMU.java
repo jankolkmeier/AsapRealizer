@@ -18,6 +18,7 @@
  ******************************************************************************/
 package asap.animationengine.transitions;
 
+import hmi.animation.Hanim;
 import hmi.animation.VJoint;
 import hmi.math.Quat4f;
 import hmi.math.Vec3f;
@@ -78,7 +79,7 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
             ArrayList<VJoint> newJoints = new ArrayList<VJoint>();
             for (VJoint vj : joints)
             {
-                VJoint newJ = player.getVCurrPartBySid(vj.getSid());
+                VJoint newJ = player.getVNextPartBySid(vj.getSid());
                 if (newJ != null)
                 {
                     newJoints.add(newJ);
@@ -88,7 +89,7 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
         }
         else
         {
-            return new T1RTransitionToPoseMU(player.getVCurr().getParts(), startPoseJoints, ep);
+            return new T1RTransitionToPoseMU(player.getVNext().getParts(), startPoseJoints, ep);
         }
     }
 
@@ -100,10 +101,12 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
     {
         int i = 0;
         startPose = new float[joints.size() * 4 + 3];
-        startJoints.get(0).getTranslation(startPose);
         i = 3;
         for (VJoint v : startJoints)
         {
+            if (v.getSid() == Hanim.HumanoidRoot) {
+                v.getTranslation(startPose);
+            }
             v.getRotation(startPose, i);
             i += 4;
         }
@@ -120,12 +123,14 @@ public class T1RTransitionToPoseMU extends TransitionToPoseMU
                 Quat4f.interpolate(result, i * 4 + 3, startPose, i * 4 + 3, endPose, i * 4 + 3, (float) t);
             }
 
-            joints.get(0).setTranslation(result);
             int i = 3;
             for (VJoint vj : joints)
             {
                 vj.setRotation(result, i);
                 i += 4;
+                if (vj.getSid() == Hanim.HumanoidRoot) {
+                    vj.setTranslation(result);
+                }
             }
         }
     }

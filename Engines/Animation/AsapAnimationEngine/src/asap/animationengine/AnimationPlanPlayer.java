@@ -254,6 +254,10 @@ public class AnimationPlanPlayer implements PlanPlayer
         defPlayer.reset(time);
     }
 
+    public RestPose getDefaultRestPose() {
+        return defaultRestPose;
+    }
+
     @Override
     public void setBMLBlockState(String bmlId, TimedPlanUnitState state)
     {
