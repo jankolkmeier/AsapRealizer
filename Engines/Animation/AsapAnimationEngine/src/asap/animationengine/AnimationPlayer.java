@@ -1,5 +1,21 @@
 /*******************************************************************************
- *******************************************************************************/
+ * Copyright (C) 2009-2020 Human Media Interaction, University of Twente, the Netherlands
+ *
+ * This file is part of the Articulated Social Agents Platform BML realizer (ASAPRealizer).
+ *
+ * ASAPRealizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ASAPRealizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ASAPRealizer.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
 package asap.animationengine;
 
 import hmi.animation.AdditiveRotationBlend;
@@ -134,10 +150,10 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         float t[] = Vec3f.getVec3f();
         for (VJoint vj : vNextMap.getJoints())
         {
-        	if (vj.getSid().equals(Hanim.HumanoidRoot)) {
-        		vCurrMap.get(vj.getSid()).getTranslation(t);
-        		vj.setTranslation(t);
-        	}
+            if (vj.getSid().equals(Hanim.HumanoidRoot)) {
+                vCurrMap.get(vj.getSid()).getTranslation(t);
+                vj.setTranslation(t);
+            }
         	
             // XXX:ugliness, the eyes move so fast that they might have identity rotation in the next frame and non-identity rotation in the previous
             if (vj.getSid() != null && !vj.getSid().equals(Hanim.l_eyeball_joint) && !vj.getSid().equals(Hanim.r_eyeball_joint))
@@ -185,9 +201,12 @@ public class AnimationPlayer implements Player, MixedAnimationPlayer
         mSystems = m;
         pHuman = mSystems.get(0).getPHuman();
         pHuman.setEnabled(true);
-
+        
+        int humanoidRootIdx = vNext.getParts().indexOf(getVNextPartBySid(Hanim.HumanoidRoot));
         votcNextToCurr = VObjectTransformCopier.newInstanceFromVJointTree(vNext, vCurr, "T1R");
+        votcNextToCurr.setRootTranslationIdx(humanoidRootIdx);
         votcCurrToPrev = VObjectTransformCopier.newInstanceFromVJointTree(vCurr, vPrev, "T1R");
+        votcNextToCurr.setRootTranslationIdx(humanoidRootIdx);
 
         mPlayer = new MixedPlayer(mSystems.get(0), vPrev, vCurr, vNext);
         mPlayer.setH(h);

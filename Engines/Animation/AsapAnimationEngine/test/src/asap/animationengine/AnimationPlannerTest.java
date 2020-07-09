@@ -1,5 +1,21 @@
 /*******************************************************************************
- *******************************************************************************/
+ * Copyright (C) 2009-2020 Human Media Interaction, University of Twente, the Netherlands
+ *
+ * This file is part of the Articulated Social Agents Platform BML realizer (ASAPRealizer).
+ *
+ * ASAPRealizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ASAPRealizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ASAPRealizer.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
 package asap.animationengine;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -75,6 +91,8 @@ import asap.realizertestutil.util.TimePegUtil;
 @PrepareForTest({ BMLBlockManager.class })
 public class AnimationPlannerTest
 {
+    protected static final String CHARACTER_ID = "character1";
+    
     private AnimationPlayer mockPlayer = mock(AnimationPlayer.class);
     private GestureBinding mockBinding = mock(GestureBinding.class);
     private RestPose mockRestPose = mock(RestPose.class);
@@ -87,7 +105,7 @@ public class AnimationPlannerTest
     private PegBoard pegBoard = new PegBoard();
 
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    protected FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private AnimationPlanner animationPlanner;
     private PlannerTests<TimedAnimationUnit> plannerTests;
     private static final String BMLID = "bml1";
@@ -158,6 +176,8 @@ public class AnimationPlannerTest
         when(mockPlayer.getVNext()).thenReturn(HanimBody.getLOA1HanimBody());
         when(mockPlayer.getVCurrPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
         when(mockPlayer.getVNextPartBySid(anyString())).thenReturn(HanimBody.getLOA1HanimBody().getPartBySid(Hanim.l_shoulder));
+
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);
     }
 
     public HeadBehaviour createHeadBehaviour() throws IOException

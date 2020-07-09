@@ -1,9 +1,26 @@
 /*******************************************************************************
- *******************************************************************************/
+ * Copyright (C) 2009-2020 Human Media Interaction, University of Twente, the Netherlands
+ *
+ * This file is part of the Articulated Social Agents Platform BML realizer (ASAPRealizer).
+ *
+ * ASAPRealizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ASAPRealizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ASAPRealizer.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
 package asap.picture;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import hmi.xml.XMLTokenizer;
@@ -45,10 +62,11 @@ import asap.realizertestutil.PlannerTests;
 @PrepareForTest({ BMLBlockManager.class })
 public class PicturePlannerTest
 {
+    protected static final String CHARACTER_ID = "character1";
     private PlannerTests<TimedPictureUnit> plannerTests;
     private static final String BMLID = "bml1";
     private BMLBlockManager mockBmlBlockManager = mock(BMLBlockManager.class);
-    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, "character1");
+    private FeedbackManager fbManager = new FeedbackManagerImpl(mockBmlBlockManager, CHARACTER_ID);
     private PictureBinding mockPictureBinding = mock(PictureBinding.class);
     private final PlanManager<TimedPictureUnit> planManager = new PlanManager<TimedPictureUnit>();
     private PicturePlanner picturePlanner;
@@ -63,7 +81,8 @@ public class PicturePlannerTest
         plannerTests = new PlannerTests<TimedPictureUnit>(picturePlanner, bbPeg);
         final List<TimedPictureUnit> tmus = new ArrayList<TimedPictureUnit>();
         tmus.add(new TimedPictureUnit(fbManager, bbPeg, BMLID, "beh1", stubPU));
-        when(mockPictureBinding.getPictureUnit(any(FeedbackManager.class), any(BMLBlockPeg.class), any(Behaviour.class))).thenReturn(tmus);        
+        when(mockPictureBinding.getPictureUnit(any(FeedbackManager.class), any(BMLBlockPeg.class), any(Behaviour.class))).thenReturn(tmus);  
+    	when(mockBmlBlockManager.getCharacterId(anyString())).thenReturn(CHARACTER_ID);      
     }
     
     public SetImageBehavior createSetImageBehaviorBehaviour() throws IOException

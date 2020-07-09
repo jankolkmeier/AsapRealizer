@@ -1,6 +1,26 @@
 /*******************************************************************************
- *******************************************************************************/
+ * Copyright (C) 2009-2020 Human Media Interaction, University of Twente, the Netherlands
+ *
+ * This file is part of the Articulated Social Agents Platform BML realizer (ASAPRealizer).
+ *
+ * ASAPRealizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ASAPRealizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ASAPRealizer.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
 package asap.animationengine.procanimation;
+
+import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 import hmi.animation.AnalyticalIKSolver;
 import hmi.animation.Hanim;
@@ -51,6 +71,8 @@ public class IKBody
     private float yAxis[] = new float[3];
     private float xAxis[] = new float[3];
 
+    private Set<String> kinematicJoints;
+
     /**
      * Constructor
      * 
@@ -95,6 +117,12 @@ public class IKBody
         relbow.getPathTranslation(rshoulder, tv);
         rwrist.getPathTranslation(relbow, sv);
         solverRHand = new AnalyticalIKSolver(sv, tv, AnalyticalIKSolver.LimbPosition.ARM, (Vec3f.length(sv) + Vec3f.length(tv)) * 0.999f);
+
+        kinematicJoints = ImmutableSet.of( root.getSid(),
+                lhip.getSid(), lknee.getSid(), lankle.getSid(),
+                rhip.getSid(), rknee.getSid(), rankle.getSid(),
+                lshoulder.getSid(), lelbow.getSid(), lwrist.getSid(),
+                rshoulder.getSid(), relbow.getSid(), rwrist.getSid() );
     }
 
     /**
@@ -483,4 +511,10 @@ public class IKBody
     {
         return human;
     }
+
+    public Set<String> getKinematicJoints()
+    {
+        return kinematicJoints;
+    }
 }
+

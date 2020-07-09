@@ -1,5 +1,21 @@
 /*******************************************************************************
- *******************************************************************************/
+ * Copyright (C) 2009-2020 Human Media Interaction, University of Twente, the Netherlands
+ *
+ * This file is part of the Articulated Social Agents Platform BML realizer (ASAPRealizer).
+ *
+ * ASAPRealizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ASAPRealizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ASAPRealizer.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
 package asap.animationengine.gaze;
 
 import static org.junit.Assert.assertEquals;
@@ -43,8 +59,10 @@ public class DynamicRestGazeTest
     public void setup()
     {
         final VJoint vNext = HanimBody.getLOA1HanimBodyWithEyes();
+        final VJoint vPrev = HanimBody.getLOA1HanimBodyWithEyes();
         final VJoint vCurr = HanimBody.getLOA1HanimBodyWithEyes();
         when(mockAnimationPlayer.getVNext()).thenReturn(vNext);
+        when(mockAnimationPlayer.getVPrev()).thenReturn(vPrev);
         when(mockAnimationPlayer.getVCurr()).thenReturn(vCurr);        
         
         stub(mockAnimationPlayer.getVCurrPartBySid(any(String.class))).toAnswer(new Answer<VJoint>() {
@@ -57,6 +75,12 @@ public class DynamicRestGazeTest
             public VJoint answer(InvocationOnMock invocation) {
                 Object[] args = invocation.getArguments();
                 return vNext.getPart((String)args[0]);
+            }
+        });
+        stub(mockAnimationPlayer.getVPrevPartBySid(any(String.class))).toAnswer(new Answer<VJoint>() {
+            public VJoint answer(InvocationOnMock invocation) {
+                Object[] args = invocation.getArguments();
+                return vPrev.getPart((String)args[0]);
             }
         });
         

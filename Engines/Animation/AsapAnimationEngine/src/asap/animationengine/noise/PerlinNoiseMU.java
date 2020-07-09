@@ -1,5 +1,21 @@
 /*******************************************************************************
- *******************************************************************************/
+ * Copyright (C) 2009-2020 Human Media Interaction, University of Twente, the Netherlands
+ *
+ * This file is part of the Articulated Social Agents Platform BML realizer (ASAPRealizer).
+ *
+ * ASAPRealizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ASAPRealizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ASAPRealizer.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
 package asap.animationengine.noise;
 
 import hmi.animation.Hanim;
@@ -44,205 +60,167 @@ import com.google.common.collect.ImmutableSet;
  * 
  */
 @Slf4j
-public class PerlinNoiseMU implements NoiseMU
-{
-    private HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
-    private KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
-    private AnimationPlayer aniPlayer;
-    private PerlinNoise pnx1 = new PerlinNoise(1024, 0, 1);
-    /*
+public class PerlinNoiseMU implements NoiseMU {
+	@java.lang.SuppressWarnings("all")
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PerlinNoiseMU.class);
+	protected HashMap<String, String> parameters = new HashMap<String, String>(); // name => value set
+	protected KeyPositionManager keyPositionManager = new KeyPositionManagerImpl();
+	protected AnimationPlayer aniPlayer;
+	protected PerlinNoise pnx1 = new PerlinNoise(1024, 0, 1);
+	/*
      * private PerlinNoise pnx2 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pnx3 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pnx4 = new PerlinNoise(1024,0,1);
      */
-    private PerlinNoise pny1 = new PerlinNoise(1024, 0, 1);
-    /*
+	protected PerlinNoise pny1 = new PerlinNoise(1024, 0, 1);
+	/*
      * private PerlinNoise pny2 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pny3 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pny4 = new PerlinNoise(1024,0,1);
      */
-    private PerlinNoise pnz1 = new PerlinNoise(1024, 0, 1);
-    /*
+	protected PerlinNoise pnz1 = new PerlinNoise(1024, 0, 1);
+	/*
      * private PerlinNoise pnz2 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pnz3 = new PerlinNoise(1024,0,1);
      * private PerlinNoise pnz4 = new PerlinNoise(1024,0,1);
      */
-
-    protected AnimationPlayer player;
-    float[] q = new float[4];
-
-    @Override
-    public void addKeyPosition(KeyPosition kp)
-    {
-        keyPositionManager.addKeyPosition(kp);
-    }
-
-    @Override
-    public List<KeyPosition> getKeyPositions()
-    {
-        return keyPositionManager.getKeyPositions();
-    }
-
-    @Override
-    public void setKeyPositions(List<KeyPosition> p)
-    {
-        keyPositionManager.setKeyPositions(p);
-    }
-
-    @Override
-    public void removeKeyPosition(String id)
-    {
-        keyPositionManager.removeKeyPosition(id);
-    }
-
-    @Override
-    public KeyPosition getKeyPosition(String name)
-    {
-        return keyPositionManager.getKeyPosition(name);
-    }
-
-    public PerlinNoiseMU()
-    {
-        setParameterValue("joint", Hanim.skullbase);
-        setFloatParameterValue("offsetx", -0.1f);
-        setFloatParameterValue("offsety", 0f);
-        setFloatParameterValue("offsetz", 0f);
-        setFloatParameterValue("basefreqx", 1f);
-        setFloatParameterValue("basefreqy", 1f);
-        setFloatParameterValue("basefreqz", 1f);
-        setFloatParameterValue("baseamplitudex", 0.5f);
-        setFloatParameterValue("baseamplitudey", 0f);
-        setFloatParameterValue("baseamplitudez", 0f);
-        setFloatParameterValue("persistencex", 0.5f);
-        setFloatParameterValue("persistencey", 0.5f);
-        setFloatParameterValue("persistencez", 0.5f);
-    }
-
-    @Override
-    public double getPreferedDuration()
-    {
-        return 1;
-    }
-
-    @Override
-    public void play(double t) throws MUPlayException
-    {
-        try
-        {
-
-            float rotxRad = getFloatParameterValue("offsetx") + getFloatParameterValue("baseamplitudex")
-                    * pnx1.noise((float) t * getFloatParameterValue("basefreqx"));
-            // + baseamplitudex*persistence*pnx2.noise((float)currentTime*basefreqx*2)
-            // + baseamplitudex*persistence*persistence*pnx3.noise((float)currentTime*basefreqx*4)
-            // + baseamplitudex*persistence*persistence*persistence*pnx4.noise((float)currentTime*basefreqx*8)
-            float rotyRad = getFloatParameterValue("offsety") + getFloatParameterValue("baseamplitudey")
-                    * pny1.noise((float) t * getFloatParameterValue("basefreqy"));
-            float rotzRad = getFloatParameterValue("offsetz") + getFloatParameterValue("baseamplitudez")
-                    * pnz1.noise((float) t * getFloatParameterValue("basefreqz"));
-            Quat4f.setFromRollPitchYaw(q, rotzRad, rotxRad, rotyRad);
-            player.getVNextPartBySid(getParameterValue("joint")).setRotation(q);
-        }
-        catch (Exception ex)
-        {
-            throw new MUPlayException(ex.getMessage(), this);
-        }
-    }
-
-    @Override
-    public void setFloatParameterValue(String name, float value)
-    {
-        parameters.put(name, "" + value);
-        // System.out.println("param" +name+","+value);
-    }
-
-    @Override
-    public void setParameterValue(String name, String value)
-    {
-        parameters.put(name, value);
-        // System.out.println("param" +name+","+value);
-    }
-
-    @Override
-    public String getParameterValue(String name) throws ParameterNotFoundException
-    {
-        if (parameters.get(name) == null)
-        {
-            throw new ParameterNotFoundException(name);
-        }
-        else return parameters.get(name);
-
-    }
-
-    @Override
-    public float getFloatParameterValue(String name) throws ParameterNotFoundException
-    {
-        if (parameters.get(name) == null)
-        {
-            throw new ParameterNotFoundException(name);
-        }
-        float value = 0;
-        try
-        {
-            value = Float.parseFloat(parameters.get(name));
-        }
-        catch (NumberFormatException ex)
-        {
-            throw new ParameterNotFoundException(name);
-        }
-        return value;
-    }
-
-    @Override
-    public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb)
-    {
-        return new NoiseTMU(bbm, bbPeg, bmlId, id, this, pb, aniPlayer);
-    }
-
-    @Override
-    public AnimationUnit copy(AnimationPlayer p)
-    {
-        this.aniPlayer = p;
-        HashMap<String, String> newparam = new HashMap<String, String>();
-        newparam.putAll(parameters);
-        PerlinNoiseMU pmu = new PerlinNoiseMU();
-        pmu.parameters = newparam;
-        pmu.player = p;
-        return pmu;
-    }
-
-    private static final Set<String> PHJOINTS = ImmutableSet.of();
-
-    @Override
-    public Set<String> getPhysicalJoints()
-    {
-        return PHJOINTS;
-    }
-
-    @Override
-    public Set<String> getKinematicJoints()
-    {
-        try
-        {
-            String jointName = getParameterValue("joint");
-            return ImmutableSet.of(jointName);
-        }
-        catch (ParameterNotFoundException e)
-        {
-            log.warn("No joint set for PerlinNoiseMU, ParameterNotFoundException", e);
-        }
-        return ImmutableSet.of();
-
-    }
-    
-    @Override
-    public Set<String> getAdditiveJoints()
-    {
-        return ImmutableSet.of();
-    }
-
-    @Override
-    public void startUnit(double t) throws MUPlayException
-    {
-                
-    }
+	protected AnimationPlayer player;
+	protected float[] q = new float[4];
+	
+	@Override
+	public void addKeyPosition(KeyPosition kp) {
+		keyPositionManager.addKeyPosition(kp);
+	}
+	
+	@Override
+	public List<KeyPosition> getKeyPositions() {
+		return keyPositionManager.getKeyPositions();
+	}
+	
+	@Override
+	public void setKeyPositions(List<KeyPosition> p) {
+		keyPositionManager.setKeyPositions(p);
+	}
+	
+	@Override
+	public void removeKeyPosition(String id) {
+		keyPositionManager.removeKeyPosition(id);
+	}
+	
+	@Override
+	public KeyPosition getKeyPosition(String name) {
+		return keyPositionManager.getKeyPosition(name);
+	}
+	
+	public PerlinNoiseMU() {
+		setParameterValue("joint", Hanim.skullbase);
+		setFloatParameterValue("offsetx", -0.1F);
+		setFloatParameterValue("offsety", 0.0F);
+		setFloatParameterValue("offsetz", 0.0F);
+		setFloatParameterValue("basefreqx", 1.0F);
+		setFloatParameterValue("basefreqy", 1.0F);
+		setFloatParameterValue("basefreqz", 1.0F);
+		setFloatParameterValue("baseamplitudex", 0.5F);
+		setFloatParameterValue("baseamplitudey", 0.0F);
+		setFloatParameterValue("baseamplitudez", 0.0F);
+		setFloatParameterValue("persistencex", 0.5F);
+		setFloatParameterValue("persistencey", 0.5F);
+		setFloatParameterValue("persistencez", 0.5F);
+	}
+	
+	@Override
+	public double getPreferedDuration() {
+		return 1;
+	}
+	
+	@Override
+	public void play(double t) throws MUPlayException {
+		try {
+			float rotxRad = getFloatParameterValue("offsetx") + getFloatParameterValue("baseamplitudex") * pnx1.noise((float)t * getFloatParameterValue("basefreqx"));
+			// + baseamplitudex*persistence*pnx2.noise((float)currentTime*basefreqx*2)
+			// + baseamplitudex*persistence*persistence*pnx3.noise((float)currentTime*basefreqx*4)
+			// + baseamplitudex*persistence*persistence*persistence*pnx4.noise((float)currentTime*basefreqx*8)
+			float rotyRad = getFloatParameterValue("offsety") + getFloatParameterValue("baseamplitudey") * pny1.noise((float)t * getFloatParameterValue("basefreqy"));
+			float rotzRad = getFloatParameterValue("offsetz") + getFloatParameterValue("baseamplitudez") * pnz1.noise((float)t * getFloatParameterValue("basefreqz"));
+			Quat4f.setFromRollPitchYaw(q, rotzRad, rotxRad, rotyRad);
+			player.getVNextPartBySid(getParameterValue("joint")).setRotation(q);
+		} catch (Exception ex) {
+			throw new MUPlayException(ex.getMessage(), this);
+		}
+	}
+	
+	@Override
+	public void setFloatParameterValue(String name, float value) {
+		parameters.put(name, "" + value);
+		// System.out.println("param" +name+","+value);
+	}
+	
+	@Override
+	public void setParameterValue(String name, String value) {
+		parameters.put(name, value);
+		// System.out.println("param" +name+","+value);
+	}
+	
+	@Override
+	public String getParameterValue(String name) throws ParameterNotFoundException {
+		if (parameters.get(name) == null) {
+			throw new ParameterNotFoundException(name);
+		} else return parameters.get(name);
+	}
+	
+	@Override
+	public float getFloatParameterValue(String name) throws ParameterNotFoundException {
+		if (parameters.get(name) == null) {
+			throw new ParameterNotFoundException(name);
+		}
+		float value = 0;
+		try {
+			value = Float.parseFloat(parameters.get(name));
+		} catch (NumberFormatException ex) {
+			throw new ParameterNotFoundException(name);
+		}
+		return value;
+	}
+	
+	@Override
+	public TimedAnimationMotionUnit createTMU(FeedbackManager bbm, BMLBlockPeg bbPeg, String bmlId, String id, PegBoard pb) {
+		return new NoiseTMU(bbm, bbPeg, bmlId, id, this, pb, aniPlayer);
+	}
+	
+	@Override
+	public AnimationUnit copy(AnimationPlayer p) {
+		this.aniPlayer = p;
+		HashMap<String, String> newparam = new HashMap<String, String>();
+		newparam.putAll(parameters);
+		PerlinNoiseMU pmu = new PerlinNoiseMU();
+		pmu.parameters = newparam;
+		pmu.player = p;
+		return pmu;
+	}
+	private static final Set<String> PHJOINTS = ImmutableSet.of();
+	
+	@Override
+	public Set<String> getPhysicalJoints() {
+		return PHJOINTS;
+	}
+	
+	@Override
+	public Set<String> getKinematicJoints() {
+		try {
+			String jointName = getParameterValue("joint");
+			return ImmutableSet.of(jointName);
+		} catch (ParameterNotFoundException e) {
+			log.warn("No joint set for PerlinNoiseMU, ParameterNotFoundException", e);
+		}
+		return ImmutableSet.of();
+	}
+	
+	@Override
+	public Set<String> getAdditiveJoints() {
+		return ImmutableSet.of();
+	}
+	
+	@Override
+	public void startUnit(double t) throws MUPlayException {
+	}
 }

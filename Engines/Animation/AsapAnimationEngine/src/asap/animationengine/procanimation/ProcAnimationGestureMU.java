@@ -1,5 +1,21 @@
 /*******************************************************************************
- *******************************************************************************/
+ * Copyright (C) 2009-2020 Human Media Interaction, University of Twente, the Netherlands
+ *
+ * This file is part of the Articulated Social Agents Platform BML realizer (ASAPRealizer).
+ *
+ * ASAPRealizer is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License (LGPL) as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * ASAPRealizer is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with ASAPRealizer.  If not, see http://www.gnu.org/licenses/.
+ ******************************************************************************/
 package asap.animationengine.procanimation;
 
 import hmi.animation.Hanim;
@@ -84,7 +100,7 @@ public class ProcAnimationGestureMU implements GestureUnit
 
         i = 0;
 
-        copyProc.play(copyProc.getKeyPosition(sync).time + 0.01);
+        copyProc.play(copyProc.getKeyPosition(sync).time + (0.01 / getStrokeDuration()));
         for (VJoint v : gestureUnit.getControlledJoints())
         {
             VJoint v2 = copyJoint.getPartBySid(v.getSid());
@@ -102,7 +118,7 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public double getRetractionDuration()
     {
-        copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - 0.01);
+        copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_END.getId()).time - (0.01 / getStrokeDuration()));
         return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint,
                 VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
 
@@ -110,7 +126,7 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public double getPreparationDuration()
     {
-        copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
+        copyProc.play(copyProc.getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + (0.01 / getStrokeDuration()));
 
         if (log.isDebugEnabled())
         {
@@ -131,7 +147,7 @@ public class ProcAnimationGestureMU implements GestureUnit
 
     public double getPreparationFromRestDuration()
     {
-        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + 0.01);
+        copyProc.play(getKeyPosition(BMLGestureSync.STROKE_START.getId()).time + (0.01 / getStrokeDuration()));
         return aniPlayer.getRestPose().getTransitionToRestDuration(copyJoint,
                 VJointUtils.transformToSidSet(gestureUnit.getControlledJoints()));
     }
